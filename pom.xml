@@ -12,5 +12,28 @@
         <module>protocol-tools</module>
     </modules>
 
+    <properties>
+        <mnt-version>1.0-SNAPSHOT</mnt-version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.github.cico216</groupId>
+            <artifactId>fx-pc</artifactId>
+        </dependency>
+    </dependencies>
+
+
+    <dependencyManagement>
+
+        <dependencies>
+            <dependency>
+                <groupId>com.github.cico216</groupId>
+                <artifactId>fx-pc</artifactId>
+                <version>${mnt-version}</version>
+            </dependency>
+        </dependencies>
+
+    </dependencyManagement>
 
 </project>
