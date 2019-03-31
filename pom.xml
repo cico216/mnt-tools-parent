@@ -10,10 +10,13 @@
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>protocol-tools</module>
+        <module>tools-common</module>
+        <module>tools-aggregation</module>
     </modules>
 
     <properties>
-        <mnt-version>1.0-SNAPSHOT</mnt-version>
+        <mnt-version>1.0</mnt-version>
+        <mnt-tools-version>1.0-SNAPSHOT</mnt-tools-version>
     </properties>
 
     <dependencies>
@@ -27,11 +30,21 @@
     <dependencyManagement>
 
         <dependencies>
+            <!-- 客户端依赖 -->
             <dependency>
                 <groupId>com.github.cico216</groupId>
                 <artifactId>fx-pc</artifactId>
                 <version>${mnt-version}</version>
             </dependency>
+            <!-- 公共依赖 -->
+            <dependency>
+                <groupId>com.mnt.tools</groupId>
+                <artifactId>tools-common</artifactId>
+                <version>${mnt-tools-version}</version>
+            </dependency>
+
+
+
         </dependencies>
 
     </dependencyManagement>
