@@ -9,4 +9,10 @@ import com.mnt.gui.fx.view.anno.MainView;
 @MainView(appName = "通讯协议工具")
 public class MainViewController extends BaseController {
 
+    @Override
+    public void init() {
+        super.init();
+    }
+
+
 }

@@ -1,0 +1,58 @@
+.top-border {
+	-fx-border-width: 1px;
+	-fx-border-color: green;
+}
+
+.label {
+	-fx-font-size: 14px;
+	-fx-font-family: "微软雅黑";
+}
+
+.font-14 {
+	-fx-font-size: 14px;
+	-fx-font-family: "微软雅黑";
+}
+
+.button {
+	-fx-background-color: #00ced1;
+	-fx-background-radius: 5px;
+}
+
+.button:hover {
+	-fx-background-color: #87cefa;
+}
+
+.mainTab:bottom {
+	-fx-background-color: #ffffff;
+}
+
+.mainTab:bottom .tab-header-area .tab-header-background {
+	-fx-background-color: #ffffff;
+}
+
+.mainTab:bottom .tab-header-area .headers-region .tab:bottom {
+	-fx-background-color: #87cefa;
+}
+
+.commList {
+	-fx-background-color: #ffffff;
+	-fx-border-width: 1px;
+	-fx-border-color: #c0c0c0;
+	-fx-font-size: 12px;
+	-fx-font-family: "微软雅黑";
+}
+
+.mainTable:row-selection:constrained-resize {
+	-fx-background-color: #ffffff;
+}
+
+.mainTable:row-selection:constrained-resize .column-header-background .nested-column-header .table-column
+	{
+	-fx-background-color: #f5f5f5;
+}
+
+.mainTable:row-selection:constrained-resize .column-header-background .nested-column-header .table-column .label
+	{
+	-fx-background-color: #f5f5f5;
+	-fx-border-width: 0px;
+}

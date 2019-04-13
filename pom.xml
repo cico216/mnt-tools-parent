@@ -12,10 +12,11 @@
         <module>protocol-tools</module>
         <module>tools-common</module>
         <module>tools-aggregation</module>
+        <module>mybatis-generate-tools</module>
     </modules>
 
     <properties>
-        <mnt-version>1.0</mnt-version>
+        <mnt-version>1.1-SNAPSHOT</mnt-version>
         <mnt-tools-version>1.0-SNAPSHOT</mnt-tools-version>
     </properties>
 
