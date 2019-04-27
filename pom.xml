@@ -43,8 +43,12 @@
                 <artifactId>tools-common</artifactId>
                 <version>${mnt-tools-version}</version>
             </dependency>
-
-
+            <!-- velocity依赖 -->
+            <dependency>
+                <groupId>org.apache.velocity</groupId>
+                <artifactId>velocity</artifactId>
+                <version>1.7</version>
+            </dependency>
 
         </dependencies>
 
