@@ -6,11 +6,16 @@ import com.mnt.gui.fx.table.TableViewSupport;
 import com.mnt.gui.fx.view.anno.MainView;
 import com.mnt.mybatis.generate.vo.TableColumnVO;
 import com.mnt.mybatis.generate.vo.TableNameVO;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
+
+import java.util.function.Predicate;
 
 /**
  * Mybatis代码生成工具
@@ -45,23 +50,113 @@ public class MainViewController extends BaseController {
     @FXML
     private TableColumn<TableColumnVO, Integer> tcolLength;
 
+    /**
+     * 字段表格初始化
+     */
     private TableViewSupport<TableColumnVO> tableViewSupport;
-    private ObservableList<TableNameVO> itemListTables = FXCollections.observableArrayList();
+
+    /**
+     * 表格名称元素
+     */
+    private ObservableList<TableNameVO> itemTableNames;
+
+    /**
+     * 可选择db列表
+     */
+    private ObservableList<String> itemDBConfigs;
+
+    /**
+     * 搜索时的元素
+     */
+    private ObservableList<TableNameVO> searchItemTableNames = FXCollections.observableArrayList();
 
     @Override
     public void init() {
         super.init();
+        initList();
         initTable();
-        listTables.setItems(itemListTables);
+        initSearch();
+        initComb();
+        listTables.setItems(searchItemTableNames);
 
 
     }
 
     /**
+     * 初始化name列表
+     */
+    private void initList() {
+        listTables.setCellFactory(cell -> {
+            return new ListCell<TableNameVO>(){
+                @Override
+                protected void updateItem(TableNameVO vo, boolean empty) {
+                    super.updateItem(vo, empty);
+                    if(!empty)
+                    {
+                        HBox hbox = new HBox(2);
+                        CheckBox checkBox = new CheckBox();
+                        checkBox.selectedProperty().bindBidirectional(vo.checkProperty());
+                        Label lbl = new Label(vo.getTableName() + "(" + vo.getRemark() +  ")");
+                        hbox.getChildren().add(checkBox);
+                        hbox.getChildren().add(lbl);
+                        setGraphic(hbox);
+                    }
+                    else
+                    {
+                        setGraphic(null);
+                    }
+                }
+            };
+        });
+    }
+    /**
      * 初始化表格
      */
     private void initTable() {
         tableViewSupport = TabelCellFactory.createTableSupport(tableFields, TableColumnVO.class);
+    }
+
+    /**
+     * 初始化下拉框选择
+     */
+    private void initComb() {
+        combDB.setItems(itemDBConfigs);
+    }
+
+
+    /**
+     * 初始化搜索栏
+     */
+    private void initSearch() {
+        txtFilter.textProperty().addListener((observable,  oldValue, newValue) -> {
+                if(null != newValue)
+                {
+                    if(newValue.equals(""))
+                    {
+                        searchItemTableNames.clear();
+                        listTables.setItems(itemTableNames);
+                    }
+                    else
+                    {
+                        searchItemTableNames.clear();
+                        searchItemTableNames.addAll(itemTableNames.filtered(t -> {
+                                if(t.getTableName().contains(newValue) || (null != t.getRemark() && t.getRemark().contains(newValue))) {
+                                    return true;
+                                }
+                                return false;
+                            }
+                        ));
+                        listTables.setItems(searchItemTableNames);
+                    }
+                }
+                else
+                {
+                    searchItemTableNames.clear();
+                    listTables.setItems(itemTableNames);
+                }
+
+            }
+        );
     }
 
 
