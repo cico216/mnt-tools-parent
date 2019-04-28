@@ -5,6 +5,12 @@ package com.mnt.mybatis.generate.model.db;
  * @author cico
  */
 public class JDBCInfo {
+
+    /**
+     * db类型
+     */
+    private String dbType;
+
     /**
      * db link url
      */
@@ -24,6 +30,14 @@ public class JDBCInfo {
      * db pwd
      */
     private String dbPassword;
+
+    public String getDbType() {
+        return dbType;
+    }
+
+    public void setDbType(String dbType) {
+        this.dbType = dbType;
+    }
 
     public String getDbUrl() {
         return dbUrl;
