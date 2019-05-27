@@ -16,7 +16,7 @@
     </modules>
 
     <properties>
-        <mnt-version>1.1-SNAPSHOT</mnt-version>
+        <mnt-version>1.1</mnt-version>
         <mnt-tools-version>1.0-SNAPSHOT</mnt-tools-version>
     </properties>
 
