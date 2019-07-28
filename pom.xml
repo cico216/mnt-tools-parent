@@ -18,12 +18,20 @@
     <properties>
         <mnt-version>1.1</mnt-version>
         <mnt-tools-version>1.0-SNAPSHOT</mnt-tools-version>
+        <velocity.version>1.7</velocity.version>
+        <lombok.version>1.18.8</lombok.version>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>com.github.cico216</groupId>
             <artifactId>fx-pc</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 
@@ -47,7 +55,14 @@
             <dependency>
                 <groupId>org.apache.velocity</groupId>
                 <artifactId>velocity</artifactId>
-                <version>1.7</version>
+                <version>${velocity.version}</version>
+            </dependency>
+            <!-- lombok -->
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
+                <scope>provided</scope>
             </dependency>
 
         </dependencies>

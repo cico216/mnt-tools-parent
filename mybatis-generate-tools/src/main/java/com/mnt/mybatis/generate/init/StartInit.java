@@ -33,7 +33,7 @@ public class StartInit extends InitContext {
 			ClassLoadUtil.loadClass(TemplateClassLoad.class, classLoad);
 		} catch (Exception e) {
 			e.printStackTrace();
-			log.error("启动失败", e);
+			log.error("加载模板脚本失败", e);
 		}
 		
 	}
