@@ -1,6 +1,7 @@
 package com.mnt.mybatis.generate.view;
 
 import com.mnt.gui.fx.base.BaseController;
+import com.mnt.gui.fx.controls.dialog.DialogFactory;
 import com.mnt.gui.fx.table.TabelCellFactory;
 import com.mnt.gui.fx.table.TableViewSupport;
 import com.mnt.gui.fx.view.anno.MainView;
@@ -13,6 +14,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 
 import java.util.function.Predicate;
@@ -79,7 +81,19 @@ public class MainViewController extends BaseController {
         initComb();
         listTables.setItems(searchItemTableNames);
 
+        addListener();
+    }
 
+    /**
+     * 添加事件
+     */
+    private void addListener() {
+        this.setOnKeyPressed((event) -> {
+            if(event.isControlDown() && event.getCode() == KeyCode.S) {
+                //save code
+                processGenerateCode(null);
+            }
+        });
     }
 
     /**
@@ -185,6 +199,7 @@ public class MainViewController extends BaseController {
     @FXML
     void processGenerateCode(ActionEvent event) {
 
+        DialogFactory.getInstance().showFaildMsg("生成错误", "请选择生成的数据库表格", ()->{});
     }
 
     /**
@@ -211,7 +226,7 @@ public class MainViewController extends BaseController {
      */
     @FXML
     void processQuit(ActionEvent event) {
-
+        System.exit(1);
     }
 
     /**

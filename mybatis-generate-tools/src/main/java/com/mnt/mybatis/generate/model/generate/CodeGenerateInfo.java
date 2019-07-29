@@ -1,5 +1,6 @@
 package com.mnt.mybatis.generate.model.generate;
 
+import com.mnt.mybatis.generate.model.view.PropertyType;
 import lombok.Data;
 
 /**
@@ -26,7 +27,7 @@ public class CodeGenerateInfo {
     /**
      * 属性设置类型
      */
-    private String type;
+    private PropertyType type;
 
 
 }

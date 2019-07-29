@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- ${remark} , author ${user}  -->
+<mapper namespace="${package}.${mapperName}" >
+	<resultMap id="BaseResultMap" type="${entityPackagePath}" >
+#foreach( $dbCloumn in $dbCloumns)
+#if($dbCloumn.cloumnJavaName == "id")
+		<id column="${dbCloumn.cloumnName}" property="${dbCloumn.cloumnJavaName}" jdbcType="${dbCloumn.cloumnJdbcType}" />
+#else
+		<result column="${dbCloumn.cloumnName}" property="${dbCloumn.cloumnJavaName}" jdbcType="${dbCloumn.cloumnJdbcType}" />
+#end	
+#end
+	</resultMap>
+#set ($columnCount=0)
+	<sql id="Base_Column_List" >
+#foreach($dbCloumn in $dbCloumns)
+#set($columnCount = ${columnCount} + 1)
+#if($columnCount == $dbCloumns.size())
+		${dbCloumn.cloumnName}
+#else
+		${dbCloumn.cloumnName},
+#end
+#end	
+	</sql>
+	
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+	    select 
+	    <include refid="Base_Column_List" />
+	    from ${tableName}
+	    where id = #{id,jdbcType=BIGINT}
+ 	</select>	
+	
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+	    delete from ${tableName}
+	    where id = #{id,jdbcType=BIGINT}
+    </delete>
+    
+    <insert id="insert" parameterType="${entityPackagePath}" useGeneratedKeys="true" keyProperty="id" >
+#set ($columnCount=0)
+    	insert into ${tableName} (
+#foreach($dbCloumn in $dbCloumns)
+#set($columnCount = ${columnCount} + 1)
+#if($columnCount == $dbCloumns.size())
+			${dbCloumn.cloumnName}
+#else
+			${dbCloumn.cloumnName},
+#end
+#end
+#set ($columnCount=0)
+    	)  values (
+#foreach($dbCloumn in $dbCloumns)
+#set($columnCount = ${columnCount} + 1)
+#if($columnCount == $dbCloumns.size())
+			#{${dbCloumn.cloumnJavaName},jdbcType=${dbCloumn.cloumnJdbcType}}
+#else
+			#{${dbCloumn.cloumnJavaName},jdbcType=${dbCloumn.cloumnJdbcType}},
+#end
+#end    	
+    	)
+    </insert>
+    
+    <insert id="insertSelective" parameterType="${entityPackagePath}" useGeneratedKeys="true" keyProperty="id">
+    insert into ${tableName}
+     <trim prefix="(" suffix=")" suffixOverrides="," >
+#foreach($dbCloumn in $dbCloumns)     
+     <if test="${dbCloumn.cloumnJavaName} != null" >
+        ${dbCloumn.cloumnName},
+      </if>
+#end       
+     </trim>
+      <trim prefix="values (" suffix=")" suffixOverrides="," >
+#foreach($dbCloumn in $dbCloumns)  
+      <if test="${dbCloumn.cloumnJavaName} != null" >
+        #{${dbCloumn.cloumnJavaName},jdbcType=${dbCloumn.cloumnJdbcType}},
+      </if>
+#end      
+      </trim>
+    </insert>
+    
+    <update id="updateByPrimaryKey" parameterType="${entityPackagePath}" >
+         update ${tableName}
+    	 <set>
+#set ($columnCount=0)    	 	
+#foreach($dbCloumn in $dbCloumns)
+#set($columnCount = ${columnCount} + 1)     
+#if(${dbCloumn.cloumnName} != "id")
+#if($columnCount == $dbCloumns.size())
+		    ${dbCloumn.cloumnName} = #{${dbCloumn.cloumnJavaName},jdbcType=${dbCloumn.cloumnJdbcType}}
+#else
+		   	${dbCloumn.cloumnName} = #{${dbCloumn.cloumnJavaName},jdbcType=${dbCloumn.cloumnJdbcType}},
+#end
+#end	      
+#end  
+    	 </set>
+    	 where id = #{id,jdbcType=BIGINT}
+    </update>
+    
+     <update id="updateByPrimaryKeySelective" parameterType="${entityPackagePath}" >
+    	 update ${tableName}
+    	 <set >
+#set ($columnCount=0)    	 
+#foreach($dbCloumn in $dbCloumns)
+#set($columnCount = ${columnCount} + 1)
+#if(${dbCloumn.cloumnName} != "id")     
+		     <if test="${dbCloumn.cloumnJavaName} != null" >
+		        ${dbCloumn.cloumnName} = #{${dbCloumn.cloumnJavaName},jdbcType=${dbCloumn.cloumnJdbcType}},
+		      </if>
+#end	      
+#end    	
+		</set > 
+    	 where id = #{id,jdbcType=BIGINT}
+    </update>
+    
+     <insert id="batchAdd" parameterType="${entityPackagePath}" useGeneratedKeys="true" keyProperty="id" >
+#set ($columnCount=0)
+    	insert into ${tableName} (
+#foreach($dbCloumn in $dbCloumns)
+ #set($columnCount = ${columnCount} + 1)
+#if($columnCount == $dbCloumns.size())
+#if(${dbCloumn.cloumnName} != "id")
+			${dbCloumn.cloumnName}
+#end			
+#else
+#if(${dbCloumn.cloumnName} != "id")
+			${dbCloumn.cloumnName},
+#end			
+#end
+#end
+#set ($columnCount=0)
+    	)  values
+    	<foreach collection="list" item="item" index="index" separator="," >    
+		(
+#foreach($dbCloumn in $dbCloumns)
+#set($columnCount = ${columnCount} + 1)
+#if($columnCount == $dbCloumns.size())
+#if(${dbCloumn.cloumnName} != "id")
+			#{item.${dbCloumn.cloumnJavaName},jdbcType=${dbCloumn.cloumnJdbcType}}
+#end			
+#else
+#if(${dbCloumn.cloumnName} == "gmt_create")
+			current_timestamp,
+#else
+#if(${dbCloumn.cloumnName} != "id")
+			#{item.${dbCloumn.cloumnJavaName},jdbcType=${dbCloumn.cloumnJdbcType}},
+#end			
+#end
+#end
+#end    
+		)	
+    	</foreach>
+    </insert>
+    
+    <sql id="Base_Search_Column" >
+#foreach($dbCloumn in $dbCloumns) 
+#if(${dbCloumn.cloumnName} != "del_flag")    
+	  <if test="${dbCloumn.cloumnJavaName} != null" >
+        AND ${dbCloumn.cloumnName} = #{${dbCloumn.cloumnJavaName},jdbcType=${dbCloumn.cloumnJdbcType}}
+      </if>
+#else 
+		AND ${dbCloumn.cloumnName} = false
+#end      
+#end    
+    </sql>
+    
+  <select id="getAll" resultMap="BaseResultMap" parameterType="${entityPackagePath}" >
+    select 
+    <include refid="Base_Column_List" />
+     from ${tableName}
+    <where>
+       <include refid="Base_Search_Column"/>
+    </where>
+    order by id
+	<if test="pageNo != null" >
+	 	LIMIT #{pageNo} offset #{startIndex}
+	</if>
+  </select>
+  
+   <select id="getAllCount" resultType="int" parameterType="${entityPackagePath}" >
+    select COUNT(1)
+     from ${tableName}
+    <where>
+       <include refid="Base_Search_Column"/>
+    </where>
+  </select>
+  
+  <select id="exist" resultType="int" parameterType="${entityPackagePath}" >
+    select COUNT(1)
+     from ${tableName}
+    <where>
+    	1 = 1
+       <include refid="Base_Search_Column"/>
+    </where>
+  </select>
+
+  <select id="listAllByIds" resultMap="BaseResultMap" parameterType="list" >
+    select  <include refid="Base_Column_List" />
+     from ${tableName}
+    <where>
+        id in
+        <foreach collection="ids" item="item" open="(" close=")" index="index" separator="," >   
+        	#{item}
+        </foreach>
+    </where>
+  </select>
+  
+  <select id="getBy" resultMap="BaseResultMap" parameterType="${entityPackagePath}" >
+    select 
+    <include refid="Base_Column_List" />
+     from ${tableName}
+    <where>
+       <include refid="Base_Search_Column"/>
+    </where>
+     LIMIT 1 offset 0
+  </select>
+  
+  <!-- append__start -->
+  
+$holdCode 
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <!-- append__end -->
+</mapper>

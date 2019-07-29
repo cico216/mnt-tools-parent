@@ -1,0 +1,92 @@
+package $package;
+
+import java.io.Serializable;
+#if($importPackages)
+	#foreach( $importPackage in $importPackages )
+import ${importPackage};
+	#end
+#end
+
+/**
+ * $remark Query
+ *
+ * @author $user
+ * @Date $date
+ */
+public class $className implements Serializable {
+
+	private static final long serialVersionUID = -1L;
+	
+	private Integer pageIndex; //索引id
+	
+	private Integer pageSize; //页面大小
+
+#foreach( $dbCloumn in $dbCloumns )
+	
+	/**
+     * $dbCloumn.remark
+     */
+    private $dbCloumn.cloumnJavaType ${dbCloumn.cloumnJavaName};
+#end
+
+	public Integer getPageIndex() {
+		return pageIndex;
+	}
+
+	public void setPageIndex(Integer pageIndex) {
+		this.pageIndex = pageIndex;
+	}
+
+	public Integer getPageSize() {
+		return pageSize;
+	}
+
+	public void setPageSize(Integer pageSize) {
+		this.pageSize = pageSize;
+	}
+
+#foreach( $dbCloumn in $dbCloumns)
+	#if($dbCloumn.cloumnJavaType == "Boolean")	
+public $dbCloumn.cloumnJavaType is${dbCloumn.methodName}() {
+        return ${dbCloumn.cloumnJavaName};
+    }
+	#else
+public $dbCloumn.cloumnJavaType get${dbCloumn.methodName}() {
+        return ${dbCloumn.cloumnJavaName};
+    }
+	#end
+	
+	#if($dbCloumn.cloumnJavaType == "String")
+public void set${dbCloumn.methodName}($dbCloumn.cloumnJavaType ${dbCloumn.cloumnJavaName}) {
+        this.${dbCloumn.cloumnJavaName} = ${dbCloumn.cloumnJavaName} == null ? null : ${dbCloumn.cloumnJavaName}.trim();
+    }
+	#else
+public void set${dbCloumn.methodName}($dbCloumn.cloumnJavaType ${dbCloumn.cloumnJavaName}) {
+        this.${dbCloumn.cloumnJavaName} = ${dbCloumn.cloumnJavaName};
+    }
+	#end    
+    
+#end
+
+
+    /* append__start */
+  
+$holdCode 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    /* append__end */    
+
+}

@@ -1,0 +1,69 @@
+package $package;
+
+#if($importPackages)
+	#foreach( $importPackage in $importPackages )
+import ${importPackage};
+	#end
+#end
+
+/**
+ * $remark VO
+ *
+ * @author $user
+ * @Date $date
+ */
+public class $className {
+
+#foreach( $dbCloumn in $dbCloumns )
+	
+	/**
+     * $dbCloumn.remark
+     */
+    private $dbCloumn.cloumnJavaType ${dbCloumn.cloumnJavaName};
+#end
+
+#foreach( $dbCloumn in $dbCloumns)
+	#if($dbCloumn.cloumnJavaType == "Boolean")	
+public $dbCloumn.cloumnJavaType is${dbCloumn.methodName}() {
+        return ${dbCloumn.cloumnJavaName};
+    }
+	#else
+public $dbCloumn.cloumnJavaType get${dbCloumn.methodName}() {
+        return ${dbCloumn.cloumnJavaName};
+    }
+	#end
+	
+	#if($dbCloumn.cloumnJavaType == "String")
+public void set${dbCloumn.methodName}($dbCloumn.cloumnJavaType ${dbCloumn.cloumnJavaName}) {
+        this.${dbCloumn.cloumnJavaName} = ${dbCloumn.cloumnJavaName} == null ? null : ${dbCloumn.cloumnJavaName}.trim();
+    }
+	#else
+public void set${dbCloumn.methodName}($dbCloumn.cloumnJavaType ${dbCloumn.cloumnJavaName}) {
+        this.${dbCloumn.cloumnJavaName} = ${dbCloumn.cloumnJavaName};
+    }
+	#end    
+    
+#end
+
+
+    /* append__start */
+  
+$holdCode 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    /* append__end */    
+
+}
