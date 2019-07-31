@@ -22,12 +22,6 @@ public class StartInit extends InitContext {
 	
 	@Override
 	public void afterInitView(URLClassLoader classLoad) {
-
-	
-	}
-
-	@Override
-	public void init(List<Class<?>> classes, URLClassLoader classLoad) {
 		try {
 			//初始化动态编译脚本
 			ClassLoadUtil.loadClass(TemplateClassLoad.class, classLoad);
@@ -35,6 +29,12 @@ public class StartInit extends InitContext {
 			e.printStackTrace();
 			log.error("加载模板脚本失败", e);
 		}
+	
+	}
+
+	@Override
+	public void init(List<Class<?>> classes, URLClassLoader classLoad) {
+
 		
 	}
 

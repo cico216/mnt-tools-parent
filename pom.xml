@@ -45,6 +45,12 @@
                 <artifactId>fx-pc</artifactId>
                 <version>${mnt-version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>com.github.cico216</groupId>
+                <artifactId>mnt-core</artifactId>
+                <version>${mnt-version}</version>
+            </dependency>
             <!-- 公共依赖 -->
             <dependency>
                 <groupId>com.mnt.tools</groupId>

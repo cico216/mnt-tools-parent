@@ -1,5 +1,6 @@
 package com.mnt.mybatis.generate.core;
 
+import com.mnt.base.classloader.anno.ClassKey;
 import com.mnt.mybatis.generate.model.db.JDBCInfo;
 import com.mnt.mybatis.generate.vo.TableColumnVO;
 import com.mnt.mybatis.generate.vo.TableNameVO;
@@ -19,11 +20,16 @@ import java.util.List;
  */
 public abstract class BaseDBLoadTemplate {
 
+    public String getKey() {
+        return getJdbcInfo().getDbType();
+    }
+
     /**
      * 获取jdbc连接信息
      * @return
      */
     protected abstract JDBCInfo getJdbcInfo();
+
 
     private static final Logger log = LoggerFactory.getLogger(BaseDBLoadTemplate.class);
 

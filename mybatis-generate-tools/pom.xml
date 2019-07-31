@@ -11,5 +11,16 @@
 
     <artifactId>mybatis-generate-tools</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.mnt.tools</groupId>
+            <artifactId>tools-common</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.cico216</groupId>
+            <artifactId>mnt-core</artifactId>
+        </dependency>
+    </dependencies>
 
 </project>

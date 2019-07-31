@@ -1,14 +1,19 @@
 package com.mnt.mybatis.generate.view;
 
+import com.mnt.common.utils.GenerateDataTypeUtils;
+import com.mnt.common.utils.GenerateNameUtils;
 import com.mnt.gui.fx.base.BaseController;
 import com.mnt.gui.fx.controls.dialog.DialogFactory;
 import com.mnt.gui.fx.table.TabelCellFactory;
 import com.mnt.gui.fx.table.TableViewSupport;
 import com.mnt.gui.fx.view.anno.MainView;
+import com.mnt.mybatis.generate.core.BaseDBLoadTemplate;
+import com.mnt.mybatis.generate.core.load.TemplateClassLoad;
+import com.mnt.mybatis.generate.model.UserData;
+import com.mnt.mybatis.generate.model.db.DBCloumn;
+import com.mnt.mybatis.generate.model.db.DBModel;
 import com.mnt.mybatis.generate.vo.TableColumnVO;
 import com.mnt.mybatis.generate.vo.TableNameVO;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -17,7 +22,8 @@ import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 
-import java.util.function.Predicate;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Mybatis代码生成工具
@@ -198,8 +204,73 @@ public class MainViewController extends BaseController {
      */
     @FXML
     void processGenerateCode(ActionEvent event) {
+        if(itemTableNames != null)
+        {
+            if(itemTableNames.isEmpty()) {
+                DialogFactory.getInstance().showFaildMsg("生成错误", "当前数据库没有表", ()->{});
+            } else {
+                List<TableNameVO> selectTables = new ArrayList<>();
+                itemTableNames.forEach(vo -> {
+                    if(vo.getCheck()) {
+                        selectTables.add(vo);
+                    }
+                });
 
-        DialogFactory.getInstance().showFaildMsg("生成错误", "请选择生成的数据库表格", ()->{});
+                if(selectTables.isEmpty()) {
+                    DialogFactory.getInstance().showFaildMsg("生成错误", "请选择生成的数据库表格", ()->{});
+                } else {
+
+                    List<DBModel> dbModels = new ArrayList<>();
+
+                    DBModel dbModel ;
+                    for (TableNameVO tableNameVO : selectTables) {
+                        dbModel = new DBModel();
+                        dbModel.setTableName(tableNameVO.getTableName());
+                        dbModel.setRemark(tableNameVO.getRemark());
+                        List<DBCloumn> dbCloumns = new ArrayList<>();
+                        dbModel.setDbCloumns(dbCloumns);
+
+                        BaseDBLoadTemplate dbLoadTemplate = null;
+                        for (BaseDBLoadTemplate baseDBLoadTemplate : TemplateClassLoad.BASE_DB_INFO_LOAD_TEMPLATE.getScripts()) {
+                            if(UserData.dbType.equals(baseDBLoadTemplate.getKey())) {
+                                dbLoadTemplate = baseDBLoadTemplate;
+                                break;
+                            }
+                        }
+
+                        //获取表字段
+                        List<TableColumnVO> tableColumnVOs = dbLoadTemplate.listTableColumn(tableNameVO.getTableName());
+                        DBCloumn dbCloumn;
+                        for (TableColumnVO tableColumnVO : tableColumnVOs) {
+                            dbCloumn = new DBCloumn();
+                            dbCloumn.setCloumnName(tableColumnVO.getCloumnName());
+                            dbCloumn.setCloumnType(tableColumnVO.getCloumnType());
+                            dbCloumn.setLength(tableColumnVO.getLength());
+                            dbCloumn.setRemark(tableColumnVO.getRemark());
+                            dbCloumn.setCloumnJavaName(GenerateNameUtils.getJavaName(tableColumnVO.getCloumnName()));
+                            dbCloumn.setCloumnJavaType(GenerateDataTypeUtils.getJavaTypeByMysql(tableColumnVO.getCloumnType()));
+                            dbCloumn.setMethodName(GenerateNameUtils.getClassFileName(tableColumnVO.getCloumnName()));
+                            dbCloumn.setCloumnJdbcType(GenerateDataTypeUtils.getJdbcTypeByMysql(tableColumnVO.getCloumnType()));
+
+                            dbCloumns.add(dbCloumn);
+                        }
+                        dbModels.add(dbModel);
+                    }
+
+                    TemplateClassLoad.BASE_CODE_GENERATE_TEMPLATE.getScripts().forEach(script -> {
+                        script.generate(dbModels);
+                    });
+
+                    DialogFactory.getInstance().showSuccessMsg("保存成功", "代码生成成功", ()->{});
+                }
+
+            }
+
+        }
+        else
+        {
+            DialogFactory.getInstance().showFaildMsg("生成错误", "当前数据库没有表", ()->{});
+        }
     }
 
     /**

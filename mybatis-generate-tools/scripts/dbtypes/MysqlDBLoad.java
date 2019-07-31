@@ -5,8 +5,6 @@ import com.mnt.mybatis.generate.model.db.JDBCInfo;
 import com.mnt.mybatis.generate.utils.SqlExecuteUtils;
 import com.mnt.mybatis.generate.vo.TableColumnVO;
 import com.mnt.mybatis.generate.vo.TableNameVO;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 
 import java.lang.reflect.Field;
 import java.sql.DatabaseMetaData;
@@ -19,6 +17,9 @@ import java.util.List;
  */
 public class MysqlDBLoad extends BaseDBLoadTemplate {
 
+//    public String getKey() {
+//        return "mysql";
+//    }
     /**
      * 获取数据库名称
      * @return
@@ -40,7 +41,7 @@ public class MysqlDBLoad extends BaseDBLoadTemplate {
     @Override
     protected JDBCInfo getJdbcInfo() {
         JDBCInfo jdbcInfo = new JDBCInfo();
-
+        jdbcInfo.setDbType("mysql");
         return jdbcInfo;
     }
 

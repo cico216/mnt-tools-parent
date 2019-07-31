@@ -11,9 +11,17 @@ import java.util.List;
  * postgres db 表结构查询
  */
 public class PostgresqlDBLoad extends BaseDBLoadTemplate {
+
+//    @Override
+//    public String getKey() {
+//        return "postgres";
+//    }
+
     @Override
     protected JDBCInfo getJdbcInfo() {
-        return null;
+        JDBCInfo jdbcInfo = new JDBCInfo();
+        jdbcInfo.setDbType("postgres");
+        return jdbcInfo;
     }
 
     @Override
@@ -27,4 +35,6 @@ public class PostgresqlDBLoad extends BaseDBLoadTemplate {
     protected List<TableColumnVO> listTableColumnImpl(String tableName) {
         return null;
     }
+
+
 }
