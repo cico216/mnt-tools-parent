@@ -20,6 +20,7 @@
         <mnt-tools-version>1.0-SNAPSHOT</mnt-tools-version>
         <velocity.version>1.7</velocity.version>
         <lombok.version>1.18.8</lombok.version>
+        <fastjson.version>1.2.59</fastjson.version>
     </properties>
 
     <dependencies>
@@ -69,6 +70,12 @@
                 <artifactId>lombok</artifactId>
                 <version>${lombok.version}</version>
                 <scope>provided</scope>
+            </dependency>
+            <!-- fast json -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>${fastjson.version}</version>
             </dependency>
 
         </dependencies>

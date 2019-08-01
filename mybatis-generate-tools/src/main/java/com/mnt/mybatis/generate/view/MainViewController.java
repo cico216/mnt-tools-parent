@@ -4,9 +4,12 @@ import com.mnt.common.utils.GenerateDataTypeUtils;
 import com.mnt.common.utils.GenerateNameUtils;
 import com.mnt.gui.fx.base.BaseController;
 import com.mnt.gui.fx.controls.dialog.DialogFactory;
+import com.mnt.gui.fx.controls.dialog.confirm.ConfirmDialog;
+import com.mnt.gui.fx.loader.FXMLLoaderUtil;
 import com.mnt.gui.fx.table.TabelCellFactory;
 import com.mnt.gui.fx.table.TableViewSupport;
 import com.mnt.gui.fx.view.anno.MainView;
+import com.mnt.mybatis.generate.component.DBConfigController;
 import com.mnt.mybatis.generate.core.BaseDBLoadTemplate;
 import com.mnt.mybatis.generate.core.load.TemplateClassLoad;
 import com.mnt.mybatis.generate.model.UserData;
@@ -14,13 +17,19 @@ import com.mnt.mybatis.generate.model.db.DBCloumn;
 import com.mnt.mybatis.generate.model.db.DBModel;
 import com.mnt.mybatis.generate.vo.TableColumnVO;
 import com.mnt.mybatis.generate.vo.TableNameVO;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,6 +83,11 @@ public class MainViewController extends BaseController {
     private ObservableList<String> itemDBConfigs;
 
     /**
+     * db加载模板
+     */
+    private  BaseDBLoadTemplate dbLoadTemplate;
+
+    /**
      * 搜索时的元素
      */
     private ObservableList<TableNameVO> searchItemTableNames = FXCollections.observableArrayList();
@@ -88,6 +102,26 @@ public class MainViewController extends BaseController {
         listTables.setItems(searchItemTableNames);
 
         addListener();
+
+        initData();
+    }
+
+    /**
+     * 初始化数据
+     */
+    private void initData() {
+        for (BaseDBLoadTemplate baseDBLoadTemplate : TemplateClassLoad.BASE_DB_INFO_LOAD_TEMPLATE.getScripts()) {
+            if(UserData.dbType.equals(baseDBLoadTemplate.getKey())) {
+                dbLoadTemplate = baseDBLoadTemplate;
+                break;
+            }
+        }
+
+        //初始化列表数据
+        itemTableNames = dbLoadTemplate.listTableName();
+        listTables.setItems(itemTableNames);
+
+
     }
 
     /**
@@ -98,6 +132,19 @@ public class MainViewController extends BaseController {
             if(event.isControlDown() && event.getCode() == KeyCode.S) {
                 //save code
                 processGenerateCode(null);
+            }
+        });
+
+        //添加选择监听事件
+        listTables.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<TableNameVO>() {
+
+            @Override
+            public void changed(ObservableValue<? extends TableNameVO> observable, TableNameVO oldValue,
+                                TableNameVO newValue) {
+                if(null != newValue)
+                {
+                    tableFields.setItems(dbLoadTemplate.listTableColumn(newValue.getTableName()));
+                }
             }
         });
     }
@@ -230,13 +277,6 @@ public class MainViewController extends BaseController {
                         List<DBCloumn> dbCloumns = new ArrayList<>();
                         dbModel.setDbCloumns(dbCloumns);
 
-                        BaseDBLoadTemplate dbLoadTemplate = null;
-                        for (BaseDBLoadTemplate baseDBLoadTemplate : TemplateClassLoad.BASE_DB_INFO_LOAD_TEMPLATE.getScripts()) {
-                            if(UserData.dbType.equals(baseDBLoadTemplate.getKey())) {
-                                dbLoadTemplate = baseDBLoadTemplate;
-                                break;
-                            }
-                        }
 
                         //获取表字段
                         List<TableColumnVO> tableColumnVOs = dbLoadTemplate.listTableColumn(tableNameVO.getTableName());
@@ -306,6 +346,15 @@ public class MainViewController extends BaseController {
      */
     @FXML
     void processSettingDB(ActionEvent event) {
+        final Stage innerStage = new Stage();
+        innerStage.setTitle("数据库设置");
+        innerStage.initModality(Modality.APPLICATION_MODAL);
+        innerStage.initStyle(StageStyle.DECORATED);
+
+        DBConfigController dbConfigController = FXMLLoaderUtil.load(DBConfigController.class);
+        innerStage.setScene(new Scene(dbConfigController));
+        innerStage.initOwner(stage);
+        innerStage.showAndWait();
 
     }
 
