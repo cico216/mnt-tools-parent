@@ -4,6 +4,9 @@ import com.mnt.gui.fx.base.BaseController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 /**
@@ -16,6 +19,21 @@ public class DBConfigController extends BaseController {
 
     @FXML
     private VBox vbConfigProperties;
+
+    @FXML
+    private HBox hbDbTypes;
+
+    @FXML
+    private TextField txtConfigName;
+
+    @FXML
+    private TextField txtUrl;
+
+    @FXML
+    private TextField txtUserName;
+
+    @FXML
+    private PasswordField pwdDb;
 
     @Override
     public void init() {

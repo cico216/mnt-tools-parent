@@ -10,7 +10,7 @@ public class UserData {
     /**
      * 当前db类型
      */
-    public static String dbType;
+    public static String dbType = "";
 
 
 

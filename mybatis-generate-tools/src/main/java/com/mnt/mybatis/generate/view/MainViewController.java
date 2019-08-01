@@ -117,9 +117,12 @@ public class MainViewController extends BaseController {
             }
         }
 
-        //初始化列表数据
-        itemTableNames = dbLoadTemplate.listTableName();
-        listTables.setItems(itemTableNames);
+        if(null != dbLoadTemplate) {
+            //初始化列表数据
+            itemTableNames = dbLoadTemplate.listTableName();
+            listTables.setItems(itemTableNames);
+        }
+
 
 
     }
