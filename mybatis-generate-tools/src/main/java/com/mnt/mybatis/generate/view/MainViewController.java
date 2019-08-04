@@ -132,9 +132,15 @@ public class MainViewController extends BaseController {
      */
     private void addListener() {
         this.setOnKeyPressed((event) -> {
-            if(event.isControlDown() && event.getCode() == KeyCode.S) {
+
+            KeyCode keyCode = event.getCode();
+            if(event.isControlDown() && keyCode == KeyCode.S) {
                 //save code
                 processGenerateCode(null);
+            }
+            if(keyCode == KeyCode.F5) {
+                //update db
+
             }
         });
 

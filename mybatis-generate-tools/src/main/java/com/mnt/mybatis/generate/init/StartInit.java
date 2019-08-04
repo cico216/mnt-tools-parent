@@ -3,6 +3,7 @@ package com.mnt.mybatis.generate.init;
 import com.mnt.base.classloader.ClassLoadUtil;
 import com.mnt.gui.fx.init.InitContext;
 import com.mnt.mybatis.generate.core.load.TemplateClassLoad;
+import com.mnt.mybatis.generate.model.UserData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,6 +36,9 @@ public class StartInit extends InitContext {
 			e.printStackTrace();
 			log.error("加载模板脚本失败", e);
 		}
+
+		//初始化数据
+		UserData.init();
 		
 	}
 

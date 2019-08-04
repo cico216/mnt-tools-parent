@@ -1,6 +1,7 @@
 package com.mnt.mybatis.generate.component;
 
 import com.mnt.gui.fx.base.BaseController;
+import com.mnt.mybatis.generate.model.db.JDBCInfo;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
@@ -15,7 +16,7 @@ import javafx.scene.layout.VBox;
 public class DBConfigController extends BaseController {
 
     @FXML
-    private ListView<?> listDbConfigs;
+    private ListView<JDBCInfo> listDbConfigs;
 
     @FXML
     private VBox vbConfigProperties;
