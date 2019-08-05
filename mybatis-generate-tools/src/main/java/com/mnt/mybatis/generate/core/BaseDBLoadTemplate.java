@@ -25,6 +25,12 @@ public abstract class BaseDBLoadTemplate {
     }
 
     /**
+     * 获取驱动
+     * @return
+     */
+    public String getDriver() {return getJdbcInfo().getDbDriver(); }
+
+    /**
      * 获取jdbc连接信息
      * @return
      */

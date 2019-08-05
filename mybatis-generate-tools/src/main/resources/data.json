@@ -1,0 +1,1 @@
+[{"configName":"test","dbDriver":"com.mysql.cj.jdbc.Driver","dbPassword":"","dbType":"mysql","dbUrl":"jdbc\\:mysql\\://127.0.0.1\\:3306/test?autoReconnect\\=true&useUnicode\\=true&allowMultiQueries\\=true&characterEncoding\\=utf-8&serverTimezone\\=UTC","dbUserName":"root"}]

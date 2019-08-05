@@ -21,6 +21,7 @@ public class PostgresqlDBLoad extends BaseDBLoadTemplate {
     protected JDBCInfo getJdbcInfo() {
         JDBCInfo jdbcInfo = new JDBCInfo();
         jdbcInfo.setDbType("postgres");
+        jdbcInfo.setDbDriver("org.postgresql.Driver");
         return jdbcInfo;
     }
 

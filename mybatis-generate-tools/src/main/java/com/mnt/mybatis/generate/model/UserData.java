@@ -88,12 +88,11 @@ public class UserData {
      */
     public static List<JDBCInfo> getJDBCInfos() {
 
-
-        return null;
+        return jdbcInfos;
     }
 
     public static void saveJDBCInfos() {
-        JSONConfigUtils.saveData(userConfig, getBasePath() + DATA_PATH);
+        JSONConfigUtils.saveData(jdbcInfos, getBasePath() + DATA_PATH);
     }
 
 

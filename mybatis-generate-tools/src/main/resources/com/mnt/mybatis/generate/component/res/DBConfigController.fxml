@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="640.0" prefWidth="1024.0" stylesheets="@common.css" type="VBox" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="800.0" stylesheets="@../../view/res/common.css" type="VBox" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
          <children>
@@ -50,7 +50,7 @@
                         </HBox>
                      </children>
                   </HBox>
-                  <VBox fx:id="vbConfigProperties" alignment="TOP_CENTER" prefHeight="538.0" prefWidth="814.0" VBox.vgrow="ALWAYS">
+                  <VBox fx:id="vbConfigProperties" alignment="TOP_CENTER" VBox.vgrow="ALWAYS">
                      <children>
                         <HBox alignment="CENTER_LEFT" prefHeight="42.0" prefWidth="814.0" spacing="10.0">
                            <padding>
@@ -62,7 +62,7 @@
                                     <Font size="14.0" />
                                  </font>
                               </Label>
-                              <HBox fx:id="hbDbTypes" alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                              <HBox fx:id="hbDbTypes" alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="3.0" HBox.hgrow="ALWAYS" />
                            </children>
                         </HBox>
                         <HBox alignment="CENTER_LEFT" prefHeight="42.0" prefWidth="814.0" spacing="10.0">
@@ -135,7 +135,7 @@
                         </HBox>
                      </children>
                   </VBox>
-                  <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+                  <HBox alignment="CENTER_RIGHT" prefHeight="76.0" prefWidth="585.0" spacing="10.0">
                      <children>
                         <Button mnemonicParsing="false" onAction="#processTest" prefHeight="69.0" prefWidth="81.0" text="连接测试">
                            <font>
@@ -154,7 +154,7 @@
                   </HBox>
                </children>
                <padding>
-                  <Insets top="5.0" />
+                  <Insets bottom="5.0" right="5.0" top="5.0" />
                </padding></VBox>
          </children>
       </HBox>

@@ -31,6 +31,11 @@ public class JDBCInfo {
      */
     private String dbPassword;
 
+    /**
+     * 当前配置命名
+     */
+    private String configName;
+
     public String getDbType() {
         return dbType;
     }
@@ -69,5 +74,13 @@ public class JDBCInfo {
 
     public void setDbPassword(String dbPassword) {
         this.dbPassword = dbPassword;
+    }
+
+    public String getConfigName() {
+        return configName;
+    }
+
+    public void setConfigName(String configName) {
+        this.configName = configName;
     }
 }

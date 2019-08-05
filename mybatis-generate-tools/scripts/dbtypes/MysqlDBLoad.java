@@ -42,6 +42,7 @@ public class MysqlDBLoad extends BaseDBLoadTemplate {
     protected JDBCInfo getJdbcInfo() {
         JDBCInfo jdbcInfo = new JDBCInfo();
         jdbcInfo.setDbType("mysql");
+        jdbcInfo.setDbDriver("com.mysql.cj.jdbc.Driver");
         return jdbcInfo;
     }
 
