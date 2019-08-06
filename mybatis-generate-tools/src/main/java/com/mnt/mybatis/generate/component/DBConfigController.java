@@ -12,12 +12,12 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
-import javafx.scene.Group;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.util.Callback;
+import org.apache.commons.lang.StringUtils;
 
 import java.sql.Connection;
 import java.util.HashMap;
@@ -238,7 +238,27 @@ public class DBConfigController extends BaseController {
      * @return
      */
     private boolean checkEditJDBCInfo() {
+        String currDBType = getCurrSelDBType();
+        if(null == currDBType) {
+            DialogFactory.getInstance().showFaildMsg("信息错误", "请选择数据库类型", ()-> {});
+            return false;
+        }
+        JDBCInfo jdbcInfo = getEditJDBCInfo();
 
+        if(StringUtils.isEmpty(jdbcInfo.getConfigName())) {
+            DialogFactory.getInstance().showFaildMsg("信息错误", "请输入配置名称", ()-> {});
+            return false;
+        }
+
+        if(StringUtils.isEmpty(jdbcInfo.getDbUrl())) {
+            DialogFactory.getInstance().showFaildMsg("信息错误", "请输入连接URL", ()-> {});
+            return false;
+        }
+
+        if(StringUtils.isEmpty(jdbcInfo.getDbUserName())) {
+            DialogFactory.getInstance().showFaildMsg("信息错误", "请输入数据库用户名", ()-> {});
+            return false;
+        }
 
         return true;
     }
@@ -253,27 +273,40 @@ public class DBConfigController extends BaseController {
 
     @FXML
     void processSave(ActionEvent event) {
-        if(null == getCurrSelJDBCInfo()) {
-            JDBCInfo jdbcInfo = getEditJDBCInfo();
-
-            itemDBConfigs.add(jdbcInfo);
-            UserData.getJDBCInfos().add(jdbcInfo);
+        if(!checkEditJDBCInfo()) {
+            return;
         }
 
+        //新增的情况
+        if(null == getCurrSelJDBCInfo()) {
+            JDBCInfo jdbcInfo = getEditJDBCInfo();
+            itemDBConfigs.add(jdbcInfo);
+            UserData.getJDBCInfos().add(jdbcInfo);
+        } else {
+            JDBCInfo jdbcInfo = getCurrSelJDBCInfo();
+            RadioButton selectRadio = ((RadioButton)radioToggleGroup.getSelectedToggle());
+            jdbcInfo.setDbUrl(txtUrl.getText());
+            jdbcInfo.setDbUserName(txtUserName.getText());
+            jdbcInfo.setDbType(selectRadio.getText());
+            jdbcInfo.setConfigName(txtConfigName.getText());
+            jdbcInfo.setDbDriver(String.valueOf(selectRadio.getUserData()));
+            jdbcInfo.setDbPassword(pwdDb.getText());
 
+        }
+
+        //保存信息
         UserData.saveJDBCInfos();
-
-
+        DialogFactory.getInstance().showSuccessMsg("保存成功", "数据库信息已保存", ()-> {});
     }
 
     @FXML
     void processTest(ActionEvent event) {
-        String currDBType = getCurrSelDBType();
-        if(null == currDBType) {
-            DialogFactory.getInstance().showSuccessMsg("测试失败", "请输入正确信息", ()-> {});
+
+        if(!checkEditJDBCInfo()) {
             return;
         }
 
+        String currDBType = getCurrSelDBType();
         JDBCInfo jdbcInfo = getEditJDBCInfo();
 
         BaseDBLoadTemplate baseDBLoadTemplate = dbTypesScript.get(currDBType);
