@@ -6,6 +6,7 @@ import com.mnt.mybatis.generate.core.BaseDBLoadTemplate;
 import com.mnt.mybatis.generate.core.load.TemplateClassLoad;
 import com.mnt.mybatis.generate.model.UserData;
 import com.mnt.mybatis.generate.model.db.JDBCInfo;
+import com.sun.istack.internal.Nullable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -18,6 +19,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 
+import java.sql.Connection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,6 +54,7 @@ public class DBConfigController extends BaseController {
      * 当前支持的数据库类型选项
      */
     private Map<String, RadioButton> dbTypesRadios;
+    private Map<String, BaseDBLoadTemplate> dbTypesScript;
     private ToggleGroup radioToggleGroup;
 
 
@@ -76,6 +79,7 @@ public class DBConfigController extends BaseController {
 
         List<BaseDBLoadTemplate> dbLoadTemplates = TemplateClassLoad.BASE_DB_INFO_LOAD_TEMPLATE.getScripts();
         dbTypesRadios = new HashMap<>(dbLoadTemplates.size());
+        dbTypesScript = new HashMap<>(dbLoadTemplates.size());
         radioToggleGroup = new ToggleGroup();
         RadioButton radioButton;
         for (BaseDBLoadTemplate baseDBLoadTemplate : dbLoadTemplates) {
@@ -84,6 +88,7 @@ public class DBConfigController extends BaseController {
             radioButton.setUserData(baseDBLoadTemplate.getDriver());
             radioButton.setText(baseDBLoadTemplate.getKey());
             dbTypesRadios.put(baseDBLoadTemplate.getKey(), radioButton);
+            dbTypesScript.put(baseDBLoadTemplate.getKey(), baseDBLoadTemplate);
             hbDbTypes.getChildren().add(radioButton);
         }
 
@@ -148,6 +153,10 @@ public class DBConfigController extends BaseController {
      */
     private void loadData() {
         List<JDBCInfo> jdbcInfos = UserData.getJDBCInfos();
+        for (JDBCInfo jdbcInfo : jdbcInfos) {
+            itemDBConfigs.add(jdbcInfo);
+        }
+
 
     }
 
@@ -169,8 +178,10 @@ public class DBConfigController extends BaseController {
     private void selectConfig(JDBCInfo jdbcInfo) {
         RadioButton radioButton = dbTypesRadios.get(jdbcInfo.getDbType());
         radioToggleGroup.selectToggle(radioButton);
-
-
+        txtConfigName.setText(jdbcInfo.getConfigName());
+        txtUrl.setText(jdbcInfo.getDbUrl());
+        txtUserName.setText(jdbcInfo.getDbUserName());
+        pwdDb.setText(jdbcInfo.getDbPassword());
     }
 
     /**
@@ -185,6 +196,54 @@ public class DBConfigController extends BaseController {
 
     }
 
+    /**
+     * 获取当前选择的链接
+     * @return
+     */
+    @Nullable
+    private JDBCInfo getCurrSelJDBCInfo() {
+        return listDbConfigs.getSelectionModel().getSelectedItem();
+    }
+
+    /**
+     * 获取当前选择的数据库类型
+     * @return
+     */
+    private String getCurrSelDBType() {
+        RadioButton radioButton = ((RadioButton)radioToggleGroup.getSelectedToggle());
+        if(null == radioButton) {
+            return null;
+        }
+        return radioButton.getText();
+    }
+
+    /**
+     * 获取当前编辑的jdbc
+     * @return
+     */
+    private JDBCInfo getEditJDBCInfo() {
+        JDBCInfo jdbcInfo = new JDBCInfo();
+        RadioButton selectRadio = ((RadioButton)radioToggleGroup.getSelectedToggle());
+        jdbcInfo.setDbType(selectRadio.getText());
+        jdbcInfo.setConfigName(txtConfigName.getText());
+        jdbcInfo.setDbDriver(String.valueOf(selectRadio.getUserData()));
+        jdbcInfo.setDbUrl(txtUrl.getText());
+        jdbcInfo.setDbUserName(txtUserName.getText());
+        jdbcInfo.setDbPassword(pwdDb.getText());
+        return jdbcInfo;
+    }
+
+    /**
+     * 检测当前编辑的JDBCInfo
+     * @return
+     */
+    private boolean checkEditJDBCInfo() {
+
+
+        return true;
+    }
+
+
     @FXML
     void processAdd(ActionEvent event) {
 
@@ -194,15 +253,8 @@ public class DBConfigController extends BaseController {
 
     @FXML
     void processSave(ActionEvent event) {
-        if(null == listDbConfigs.getSelectionModel().getSelectedItem()) {
-            JDBCInfo jdbcInfo = new JDBCInfo();
-            RadioButton selectRadio = ((RadioButton)radioToggleGroup.getSelectedToggle());
-            jdbcInfo.setDbType(selectRadio.getText());
-            jdbcInfo.setConfigName(txtConfigName.getText());
-            jdbcInfo.setDbDriver(String.valueOf(selectRadio.getUserData()));
-            jdbcInfo.setDbUrl(txtUrl.getText());
-            jdbcInfo.setDbUserName(txtUserName.getText());
-            jdbcInfo.setDbPassword(pwdDb.getText());
+        if(null == getCurrSelJDBCInfo()) {
+            JDBCInfo jdbcInfo = getEditJDBCInfo();
 
             itemDBConfigs.add(jdbcInfo);
             UserData.getJDBCInfos().add(jdbcInfo);
@@ -216,7 +268,25 @@ public class DBConfigController extends BaseController {
 
     @FXML
     void processTest(ActionEvent event) {
+        String currDBType = getCurrSelDBType();
+        if(null == currDBType) {
+            DialogFactory.getInstance().showSuccessMsg("测试失败", "请输入正确信息", ()-> {});
+            return;
+        }
 
+        JDBCInfo jdbcInfo = getEditJDBCInfo();
+
+        BaseDBLoadTemplate baseDBLoadTemplate = dbTypesScript.get(currDBType);
+        //获取当前脚本的连接
+        Connection collection = baseDBLoadTemplate.getConnection(jdbcInfo);
+        if(null != collection)
+        {
+            DialogFactory.getInstance().showSuccessMsg("测试成功", "连接成功", ()-> {});
+        }
+        else
+        {
+            DialogFactory.getInstance().showFaildMsg("测试失败", "连接失败", ()-> {});
+        }
 
     }
 

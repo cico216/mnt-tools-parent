@@ -21,6 +21,8 @@
         <velocity.version>1.7</velocity.version>
         <lombok.version>1.18.8</lombok.version>
         <fastjson.version>1.2.59</fastjson.version>
+        <mysql.version>8.0.17</mysql.version>
+        <postgresql.version>42.2.6</postgresql.version>
     </properties>
 
     <dependencies>
@@ -76,6 +78,20 @@
                 <groupId>com.alibaba</groupId>
                 <artifactId>fastjson</artifactId>
                 <version>${fastjson.version}</version>
+            </dependency>
+
+            <!-- mysql -->
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>${mysql.version}</version>
+            </dependency>
+
+            <!-- postgresql -->
+            <dependency>
+                <groupId>org.postgresql</groupId>
+                <artifactId>postgresql</artifactId>
+                <version>${postgresql.version}</version>
             </dependency>
 
         </dependencies>

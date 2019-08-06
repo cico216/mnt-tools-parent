@@ -44,7 +44,7 @@ public abstract class BaseDBLoadTemplate {
      * @param jdbcInfo jdbc信息
      * @return jdbc 连接
      */
-    protected Connection getConnection(JDBCInfo jdbcInfo) {
+    public Connection getConnection(JDBCInfo jdbcInfo) {
         try {
             Class.forName(jdbcInfo.getDbDriver());
             Connection connection = DriverManager.getConnection(jdbcInfo.getDbUrl(), jdbcInfo.getDbUserName(), jdbcInfo.getDbPassword());

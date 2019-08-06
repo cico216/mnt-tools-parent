@@ -42,12 +42,12 @@ public class UserData {
     /**
      * 配置文件地址
      */
-    public static final String CONFIG_PATH = "config.json";
+    public static final String CONFIG_PATH = "conf/config.json";
 
     /**
      * 数据文件地址
      */
-    public static final String DATA_PATH = "data.json";
+    public static final String DATA_PATH = "conf/data.json";
 
 
 
