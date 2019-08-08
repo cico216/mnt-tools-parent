@@ -114,12 +114,20 @@ public class MainViewController extends BaseController {
      * 初始化数据
      */
     private void initData() {
-
+        String lastSelJDBCInfo =  UserData.getUserConfig().getLastSelectDb();
+        JDBCInfo lastJdbcInfo = null;
 
         //初始化列表数据
         List<JDBCInfo> jdbcInfos = UserData.getJDBCInfos();
         for (JDBCInfo jdbcInfo : jdbcInfos) {
             itemDBConfigs.add(jdbcInfo);
+            if(jdbcInfo.getConfigName().equals(lastSelJDBCInfo)) {
+                lastJdbcInfo = jdbcInfo;
+            }
+        }
+
+        if(null != lastSelJDBCInfo && lastJdbcInfo != null){
+            combDB.getSelectionModel().select(lastJdbcInfo);
         }
 
 
@@ -135,10 +143,12 @@ public class MainViewController extends BaseController {
             if(event.isControlDown() && keyCode == KeyCode.S) {
                 //save code
                 processGenerateCode(null);
+
             }
             if(keyCode == KeyCode.F5) {
                 //update db
-
+                selJDBCInfo(getSelJDBCInfo());
+                DialogFactory.getInstance().showSuccessMsg("刷新成功", "重新加载数据成功", ()->{});
             }
         });
 
@@ -189,11 +199,9 @@ public class MainViewController extends BaseController {
             @Override
             public void changed(ObservableValue<? extends TableNameVO> observable, TableNameVO oldValue,
                                 TableNameVO newValue) {
-                if(null != newValue)
-                {
-                    tableViewSupport.clear();
-                    tableViewSupport.addItems(dbLoadTemplate.listTableColumn(getSelJDBCInfo(), newValue.getTableName()));
-                }
+
+                selTableName(newValue);
+
             }
         });
     }
@@ -290,6 +298,9 @@ public class MainViewController extends BaseController {
      * @param jdbcInfo
      */
     private void selJDBCInfo(JDBCInfo jdbcInfo) {
+        if(null == jdbcInfo){
+            return;
+        }
         for (BaseDBLoadTemplate baseDBLoadTemplate : TemplateClassLoad.BASE_DB_INFO_LOAD_TEMPLATE.getScripts()) {
             if(baseDBLoadTemplate.getKey().equals(jdbcInfo.getDbType())) {
                 dbLoadTemplate = baseDBLoadTemplate;
@@ -301,6 +312,8 @@ public class MainViewController extends BaseController {
             //初始化列表数据
             itemTableNames = dbLoadTemplate.listTableName(getSelJDBCInfo());
             listTables.setItems(itemTableNames);
+            UserData.getUserConfig().setLastSelectDb(jdbcInfo.getConfigName());
+            UserData.saveUserConfig();
         }
     }
 
@@ -310,6 +323,19 @@ public class MainViewController extends BaseController {
      */
     private JDBCInfo getSelJDBCInfo() {
         return  combDB.getSelectionModel().getSelectedItem();
+    }
+
+    /**
+     * 选择表格名称
+     * @param selTableValue
+     */
+    private void selTableName(TableNameVO selTableValue) {
+        if(null != selTableValue)
+        {
+            tableViewSupport.clear();
+            tableViewSupport.addItems(dbLoadTemplate.listTableColumn(getSelJDBCInfo(), selTableValue.getTableName()));
+        }
+
     }
 
     /**
@@ -382,7 +408,7 @@ public class MainViewController extends BaseController {
                         dbModels.add(dbModel);
                     }
 
-                    TemplateClassLoad.BASE_CODE_GENERATE_TEMPLATE.getScripts().forEach(script -> {
+                    TemplateClassLoad.BASE_CODE_GENERATE_TEMPLATE.getScripts().stream().filter((script)-> script.getDBType().equals(getSelJDBCInfo().getDbType())).forEach(script -> {
                         script.generate(dbModels);
                     });
 

@@ -35,11 +35,6 @@ public class UserData {
     }
 
     /**
-     * 当前db类型
-     */
-    public static String dbType = "";
-
-    /**
      * 配置文件地址
      */
     public static final String CONFIG_PATH = "conf/config.json";

@@ -29,7 +29,7 @@ public abstract class BaseCodeGenerateTemplate {
      * 获取数据库类型
      * @return
      */
-    protected abstract String getDBType();
+    public abstract String getDBType();
 
     /**
      * 获取代码生成属性信息

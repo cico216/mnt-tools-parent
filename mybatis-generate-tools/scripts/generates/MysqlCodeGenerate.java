@@ -12,7 +12,7 @@ import java.util.List;
  */
 public class MysqlCodeGenerate extends BaseCodeGenerateTemplate {
     @Override
-    protected String getDBType() {
+    public String getDBType() {
         return "mysql";
     }
 
