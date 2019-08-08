@@ -24,10 +24,10 @@ public class MysqlDBLoad extends BaseDBLoadTemplate {
      * 获取数据库名称
      * @return
      */
-    private String getDatabase() {
+    private String getDatabase(JDBCInfo jdbcInfo) {
         String result = null;
         try {
-            DatabaseMetaData dmd = getConnection(getJdbcInfo()).getMetaData();
+            DatabaseMetaData dmd = getConnection(jdbcInfo).getMetaData();
             Field f = dmd.getClass().getDeclaredField("database");
             f.setAccessible(true);
             result = (String) f.get(dmd);
@@ -47,11 +47,11 @@ public class MysqlDBLoad extends BaseDBLoadTemplate {
     }
 
     @Override
-    protected List<TableNameVO> listTableNameImpl() {
+    protected List<TableNameVO> listTableNameImpl(JDBCInfo jdbcInfo) {
         final List<TableNameVO> result = new ArrayList<>();
-        String database = getDatabase();
+        String database = getDatabase(jdbcInfo);
         String sql = "select TABLE_NAME, TABLE_COMMENT from INFORMATION_SCHEMA.Tables where table_schema = '"+ database +"'";
-        SqlExecuteUtils.query(getConnection(getJdbcInfo()), sql, (rs) -> {
+        SqlExecuteUtils.query(getConnection(jdbcInfo), sql, (rs) -> {
             try {
                 TableNameVO vo;
                 while (rs.next()) {
@@ -68,13 +68,13 @@ public class MysqlDBLoad extends BaseDBLoadTemplate {
     }
 
     @Override
-    protected List<TableColumnVO> listTableColumnImpl(String tableName) {
+    protected List<TableColumnVO> listTableColumnImpl(JDBCInfo jdbcInfo, String tableName) {
 
         final List<TableColumnVO> result = new ArrayList<>();
-        String database = getDatabase();
+        String database = getDatabase(jdbcInfo);
         String sql = "select COLUMN_NAME ,COLUMN_COMMENT as remark ,DATA_TYPE,character_maximum_length as max_len, numeric_precision as num_len from INFORMATION_SCHEMA.Columns where table_name = '" + tableName + "'  and table_schema='"+ database +"'";
 
-        SqlExecuteUtils.query(getConnection(getJdbcInfo()), sql, (rs) -> {
+        SqlExecuteUtils.query(getConnection(jdbcInfo), sql, (rs) -> {
             try {
                 TableColumnVO vo;
                 while (rs.next()) {

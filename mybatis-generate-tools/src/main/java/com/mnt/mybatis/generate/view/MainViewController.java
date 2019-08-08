@@ -15,6 +15,7 @@ import com.mnt.mybatis.generate.core.load.TemplateClassLoad;
 import com.mnt.mybatis.generate.model.UserData;
 import com.mnt.mybatis.generate.model.db.DBCloumn;
 import com.mnt.mybatis.generate.model.db.DBModel;
+import com.mnt.mybatis.generate.model.db.JDBCInfo;
 import com.mnt.mybatis.generate.vo.TableColumnVO;
 import com.mnt.mybatis.generate.vo.TableNameVO;
 import javafx.beans.value.ChangeListener;
@@ -30,6 +31,8 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Callback;
+import javafx.util.StringConverter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +44,7 @@ import java.util.List;
 public class MainViewController extends BaseController {
 
     @FXML
-    private ComboBox<String> combDB;
+    private ComboBox<JDBCInfo> combDB;
 
     @FXML
     private CheckBox cbChoice;
@@ -80,7 +83,7 @@ public class MainViewController extends BaseController {
     /**
      * 可选择db列表
      */
-    private ObservableList<String> itemDBConfigs;
+    private ObservableList<JDBCInfo> itemDBConfigs = FXCollections.observableArrayList();
 
     /**
      * db加载模板
@@ -99,7 +102,8 @@ public class MainViewController extends BaseController {
         initTable();
         initSearch();
         initComb();
-        listTables.setItems(searchItemTableNames);
+        initChoice();
+
 
         addListener();
 
@@ -110,19 +114,13 @@ public class MainViewController extends BaseController {
      * 初始化数据
      */
     private void initData() {
-        for (BaseDBLoadTemplate baseDBLoadTemplate : TemplateClassLoad.BASE_DB_INFO_LOAD_TEMPLATE.getScripts()) {
-            if(UserData.dbType.equals(baseDBLoadTemplate.getKey())) {
-                dbLoadTemplate = baseDBLoadTemplate;
-                break;
-            }
-        }
 
-        if(null != dbLoadTemplate) {
-            //初始化列表数据
-            itemTableNames = dbLoadTemplate.listTableName();
-            listTables.setItems(itemTableNames);
-        }
 
+        //初始化列表数据
+        List<JDBCInfo> jdbcInfos = UserData.getJDBCInfos();
+        for (JDBCInfo jdbcInfo : jdbcInfos) {
+            itemDBConfigs.add(jdbcInfo);
+        }
 
 
     }
@@ -144,24 +142,24 @@ public class MainViewController extends BaseController {
             }
         });
 
-        //添加选择监听事件
-        listTables.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<TableNameVO>() {
 
-            @Override
-            public void changed(ObservableValue<? extends TableNameVO> observable, TableNameVO oldValue,
-                                TableNameVO newValue) {
-                if(null != newValue)
-                {
-                    tableFields.setItems(dbLoadTemplate.listTableColumn(newValue.getTableName()));
-                }
-            }
-        });
+    }
+
+    /**
+     * 初始化选择事件
+     */
+    private void initChoice() {
+        cbChoice.selectedProperty().addListener(((observable, oldValue, newValue) -> {
+            listTables.getItems().forEach((item)-> item.setCheck(newValue));
+        }));
     }
 
     /**
      * 初始化name列表
      */
     private void initList() {
+        listTables.setItems(searchItemTableNames);
+
         listTables.setCellFactory(cell -> {
             return new ListCell<TableNameVO>(){
                 @Override
@@ -184,12 +182,28 @@ public class MainViewController extends BaseController {
                 }
             };
         });
+
+        //添加选择监听事件
+        listTables.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<TableNameVO>() {
+
+            @Override
+            public void changed(ObservableValue<? extends TableNameVO> observable, TableNameVO oldValue,
+                                TableNameVO newValue) {
+                if(null != newValue)
+                {
+                    tableViewSupport.clear();
+                    tableViewSupport.addItems(dbLoadTemplate.listTableColumn(getSelJDBCInfo(), newValue.getTableName()));
+                }
+            }
+        });
     }
     /**
      * 初始化表格
      */
     private void initTable() {
         tableViewSupport = TabelCellFactory.createTableSupport(tableFields, TableColumnVO.class);
+
+
     }
 
     /**
@@ -197,6 +211,42 @@ public class MainViewController extends BaseController {
      */
     private void initComb() {
         combDB.setItems(itemDBConfigs);
+        combDB.setCellFactory(new Callback<ListView<JDBCInfo>, ListCell<JDBCInfo>>() {
+            @Override
+            public ListCell<JDBCInfo> call(ListView<JDBCInfo> param) {
+                return new ListCell<JDBCInfo>(){
+                    @Override
+                    protected void updateItem(JDBCInfo item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if(empty) {
+                            setGraphic(null);
+                        } else {
+                            setGraphic(new Label(item.getConfigName()));
+                        }
+                    }
+                };
+            }
+        });
+        combDB.setConverter(new StringConverter<JDBCInfo>() {
+            @Override
+            public String toString(JDBCInfo object) {
+
+                return object.getConfigName();
+            }
+
+            @Override
+            public JDBCInfo fromString(String string) {
+                JDBCInfo jdbcInfo = new JDBCInfo();
+                jdbcInfo.setConfigName(string);
+                return jdbcInfo;
+            }
+        });
+        combDB.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
+            if(null != newValue) {
+                selJDBCInfo(newValue);
+            }
+        }));
+
     }
 
 
@@ -235,6 +285,32 @@ public class MainViewController extends BaseController {
         );
     }
 
+    /**
+     *  选择数据库
+     * @param jdbcInfo
+     */
+    private void selJDBCInfo(JDBCInfo jdbcInfo) {
+        for (BaseDBLoadTemplate baseDBLoadTemplate : TemplateClassLoad.BASE_DB_INFO_LOAD_TEMPLATE.getScripts()) {
+            if(baseDBLoadTemplate.getKey().equals(jdbcInfo.getDbType())) {
+                dbLoadTemplate = baseDBLoadTemplate;
+                break;
+            }
+        }
+
+        if(null != dbLoadTemplate) {
+            //初始化列表数据
+            itemTableNames = dbLoadTemplate.listTableName(getSelJDBCInfo());
+            listTables.setItems(itemTableNames);
+        }
+    }
+
+    /**
+     * 当前选择的数据库信息
+     * @return
+     */
+    private JDBCInfo getSelJDBCInfo() {
+        return  combDB.getSelectionModel().getSelectedItem();
+    }
 
     /**
      * 关于我们
@@ -288,7 +364,7 @@ public class MainViewController extends BaseController {
 
 
                         //获取表字段
-                        List<TableColumnVO> tableColumnVOs = dbLoadTemplate.listTableColumn(tableNameVO.getTableName());
+                        List<TableColumnVO> tableColumnVOs = dbLoadTemplate.listTableColumn(getSelJDBCInfo(), tableNameVO.getTableName());
                         DBCloumn dbCloumn;
                         for (TableColumnVO tableColumnVO : tableColumnVOs) {
                             dbCloumn = new DBCloumn();

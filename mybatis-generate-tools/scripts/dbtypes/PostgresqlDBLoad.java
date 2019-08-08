@@ -26,14 +26,14 @@ public class PostgresqlDBLoad extends BaseDBLoadTemplate {
     }
 
     @Override
-    protected List<TableNameVO> listTableNameImpl() {
+    protected List<TableNameVO> listTableNameImpl(JDBCInfo jdbcInfo) {
 
 
         return null;
     }
 
     @Override
-    protected List<TableColumnVO> listTableColumnImpl(String tableName) {
+    protected List<TableColumnVO> listTableColumnImpl(JDBCInfo jdbcInfo, String tableName) {
         return null;
     }
 

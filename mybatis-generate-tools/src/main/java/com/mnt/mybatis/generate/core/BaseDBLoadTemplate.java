@@ -73,10 +73,10 @@ public abstract class BaseDBLoadTemplate {
      * 获取所有表名
      * @return
      */
-    public ObservableList<TableNameVO> listTableName() {
+    public ObservableList<TableNameVO> listTableName(JDBCInfo jdbcInfo) {
         final ObservableList<TableNameVO> result = FXCollections.observableArrayList();
 
-        result.addAll(listTableNameImpl());
+        result.addAll(listTableNameImpl(jdbcInfo));
 
         return result;
     }
@@ -85,17 +85,17 @@ public abstract class BaseDBLoadTemplate {
      * 获取所有表名实现
      * @return
      */
-    protected abstract List<TableNameVO> listTableNameImpl();
+    protected abstract List<TableNameVO> listTableNameImpl(JDBCInfo jdbcInfo);
 
     /**
      * 获取表的列明
      * @param tableName 指定的表
      * @return
      */
-    public ObservableList<TableColumnVO> listTableColumn(String tableName) {
+    public ObservableList<TableColumnVO> listTableColumn(JDBCInfo jdbcInfo, String tableName) {
         final ObservableList<TableColumnVO> result = FXCollections.observableArrayList();
 
-        result.addAll(listTableColumnImpl(tableName));
+        result.addAll(listTableColumnImpl(jdbcInfo, tableName));
 
         return result;
     }
@@ -104,6 +104,6 @@ public abstract class BaseDBLoadTemplate {
      * 获取表的所有字段
      * @return
      */
-    protected abstract List<TableColumnVO> listTableColumnImpl(String tableName);
+    protected abstract List<TableColumnVO> listTableColumnImpl(JDBCInfo jdbcInfo, String tableName);
 
 }
