@@ -9,6 +9,13 @@ import lombok.Data;
 @Data
 public class CodeGenerateInfo {
 
+    public CodeGenerateInfo(String propertyName, String propertyKey, String propertyValue, PropertyType type) {
+        this.propertyName = propertyName;
+        this.propertyKey = propertyKey;
+        this.propertyValue = propertyValue;
+        this.type = type;
+    }
+
     /**
      * 属性名
      */

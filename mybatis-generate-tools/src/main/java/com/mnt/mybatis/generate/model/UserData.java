@@ -3,6 +3,7 @@ package com.mnt.mybatis.generate.model;
 
 import com.mnt.common.utils.JSONConfigUtils;
 import com.mnt.mybatis.generate.model.db.JDBCInfo;
+import com.mnt.mybatis.generate.model.generate.GenerateConfig;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,11 +13,20 @@ import java.util.List;
  */
 public class UserData {
 
+    /**
+     * 用户基础配置表
+     */
     private static UserConfig userConfig;
 
+    /**
+     * jdbc配置信息列表
+     */
     private static List<JDBCInfo> jdbcInfos;
 
-
+    /**
+     * 代码生成配置列表
+     */
+    private static List<GenerateConfig> generateConfigs;
 
     /**
      * 初始化用户数据
@@ -27,9 +37,14 @@ public class UserData {
             userConfig = new UserConfig();
         }
 
-        jdbcInfos = JSONConfigUtils.loadDatas(JDBCInfo.class, getBasePath() + DATA_PATH);
+        jdbcInfos = JSONConfigUtils.loadDatas(JDBCInfo.class, getBasePath() + DB_CONFIG_PATH);
         if(null == jdbcInfos) {
             jdbcInfos = new ArrayList<>();
+        }
+
+        generateConfigs = JSONConfigUtils.loadDatas(GenerateConfig.class, getBasePath() + GENERATE_CONFIG_PATH);
+        if(null == generateConfigs) {
+            generateConfigs = new ArrayList<>();
         }
 
     }
@@ -40,9 +55,14 @@ public class UserData {
     public static final String CONFIG_PATH = "conf/config.json";
 
     /**
-     * 数据文件地址
+     * db数据文件地址
      */
-    public static final String DATA_PATH = "conf/data.json";
+    public static final String DB_CONFIG_PATH = "conf/db-configs.json";
+
+    /**
+     * db数据文件地址
+     */
+    public static final String GENERATE_CONFIG_PATH = "conf/generate-configs.json";
 
 
 
@@ -78,7 +98,7 @@ public class UserData {
     }
 
     /**
-     *
+     * 获取所有db信息
      * @return
      */
     public static List<JDBCInfo> getJDBCInfos() {
@@ -86,10 +106,28 @@ public class UserData {
         return jdbcInfos;
     }
 
+    /**
+     * 保存DB信息
+     */
     public static void saveJDBCInfos() {
-        JSONConfigUtils.saveData(jdbcInfos, getBasePath() + DATA_PATH);
+        JSONConfigUtils.saveData(jdbcInfos, getBasePath() + DB_CONFIG_PATH);
     }
 
+    /**
+     * 获取所有代码生成配置信息
+     * @return
+     */
+    public static List<GenerateConfig> getGenerateConfigs() {
+
+        return generateConfigs;
+    }
+
+    /**
+     * 保存代码生成配置信息
+     */
+    public static void saveGenerateConfigs() {
+        JSONConfigUtils.saveData(generateConfigs, getBasePath() + GENERATE_CONFIG_PATH);
+    }
 
 
 

@@ -10,6 +10,7 @@ import com.mnt.gui.fx.table.TabelCellFactory;
 import com.mnt.gui.fx.table.TableViewSupport;
 import com.mnt.gui.fx.view.anno.MainView;
 import com.mnt.mybatis.generate.component.DBConfigController;
+import com.mnt.mybatis.generate.component.GenerateConfigController;
 import com.mnt.mybatis.generate.core.BaseDBLoadTemplate;
 import com.mnt.mybatis.generate.core.load.TemplateClassLoad;
 import com.mnt.mybatis.generate.model.UserData;
@@ -457,16 +458,7 @@ public class MainViewController extends BaseController {
      */
     @FXML
     void processSettingDB(ActionEvent event) {
-        final Stage innerStage = new Stage();
-        innerStage.setTitle("数据库设置");
-        innerStage.initModality(Modality.APPLICATION_MODAL);
-        innerStage.initStyle(StageStyle.DECORATED);
-
-        DBConfigController dbConfigController = FXMLLoaderUtil.load(DBConfigController.class);
-        innerStage.setScene(new Scene(dbConfigController));
-        innerStage.initOwner(stage);
-        innerStage.showAndWait();
-
+        showBlockStage("数据库设置", DBConfigController.class);
     }
 
     /**
@@ -475,7 +467,25 @@ public class MainViewController extends BaseController {
      */
     @FXML
     void processSettingGenerate(ActionEvent event) {
+        showBlockStage("代码生成设置", GenerateConfigController.class);
+    }
 
+    /**
+     * 构建阻塞窗口
+     * @param title
+     * @param baseControllerClass
+     * @param <T>
+     */
+    private <T extends BaseController> void showBlockStage(String title, Class<T> baseControllerClass) {
+        final Stage innerStage = new Stage();
+        innerStage.setTitle(title);
+        innerStage.initModality(Modality.APPLICATION_MODAL);
+        innerStage.initStyle(StageStyle.DECORATED);
+
+        BaseController baseController = FXMLLoaderUtil.load(baseControllerClass);
+        innerStage.setScene(new Scene(baseController));
+        innerStage.initOwner(stage);
+        innerStage.showAndWait();
     }
 
 
