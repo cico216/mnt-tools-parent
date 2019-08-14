@@ -13,9 +13,12 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import javafx.util.Callback;
 import org.apache.commons.lang.StringUtils;
 
@@ -66,9 +69,35 @@ public class DBConfigController extends BaseController {
 
         initRadio();
         initList();
-
+        addListener();
         loadData();
 
+
+    }
+
+    /**
+     * 添加监听
+     */
+    private void addListener() {
+        this.setOnKeyPressed((event) -> {
+            esc(event);
+        });
+        listDbConfigs.setOnKeyPressed((event) -> {
+            esc(event);
+        });
+
+    }
+
+    /**
+     * 退出事件
+     * @param event
+     */
+    private void esc(KeyEvent event) {
+        KeyCode keyCode = event.getCode();
+        if(keyCode == KeyCode.ESCAPE) {
+            //quit
+            ((Stage)getScene().getWindow()).close();
+        }
     }
 
     /**
@@ -281,6 +310,7 @@ public class DBConfigController extends BaseController {
         if(null == getCurrSelJDBCInfo()) {
             JDBCInfo jdbcInfo = getEditJDBCInfo();
             itemDBConfigs.add(jdbcInfo);
+            listDbConfigs.getSelectionModel().select(jdbcInfo);
             UserData.getJDBCInfos().add(jdbcInfo);
         } else {
             JDBCInfo jdbcInfo = getCurrSelJDBCInfo();

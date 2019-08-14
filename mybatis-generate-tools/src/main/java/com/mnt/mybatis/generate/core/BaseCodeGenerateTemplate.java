@@ -35,7 +35,7 @@ public abstract class BaseCodeGenerateTemplate {
      * 获取代码生成属性信息
      * @return
      */
-    protected abstract List<CodeGenerateInfo> loadPropertieskey();
+    public abstract List<CodeGenerateInfo> loadPropertieskey();
 
     /**
      * 生成代码调用
