@@ -6,7 +6,6 @@ import com.mnt.gui.fx.controls.file.FileChooserFacotry;
 import com.mnt.mybatis.generate.core.BaseCodeGenerateTemplate;
 import com.mnt.mybatis.generate.core.load.TemplateClassLoad;
 import com.mnt.mybatis.generate.model.UserData;
-import com.mnt.mybatis.generate.model.db.JDBCInfo;
 import com.mnt.mybatis.generate.model.generate.CodeGenerateInfo;
 import com.mnt.mybatis.generate.model.generate.GenerateConfig;
 import com.mnt.mybatis.generate.model.view.PropertyType;
@@ -122,7 +121,7 @@ public class GenerateConfigController extends BaseController {
             if(null != newValue) {
                 BaseCodeGenerateTemplate baseCodeGenerateTemplate = codeGenerateScript.get(((RadioButton)newValue).getText());
                 List<CodeGenerateInfo> codeGenerateInfos = baseCodeGenerateTemplate.loadPropertieskey();
-                loadProperties(codeGenerateInfos, null);
+                loadProperties(codeGenerateInfos, getCurrSelGenerateInfo());
             }
         });
 
@@ -153,7 +152,8 @@ public class GenerateConfigController extends BaseController {
                             hBox.setSpacing(2);
                             CheckBox cbUsed = new CheckBox();
                             cbUsed.setSelected(item.isUsed());
-                            cbUsed.selectedProperty().bind(item.usedProperty());
+                            cbUsed.selectedProperty().bindBidirectional(item.usedProperty());
+                            cbUsed.setDisable(true);
                             hBox.getChildren().add(cbUsed);
                             hBox.getChildren().add(new Label(item.getConfigName() + "[" + item.getDbType() + "]"));
                             HBox hboxBtn = new HBox();
@@ -297,7 +297,7 @@ public class GenerateConfigController extends BaseController {
         HBox.setHgrow(result, Priority.ALWAYS);
         Label lblName = new Label(name);
         lblName.getStyleClass().add("font-14");
-        lblName.setPrefWidth(150);
+        lblName.setPrefWidth(160);
         result.getChildren().add(lblName);
         return result;
     }
@@ -332,9 +332,10 @@ public class GenerateConfigController extends BaseController {
      * 清除输入数据
      */
     private void clearValue() {
-
+        txtConfigName.clear();
         radioToggleGroup.getSelectedToggle().setSelected(false);
-
+        vbConfigProperties.getChildren().clear();
+        currProperties.clear();
     }
 
     /**
@@ -363,19 +364,19 @@ public class GenerateConfigController extends BaseController {
      * @return
      */
     private GenerateConfig getEditGenerateConfig() {
-        GenerateConfig jdbcInfo = new GenerateConfig();
+        GenerateConfig generateConfig = new GenerateConfig();
         RadioButton selectRadio = ((RadioButton)radioToggleGroup.getSelectedToggle());
-        jdbcInfo.setDbType(selectRadio.getText());
-        jdbcInfo.setConfigName(txtConfigName.getText());
-
-        return jdbcInfo;
+        generateConfig.setDbType(selectRadio.getText());
+        generateConfig.setConfigName(txtConfigName.getText());
+        generateConfig.setProperties(currProperties);
+        return generateConfig;
     }
 
     /**
-     * 检测当前编辑的JDBCInfo
+     * 检测当前编辑的GenerateInfo
      * @return
      */
-    private boolean checkEditJDBCInfo() {
+    private boolean checkEditGenerateInfo() {
         String currDBType = getCurrSelDBType();
         if(null == currDBType) {
             DialogFactory.getInstance().showFaildMsg("信息错误", "请选择数据库类型", ()-> {});
@@ -387,7 +388,18 @@ public class GenerateConfigController extends BaseController {
             DialogFactory.getInstance().showFaildMsg("信息错误", "请输入配置名称", ()-> {});
             return false;
         }
+        Map<String, String> properties = generateConfig.getProperties();
+        if(null == properties) {
+            DialogFactory.getInstance().showFaildMsg("信息错误", "请输入属性配置", ()-> {});
+            return false;
+        }
 
+        for (Map.Entry<String, String> propEntry : properties.entrySet()) {
+            if(StringUtils.isEmpty(propEntry.getValue())) {
+                DialogFactory.getInstance().showFaildMsg("信息错误", "请输入" + propEntry.getKey() + "数据", ()-> {});
+                return false;
+            }
+        }
 
         return true;
     }
@@ -412,14 +424,17 @@ public class GenerateConfigController extends BaseController {
             return;
         }
 
-
+        for(GenerateConfig generateConfigTemp : itemGenerateConfigs) {
+            generateConfigTemp.setUsed(false);
+        }
+        generateConfig.setUsed(true);
 
 
     }
 
     @FXML
     void processSave(ActionEvent event) {
-        if(!checkEditJDBCInfo()) {
+        if(!checkEditGenerateInfo()) {
             return;
         }
 
@@ -434,7 +449,7 @@ public class GenerateConfigController extends BaseController {
             RadioButton selectRadio = ((RadioButton)radioToggleGroup.getSelectedToggle());
             generateConfig.setDbType(selectRadio.getText());
             generateConfig.setConfigName(txtConfigName.getText());
-
+            generateConfig.setProperties(currProperties);
         }
 
         //保存信息
