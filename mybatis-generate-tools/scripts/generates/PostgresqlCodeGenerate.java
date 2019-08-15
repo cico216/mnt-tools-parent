@@ -17,7 +17,7 @@ public class PostgresqlCodeGenerate extends BaseCodeGenerateTemplate {
     }
 
     @Override
-    protected List<CodeGenerateInfo> loadPropertieskey() {
+    public List<CodeGenerateInfo> loadPropertieskey() {
         return null;
     }
 

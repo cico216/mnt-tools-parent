@@ -2,6 +2,7 @@ package com.mnt.mybatis.generate.component;
 
 import com.mnt.gui.fx.base.BaseController;
 import com.mnt.gui.fx.controls.dialog.DialogFactory;
+import com.mnt.gui.fx.controls.file.FileChooserFacotry;
 import com.mnt.mybatis.generate.core.BaseCodeGenerateTemplate;
 import com.mnt.mybatis.generate.core.load.TemplateClassLoad;
 import com.mnt.mybatis.generate.model.UserData;
@@ -25,6 +26,7 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 import org.apache.commons.lang.StringUtils;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,6 +55,10 @@ public class GenerateConfigController extends BaseController {
     private Map<String, BaseCodeGenerateTemplate> codeGenerateScript;
     private ToggleGroup radioToggleGroup;
 
+    /**
+     * 当前的动态属性
+     */
+    private Map<String, String> currProperties;
 
     private ObservableList<GenerateConfig> itemGenerateConfigs = FXCollections.observableArrayList();
 
@@ -201,16 +207,26 @@ public class GenerateConfigController extends BaseController {
      */
     private void loadProperties(List<CodeGenerateInfo> codeGenerateInfos, GenerateConfig generateConfig) {
 
+        if(null == currProperties) {
+            currProperties = new HashMap<>(codeGenerateInfos.size());
+        } else {
+            currProperties.clear();
+        }
+
+
         vbConfigProperties.getChildren().clear();
+
         for (CodeGenerateInfo codeGenerateInfo : codeGenerateInfos) {
             String value = codeGenerateInfo.getPropertyValue();
+            String key = codeGenerateInfo.getPropertyKey();
             if(null != generateConfig) {
-                value = generateConfig.getProperties().get(codeGenerateInfo.getPropertyKey());
+                value = generateConfig.getProperties().get(key);
             }
+            currProperties.put(key, value);
             if(codeGenerateInfo.getType() == PropertyType.DIRECTOR) {
-                vbConfigProperties.getChildren().add(buildDirProperties(codeGenerateInfo.getPropertyName(), value));
+                vbConfigProperties.getChildren().add(buildDirProperties(codeGenerateInfo.getPropertyName(), key, value));
             } else if(codeGenerateInfo.getType() == PropertyType.TEXT) {
-                vbConfigProperties.getChildren().add(buildTextProperties(codeGenerateInfo.getPropertyName(), value));
+                vbConfigProperties.getChildren().add(buildTextProperties(codeGenerateInfo.getPropertyName(), key, value));
             }
 
         }
@@ -218,15 +234,54 @@ public class GenerateConfigController extends BaseController {
 
     }
 
-    private HBox buildTextProperties(String name, String value) {
+    /**
+     * 构建文本输入框
+     * @param name
+     * @param key
+     * @param value
+     * @return
+     */
+    private HBox buildTextProperties(String name, String key, String value) {
         HBox result = buildHBox(name);
-
+        TextField txtValue = new TextField(value);
+        HBox.setHgrow(txtValue, Priority.ALWAYS);
+        txtValue.setUserData(key);
+        result.getChildren().add(txtValue);
+        txtValue.textProperty().addListener(((observable, oldValue, newValue) -> {
+            currProperties.put(key, newValue);
+        }));
+        txtValue.getStyleClass().add("font-14");
         return result;
     }
 
-    private HBox buildDirProperties(String name, String value) {
+    /**
+     * 构建文件夹选择
+     * @param name
+     * @param key
+     * @param value
+     * @return
+     */
+    private HBox buildDirProperties(String name, String key, String value) {
         HBox result = buildHBox(name);
 
+        TextField txtValue = new TextField(value);
+        HBox.setHgrow(txtValue, Priority.ALWAYS);
+        txtValue.setUserData(key);
+        txtValue.getStyleClass().add("font-14");
+        Button btn = new Button("...");
+        btn.getStyleClass().add("font-14");
+        btn.setOnAction((event -> {
+            File file = FileChooserFacotry.chooserDirectorControl((Stage)getScene().getWindow(), value);
+            if(null != file) {
+                txtValue.setText(file.getAbsolutePath());
+            }
+        }));
+
+        txtValue.textProperty().addListener(((observable, oldValue, newValue) -> {
+            currProperties.put(key, newValue);
+        }));
+        result.getChildren().add(txtValue);
+        result.getChildren().add(btn);
         return result;
     }
 
@@ -239,8 +294,9 @@ public class GenerateConfigController extends BaseController {
         HBox result = new HBox();
         result.setSpacing(2);
         result.setAlignment(Pos.CENTER_LEFT);
-
+        HBox.setHgrow(result, Priority.ALWAYS);
         Label lblName = new Label(name);
+        lblName.getStyleClass().add("font-14");
         lblName.setPrefWidth(150);
         result.getChildren().add(lblName);
         return result;

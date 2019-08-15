@@ -82,7 +82,10 @@
                   </HBox>
                   <ScrollPane VBox.vgrow="ALWAYS">
                      <content>
-                        <VBox fx:id="vbConfigProperties" alignment="TOP_CENTER" />
+                        <VBox fx:id="vbConfigProperties" alignment="TOP_CENTER" prefWidth="580.0" spacing="2.0">
+                           <padding>
+                              <Insets left="2.0" top="2.0" />
+                           </padding></VBox>
                      </content>
                   </ScrollPane>
                   <HBox alignment="CENTER_RIGHT" prefHeight="76.0" prefWidth="585.0" spacing="10.0">

@@ -19,7 +19,7 @@ public class MysqlCodeGenerate extends BaseCodeGenerateTemplate {
     }
 
     @Override
-    protected List<CodeGenerateInfo> loadPropertieskey() {
+    public List<CodeGenerateInfo> loadPropertieskey() {
         List<CodeGenerateInfo>  result = new ArrayList<>();
         result.add(new CodeGenerateInfo("代码作者","project.author", "CICO", PropertyType.TEXT));
         result.add(new CodeGenerateInfo("项目路径","project.path", "", PropertyType.DIRECTOR));
