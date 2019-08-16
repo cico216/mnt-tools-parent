@@ -11,6 +11,7 @@ import com.mnt.mybatis.generate.model.generate.CodeGenerateInfo;
 import com.mnt.mybatis.generate.model.generate.GenerateConfig;
 import com.mnt.mybatis.generate.model.view.PropertyType;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -217,7 +218,7 @@ public class MysqlCodeGenerate extends BaseCodeGenerateTemplate {
         //类名
         String className = "I" + baseFileName + "Service";
         //生成文件路径
-        String generateFilePath = baseFileName + className + ".java";
+        String generateFilePath = filePath + className + ".java";
 
         String queryEntity = baseFileName + "Query";
 
@@ -454,12 +455,13 @@ public class MysqlCodeGenerate extends BaseCodeGenerateTemplate {
 
 
 
-
     private String buildFileBaseName(String projectPath, String propertiesPath) {
-        String filePath = handlerPath(projectPath) + handlerPath(propertiesPath);
+        String filePath = handlerPath(projectPath) + "/" + handlerPath(propertiesPath);
         if(!filePath.endsWith("/")) {
             filePath += "/";
         }
+
+        checkAndCreateDir(filePath);
         return filePath;
     }
 
