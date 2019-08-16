@@ -129,6 +129,24 @@ public class UserData {
         JSONConfigUtils.saveData(generateConfigs, getBasePath() + GENERATE_CONFIG_PATH);
     }
 
+    /**
+     * 获取当前选择生成代码的配置
+     * @return
+     */
+    public static GenerateConfig getSelConfig() {
+        if(null == generateConfigs) {
+            return null;
+        }
+
+        for (GenerateConfig generateConfig : generateConfigs) {
+            if(generateConfig.isUsed()) {
+                return generateConfig;
+            }
+        }
+
+        return null;
+    }
+
 
 
 }

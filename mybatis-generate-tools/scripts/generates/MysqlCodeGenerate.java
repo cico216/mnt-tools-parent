@@ -4,6 +4,7 @@ package generates;
 import com.mnt.mybatis.generate.core.BaseCodeGenerateTemplate;
 import com.mnt.mybatis.generate.model.db.DBModel;
 import com.mnt.mybatis.generate.model.generate.CodeGenerateInfo;
+import com.mnt.mybatis.generate.model.generate.GenerateConfig;
 import com.mnt.mybatis.generate.model.view.PropertyType;
 
 import java.util.ArrayList;
@@ -35,7 +36,7 @@ public class MysqlCodeGenerate extends BaseCodeGenerateTemplate {
     }
 
     @Override
-    protected void generateImpl(DBModel dbModel) {
+    protected void generateImpl(DBModel dbModel, GenerateConfig generateConfig) {
 
 
 

@@ -2,6 +2,7 @@ package com.mnt.mybatis.generate.core;
 
 import com.mnt.mybatis.generate.model.db.DBModel;
 import com.mnt.mybatis.generate.model.generate.CodeGenerateInfo;
+import com.mnt.mybatis.generate.model.generate.GenerateConfig;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -41,10 +42,10 @@ public abstract class BaseCodeGenerateTemplate {
      * 生成代码调用
      * @param dbModel
      */
-    public final void generate(DBModel dbModel) {
+    public final void generate(DBModel dbModel, GenerateConfig generateConfig) {
 
         try {
-            generateImpl(dbModel);
+            generateImpl(dbModel, generateConfig);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -55,15 +56,15 @@ public abstract class BaseCodeGenerateTemplate {
      * 执行生成代码方法
      * @param dbModel
      */
-    protected abstract void generateImpl(DBModel dbModel);
+    protected abstract void generateImpl(DBModel dbModel, GenerateConfig generateConfig);
 
     /**
      * 批量执行生成代码方法
      * @param dbModels
      */
-    public final void generate(List<DBModel> dbModels) {
+    public final void generate(List<DBModel> dbModels, GenerateConfig generateConfig) {
         for (DBModel dbModel : dbModels) {
-            generate(dbModel);
+            generate(dbModel, generateConfig);
         }
     }
 

@@ -17,6 +17,7 @@ import com.mnt.mybatis.generate.model.UserData;
 import com.mnt.mybatis.generate.model.db.DBCloumn;
 import com.mnt.mybatis.generate.model.db.DBModel;
 import com.mnt.mybatis.generate.model.db.JDBCInfo;
+import com.mnt.mybatis.generate.model.generate.GenerateConfig;
 import com.mnt.mybatis.generate.vo.TableColumnVO;
 import com.mnt.mybatis.generate.vo.TableNameVO;
 import javafx.beans.value.ChangeListener;
@@ -363,6 +364,13 @@ public class MainViewController extends BaseController {
      */
     @FXML
     void processGenerateCode(ActionEvent event) {
+        GenerateConfig generateConfig = UserData.getSelConfig();
+
+        if(null == generateConfig) {
+            DialogFactory.getInstance().showFaildMsg("生成错误", "未选择代码生成配置", ()->{});
+            return;
+        }
+
         if(itemTableNames != null)
         {
             if(itemTableNames.isEmpty()) {
@@ -410,7 +418,7 @@ public class MainViewController extends BaseController {
                     }
 
                     TemplateClassLoad.BASE_CODE_GENERATE_TEMPLATE.getScripts().stream().filter((script)-> script.getDBType().equals(getSelJDBCInfo().getDbType())).forEach(script -> {
-                        script.generate(dbModels);
+                        script.generate(dbModels, generateConfig);
                     });
 
                     DialogFactory.getInstance().showSuccessMsg("保存成功", "代码生成成功", ()->{});
