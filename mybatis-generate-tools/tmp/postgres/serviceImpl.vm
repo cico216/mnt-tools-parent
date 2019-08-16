@@ -1,0 +1,136 @@
+package $package;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
+
+import $entityPackagePath;
+import $daoPackagePath;
+import $servicePackagePath;
+import $queryPackage;
+import com.jiangroom.common.generic.GenericMapper;
+import com.jiangroom.common.generic.GenericServiceImpl;
+
+
+/**
+ * 
+ * $remark 服务类实现
+ * @author $user
+ * @Date $date
+ */
+@Transactional
+@Service
+public class $className extends GenericServiceImpl<$entityName, Long> implements $serviceClassName {
+
+	@Autowired
+	private $daoClassName $daoJavaName;
+	
+	
+	@Override
+	public GenericMapper<$entityName, Long> getMapper() {
+		return $daoJavaName;
+	}
+	
+	
+	/**
+	 * 根据条件查询列表
+	 */
+	@Override 
+	public List<$entityName> listBy($queryEntity query) {
+		Map<String, Object> params = new HashMap<>(${dbCloumns.size()}  + 2);
+		
+#foreach($dbCloumn in $dbCloumns)
+#if($dbCloumn.cloumnJavaType == "Boolean")			
+		checkAndPut("${dbCloumn.cloumnJavaName}", query.is${dbCloumn.methodName}(), params);
+#else
+		checkAndPut("${dbCloumn.cloumnJavaName}", query.get${dbCloumn.methodName}(), params);
+#end
+#end
+		
+		if(null != query.getPageIndex()) {
+			params.put(START_INDEX, query.getPageIndex() * query.getPageSize());
+			params.put(PAGE_NO, query.getPageSize());
+		}
+	
+		return ${daoJavaName}.getAll(params);
+	}
+	
+	
+	/**
+	 * 根据条件查询数量
+	 */
+	@Override 
+	public int countBy($queryEntity query) {
+		Map<String, Object> params = new HashMap<>($dbCloumns.size());
+		
+#foreach($dbCloumn in $dbCloumns)
+#if($dbCloumn.cloumnJavaType == "Boolean")			
+		checkAndPut("${dbCloumn.cloumnJavaName}", query.is${dbCloumn.methodName}(), params);
+#else
+		checkAndPut("${dbCloumn.cloumnJavaName}", query.get${dbCloumn.methodName}(), params);
+#end
+#end
+	
+		return ${daoJavaName}.getAllCount(params);
+	}
+	
+	/**
+	 * 根据条件查询实体
+	 */
+	@Override 
+	public $entityName getBy($queryEntity query) {
+		Map<String, Object> params = new HashMap<>($dbCloumns.size());
+	
+#foreach($dbCloumn in $dbCloumns)
+#if($dbCloumn.cloumnJavaType == "Boolean")			
+		checkAndPut("${dbCloumn.cloumnJavaName}", query.is${dbCloumn.methodName}(), params);
+#else
+		checkAndPut("${dbCloumn.cloumnJavaName}", query.get${dbCloumn.methodName}(), params);
+#end
+#end	
+		//参数不能为空
+		if(params.isEmpty()) {
+			throw new NullPointerException("参数属性不能为空");
+		}
+		
+		return ${daoJavaName}.getBy(params);
+	}
+	
+	/**
+	 * 判断是否存在
+	 */
+	@Override 
+	public boolean exist($entityName dto) {
+		Map<String, Object> params = new HashMap<>($dbCloumns.size());
+	
+#foreach($dbCloumn in $dbCloumns)
+#if($dbCloumn.cloumnJavaType == "Boolean")			
+		checkAndPut("${dbCloumn.cloumnJavaName}", dto.is${dbCloumn.methodName}(), params);
+#else
+		checkAndPut("${dbCloumn.cloumnJavaName}", dto.get${dbCloumn.methodName}(), params);
+#end
+#end	
+		//参数不能为空
+		if(params.isEmpty()) {
+			throw new NullPointerException("参数属性不能为空");
+		}
+	
+		return ${daoJavaName}.exist(dto) > 0;
+	}
+	
+	
+    /* append__start */
+  
+$holdCode 
+
+
+
+
+
+  
+    /* append__end */
+
+}	

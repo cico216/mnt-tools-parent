@@ -1,0 +1,59 @@
+package $package;
+
+import $entityPackagePath;
+import $queryPackage;
+import com.jiangroom.common.generic.GenericService;
+import java.util.List;
+
+/**
+ * $remark 服务类接口
+ *
+ * @author $user
+ * @Date $date
+ */
+public interface $className extends GenericService<$entityName, Long> {
+
+
+	/**
+	 * 根据条件查询列表
+	 */
+	List<$entityName> listBy($queryEntity query);
+	
+	
+	/**
+	 * 根据条件查询数量
+	 */
+	int countBy($queryEntity query);
+	
+	/**
+	 * 根据条件查询实体
+	 */
+	$entityName getBy($queryEntity query); 
+	
+	
+	/**
+	 * 判断是否存在
+	 */
+	boolean exist($entityName dto);
+
+    /* append__start */
+  
+$holdCode 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    /* append__end */
+	
+}

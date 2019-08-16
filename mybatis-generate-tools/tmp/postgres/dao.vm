@@ -1,0 +1,39 @@
+package $package;
+
+import org.apache.ibatis.annotations.Mapper;
+import java.util.Map;
+
+import $entityPackagePath;
+import com.jiangroom.common.generic.GenericMapper;
+
+/**
+ *  $remark dao
+ *
+ * @author $user
+ * @Date $date
+ */
+@Mapper
+public interface $className extends GenericMapper<$entityName, Long> {
+	
+
+	public $entityName getBy(Map<String, Object> params);
+
+    /* append__start */
+  
+$holdCode 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+  
+    /* append__end */
+
+}
