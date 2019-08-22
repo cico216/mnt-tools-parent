@@ -16,13 +16,15 @@
     </modules>
 
     <properties>
-        <mnt-version>1.1</mnt-version>
+        <mnt-version>1.2</mnt-version>
         <mnt-tools-version>1.0-SNAPSHOT</mnt-tools-version>
         <velocity.version>1.7</velocity.version>
         <lombok.version>1.18.8</lombok.version>
         <fastjson.version>1.2.59</fastjson.version>
         <mysql.version>8.0.17</mysql.version>
         <postgresql.version>42.2.6</postgresql.version>
+        <dom4j.version>1.6.1</dom4j.version>
+        <httpclient.version>4.5.9</httpclient.version>
     </properties>
 
     <dependencies>
@@ -93,6 +95,23 @@
                 <artifactId>postgresql</artifactId>
                 <version>${postgresql.version}</version>
             </dependency>
+
+            <!-- dom4j -->
+            <dependency>
+                <groupId>dom4j</groupId>
+                <artifactId>dom4j</artifactId>
+                <version>${dom4j.version}</version>
+            </dependency>
+
+
+            <!-- httpclient -->
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpclient</artifactId>
+                <version>${httpclient.version}</version>
+            </dependency>
+
+
 
         </dependencies>
 

@@ -1,0 +1,51 @@
+
+/**
+* $remark 内部类
+*
+*/
+public static class $reqParamName  {
+
+
+#foreach( $reqParam in $reqParams )
+
+    /**
+    * $reqParam.remark
+    */
+#if($reqParam.type == "Date")
+#if($body)
+    @JsonFormat(pattern = "${reqParam.format}")
+    @DateTimeFormat(pattern = "${reqParam.format}")
+    private $reqParam.type ${reqParam.name};
+#else
+    @DateTimeFormat(pattern = "${reqParam.format}")
+    private $reqParam.type ${reqParam.name};
+#end
+#else
+    private $reqParam.type ${reqParam.name};
+#end
+#end
+
+#foreach( $reqParam in $reqParams)
+#if($reqParam.type == "Boolean")
+    public $reqParam.type is${reqParam.methodName}() {
+        return ${reqParam.name};
+    }
+#else
+    public $reqParam.type get${reqParam.methodName}() {
+        return ${reqParam.name};
+    }
+#end
+
+#if($reqParam.type == "String")
+    public void set${reqParam.methodName}($reqParam.type ${reqParam.name}) {
+        this.${reqParam.name} = ${reqParam.name} == null ? null : ${reqParam.name}.trim();
+    }
+#else
+    public void set${reqParam.methodName}($reqParam.type ${reqParam.name}) {
+        this.${reqParam.name} = ${reqParam.name};
+    }
+#end
+
+#end
+
+}

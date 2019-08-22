@@ -1,0 +1,59 @@
+package $package;
+
+#if($importPackages)
+#foreach( $importPackage in $importPackages )
+import ${importPackage};
+#end
+#end
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import com.jiangroom.common.generic.BaseController;
+import com.jiangroom.common.model.AjaxResult;
+
+
+/**
+* $remark
+*
+* @author $user
+* @Date $date
+*/
+@RestController
+@RequestMapping("$requestMapper")
+public class $controllerName extends BaseController {
+
+/* append__start */
+
+${holdCode}
+
+
+
+
+#foreach( $action in $actions)
+    /**
+     * $action.remark
+     * @param ${action.reqName} ${action.remark}请求参数
+     */
+    @RequestMapping("$action.requestMapper")
+#if(${action.body})
+    public AjaxResult ${action.actionName}(@org.springframework.web.bind.annotation.RequestBody ${action.reqClass} ${action.reqName}) {
+#else
+    public AjaxResult ${action.actionName}(${action.reqClass} ${action.reqName}) {
+#end
+
+        //TODO 请求参数复制到指定对象
+        ${action.reqName}.valueTo(null);
+
+
+
+        //TODO 对象的参数赋值到答复参数
+        $action.respClass resultParam = ${action.respClass}.valueFrom(null);
+
+        return AjaxResult.success(resultParam);
+    }
+
+
+#end
+
+/* append__end */
+
+}

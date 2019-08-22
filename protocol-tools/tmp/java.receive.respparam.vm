@@ -1,0 +1,74 @@
+package $package;
+
+#if($importPackages)
+#foreach( $importPackage in $importPackages )
+import ${importPackage};
+#end
+#end
+import com.jiangroom.common.utils.PropertyCloneUtils;
+
+
+/**
+* $remark 答复参数
+*
+* @author $user
+* @Date $date
+*/
+public class $respParamName {
+
+
+#foreach( $respParam in $respParams )
+
+    /**
+    * $respParam.remark
+    */
+#if($respParam.type == "Date")
+    @JsonFormat(pattern = "${respParam.format}", timezone = "GMT+8")
+    private $respParam.type ${respParam.name};
+#else
+    private $respParam.type ${respParam.name};
+#end
+#end
+
+#foreach( $respParam in $respParams)
+#if($respParam.type == "Boolean")
+    public $respParam.type is${respParam.methodName}() {
+        return ${respParam.name};
+    }
+#else
+    public $respParam.type get${respParam.methodName}() {
+        return ${respParam.name};
+    }
+#end
+
+#if($respParam.type == "String")
+    public void set${respParam.methodName}($respParam.type ${respParam.name}) {
+        this.${respParam.name} = ${respParam.name} == null ? null : ${respParam.name}.trim();
+    }
+#else
+    public void set${respParam.methodName}($respParam.type ${respParam.name}) {
+        this.${respParam.name} = ${respParam.name};
+    }
+#end
+
+#end
+
+#if($innerClassStr)
+    ${innerClassStr}
+#end
+
+    /**
+     * 拷贝指定对象属性到当前类的新实例 List除外
+     */
+    public static $respParamName valueFrom(Object obj) {
+#if($respParams.size() > 0)
+        $respParamName result = new ${respParamName}();
+        PropertyCloneUtils.clone(obj, result);
+        return result;
+#else
+        return null;
+#end
+    }
+
+
+}

@@ -7,6 +7,7 @@ import org.apache.velocity.app.VelocityEngine;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -79,6 +80,41 @@ public class VelocityUtils {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	/**
+	 * 解析模板
+	 * @param templateName
+	 * @param params
+	 */
+	public String parseTemplate(String templateName, Map<String, Object> params)
+	{
+		String result = "";
+		StringWriter sw = new StringWriter();
+		try {
+
+			VelocityContext context = new VelocityContext();
+			//设置参数  ℃ 、 m³，
+			for (Entry<String, Object> paramKV : params.entrySet()) {
+				context.put(paramKV.getKey(), paramKV.getValue());
+			}
+
+
+
+			Velocity.mergeTemplate(templateName, "UTF-8" , context, sw);
+			//System.err.println("templateName : " + templateName + " , toFilePath : " + toFilePath);
+
+			result = sw.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				sw.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return result;
 	}
 	
 	

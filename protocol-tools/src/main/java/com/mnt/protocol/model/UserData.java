@@ -1,0 +1,67 @@
+package com.mnt.protocol.model;
+
+import com.mnt.common.utils.JSONConfigUtils;
+
+/**
+ * 用户数据
+ */
+public class UserData {
+
+
+    /**
+     * 用户基础配置表
+     */
+    private static UserConfig userConfig;
+
+    /**
+     * 初始化用户数据
+     */
+    public static void init() {
+        userConfig = JSONConfigUtils.loadData(UserConfig.class, getBasePath() + CONFIG_PATH);
+        if(null == userConfig) {
+            userConfig = new UserConfig();
+        }
+    }
+
+    /**
+     * 配置文件地址
+     */
+    public static final String CONFIG_PATH = "conf/config.json";
+
+
+    /**
+     * 获取用户目录
+     * @return
+     */
+    public static String getUserPath() {
+        return System.getProperty("user.dir");
+    }
+
+    /**
+     * 获取基础路径
+     * @return
+     */
+    private static String getBasePath() {
+        return getUserPath() + "/";
+    }
+
+
+    /**
+     * 获取用户配置数据
+     * @return
+     */
+    public static UserConfig getUserConfig() {
+
+        return userConfig;
+    }
+
+    /**
+     * 保存用户数据
+     */
+    public static void saveUserConfig() {
+        JSONConfigUtils.saveData(userConfig, getBasePath() + CONFIG_PATH);
+
+
+    }
+
+}

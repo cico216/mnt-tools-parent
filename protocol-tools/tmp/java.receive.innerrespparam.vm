@@ -1,0 +1,45 @@
+
+/**
+* $remark 内部类
+*
+*/
+public static class $respParamName {
+
+
+#foreach( $respParam in $respParams )
+
+    /**
+    * $respParam.remark
+    */
+#if($respParam.type == "Date")
+    @JsonFormat(pattern = "${respParam.format}", timezone = "GMT+8")
+    private $respParam.type ${respParam.name};
+#else
+    private $respParam.type ${respParam.name};
+#end
+#end
+
+#foreach( $respParam in $respParams)
+#if($respParam.type == "Boolean")
+    public $respParam.type is${respParam.methodName}() {
+        return ${respParam.name};
+    }
+#else
+    public $respParam.type get${respParam.methodName}() {
+        return ${respParam.name};
+    }
+#end
+
+#if($respParam.type == "String")
+    public void set${respParam.methodName}($respParam.type ${respParam.name}) {
+        this.${respParam.name} = ${respParam.name} == null ? null : ${respParam.name}.trim();
+    }
+#else
+    public void set${respParam.methodName}($respParam.type ${respParam.name}) {
+        this.${respParam.name} = ${respParam.name};
+    }
+#end
+
+#end
+
+}
