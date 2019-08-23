@@ -24,6 +24,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -36,6 +37,9 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Callback;
 import org.apache.commons.lang.StringUtils;
 
@@ -111,18 +115,28 @@ public class MainViewController extends BaseController {
         UserData.getUserConfig().setLastSelectedDir(dir.getAbsolutePath());
         if(null != dir && dir.isDirectory()) {
             ConsoleLogUtils.log(dir.getAbsolutePath());
-            loadProto(defaultPath);
+            loadProto(dir.getAbsolutePath());
         }
     }
 
     @FXML
     void processMenuRequestSetting(ActionEvent event) {
-
+        Stage innerStage = new Stage();
+        innerStage.initModality(Modality.APPLICATION_MODAL);
+        innerStage.initStyle(StageStyle.DECORATED);
+        innerStage.setScene(new Scene(new RequestSettingController(innerStage)));
+        innerStage.initOwner(stage);
+        innerStage.showAndWait();
     }
 
     @FXML
     void processMenuSetting(ActionEvent event) {
-
+        Stage innerStage = new Stage();
+        innerStage.initModality(Modality.APPLICATION_MODAL);
+        innerStage.initStyle(StageStyle.DECORATED);
+        innerStage.setScene(new Scene(new SettingController(innerStage)));
+        innerStage.initOwner(stage);
+        innerStage.showAndWait();
     }
 
     @FXML
@@ -381,6 +395,7 @@ public class MainViewController extends BaseController {
      * @param dirPath
      */
     private void loadProto(String dirPath) {
+        itemProtos.clear();
         File file =  new File(dirPath);
         File[] xmlFiles = file.listFiles(new FilenameFilter() {
             @Override
