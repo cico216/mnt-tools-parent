@@ -1,6 +1,6 @@
 package $package;
 
-import com.dxpay.common.mybatis.GenericDomain;
+import com.mnt.tools.dep.GenericDomain;
 #if($importPackages)
 	#foreach( $importPackage in $importPackages )
 import ${importPackage};

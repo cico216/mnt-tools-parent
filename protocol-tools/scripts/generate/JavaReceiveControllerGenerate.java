@@ -243,7 +243,7 @@ public class JavaReceiveControllerGenerate extends ProtoCodeGenerateTemplate
 
                         if(!line.contains("import org.springframework.web.bind.annotation.RequestMapping;") &&
                                 !line.contains("import org.springframework.web.bind.annotation.RestController;") &&
-                                !line.contains("import com.jiangroom.common.generic.BaseController;") &&
+                                !line.contains("import com.mnt.tools.dep.BaseController;") &&
                                 !line.contains("import com.jiangroom.common.model.AjaxResult;")
                                 ) {
                             String packageStr = line.trim().replace("import ", "").replace(";", "");

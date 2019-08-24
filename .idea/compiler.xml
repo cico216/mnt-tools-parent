@@ -10,6 +10,7 @@
         <module name="protocol-tools" />
         <module name="tools-aggregation" />
         <module name="tools-common" />
+        <module name="tools-dependent" />
       </profile>
     </annotationProcessing>
   </component>

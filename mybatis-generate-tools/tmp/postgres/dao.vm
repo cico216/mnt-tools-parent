@@ -4,7 +4,7 @@ import org.apache.ibatis.annotations.Mapper;
 import java.util.Map;
 
 import $entityPackagePath;
-import com.jiangroom.common.generic.GenericMapper;
+import com.mnt.tools.dep.GenericMapper;
 
 /**
  *  $remark dao

@@ -2,7 +2,7 @@ package $package;
 
 import $entityPackagePath;
 import $queryPackage;
-import com.jiangroom.common.generic.GenericService;
+import com.mnt.tools.dep.GenericService;
 import java.util.List;
 
 /**

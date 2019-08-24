@@ -11,8 +11,8 @@ import $entityPackagePath;
 import $daoPackagePath;
 import $servicePackagePath;
 import $queryPackage;
-import com.jiangroom.common.generic.GenericMapper;
-import com.jiangroom.common.generic.GenericServiceImpl;
+import com.mnt.tools.dep.GenericMapper;
+import com.mnt.tools.dep.GenericServiceImpl;
 
 
 /**

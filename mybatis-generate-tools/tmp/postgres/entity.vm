@@ -1,6 +1,6 @@
 package $package;
 
-import com.jiangroom.common.generic.GenericDomain;
+import com.mnt.tools.dep.GenericDomain;
 #if($importPackages)
 	#foreach( $importPackage in $importPackages )
 import ${importPackage};

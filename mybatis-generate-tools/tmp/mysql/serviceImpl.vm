@@ -11,8 +11,8 @@ import $entityPackagePath;
 import $daoPackagePath;
 import $servicePackagePath;
 import $queryPackage;
-import com.dxpay.common.mybatis.GenericMapper;
-import com.dxpay.common.mybatis.GenericServiceImpl;
+import com.mnt.tools.dep.GenericMapper;
+import com.mnt.tools.dep.GenericServiceImpl;
 
 
 /**
