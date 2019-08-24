@@ -113,6 +113,7 @@ public class MainViewController extends BaseController {
         }
 
         UserData.getUserConfig().setLastSelectedDir(dir.getAbsolutePath());
+        UserData.saveUserConfig();
         if(null != dir && dir.isDirectory()) {
             ConsoleLogUtils.log(dir.getAbsolutePath());
             loadProto(dir.getAbsolutePath());
@@ -743,6 +744,24 @@ public class MainViewController extends BaseController {
         setRespChildren(treeTableResponse.getRoot(), commadResp);
 
 
+        //设置测试界面
+
+        copyRequestUrl = null;
+
+        String testUrl = ProtoVOUtils.getProtoTestUrl(baseProtoVO.getXmlObject());
+
+        if(null == testUrl) {
+            testUrl = "";
+        }
+
+        //移除最后一个斜杠
+        if(testUrl.endsWith("/")) {
+            testUrl = testUrl.substring(0, testUrl.length() - 1);
+        }
+
+        copyRequestUrl = testUrl + "/" + path + "/" + baseCommad.getPath();
+
+        txtRequestUrl.setText(copyRequestUrl);
 
     }
 

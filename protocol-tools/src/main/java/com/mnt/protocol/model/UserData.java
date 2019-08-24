@@ -2,6 +2,8 @@ package com.mnt.protocol.model;
 
 import com.mnt.common.utils.JSONConfigUtils;
 
+import java.util.Collections;
+
 /**
  * 用户数据
  */
@@ -20,6 +22,10 @@ public class UserData {
         userConfig = JSONConfigUtils.loadData(UserConfig.class, getBasePath() + CONFIG_PATH);
         if(null == userConfig) {
             userConfig = new UserConfig();
+            userConfig.setUser("");
+            userConfig.setHeaders(Collections.emptyMap());
+            userConfig.setProjectPath("");
+            userConfig.setLastSelectedDir("");
         }
     }
 
