@@ -616,6 +616,11 @@ public class MainViewController extends BaseController {
                                 setGraphic(textField);
                                 textField.requestFocus();
                                 textField.end();
+                                textField.textProperty().addListener((observable, oldValue, newValue) -> {
+                                    if(null != newValue) {
+                                        rebuildReqText();
+                                    }
+                                });
 
                             }
 
@@ -792,6 +797,7 @@ public class MainViewController extends BaseController {
 
         txtRequestUrl.setText(copyRequestUrl);
 
+        rebuildReqText();
     }
 
     /**
@@ -933,16 +939,20 @@ public class MainViewController extends BaseController {
             return;
         }
 
-        for (int i = 0; i < 20 ; i ++) {
-            for (int j = 0; j < 5 ; j ++) {
-                ThreadPoolManager.getInstance().schedule(()->{
-
-                    requestTest(testUrl);
-
-                }, 500 * i);
-            }
-
+        int count;
+        try {
+            count = Integer.parseInt(txtXCount.getText());
+        } catch (Exception e) {
+            DialogFactory.getInstance().showFaildMsg("请求失败", "请选择输入数字", ()->{});
+            return;
         }
+
+        for (int j = 0; j < count ; j ++) {
+            ThreadPoolManager.getInstance().schedule(()->{
+                requestTest(testUrl);
+            }, 500 * (j / 5));
+        }
+
     }
 
 
@@ -952,28 +962,8 @@ public class MainViewController extends BaseController {
      */
     private void notEncryptTest(String testUrl) {
 
-        StringBuilder paramUrlSB = new StringBuilder();
-        final SimpleBooleanProperty isFrist = new SimpleBooleanProperty(false);
 
-        treeTableRequest.getRoot().getChildren().forEach(commadReqVOTreeItem ->{
-            if(!StringUtils.isEmpty(commadReqVOTreeItem.getValue().getTest())) {
-                if(isFrist.get()) {
-                    isFrist.set(false);
-                } else {
-                    paramUrlSB.append("&");
-                }
-                paramUrlSB.append(commadReqVOTreeItem.getValue().getName());
-                paramUrlSB.append("=");
-                paramUrlSB.append(commadReqVOTreeItem.getValue().getTest());
-            }
-
-//            paramsStr += paramEntry.getKey() + "=" + String.valueOf(paramEntry.getValue());
-
-        });
-
-        //http请求的地址
-        String requestParamUrl = testUrl + "?" + paramUrlSB.toString();
-
+        String requestParamUrl =  buildRequestUrl(testUrl);
         ConsoleLogUtils.log("请求URL : [" + requestParamUrl + "]");
         ThreadPoolManager.getInstance().execute(()-> {
             String requestResult = HttpRequestUtils.getHttpResult(requestParamUrl, "GET");
@@ -995,6 +985,41 @@ public class MainViewController extends BaseController {
         });
 
 
+    }
+
+    /**
+     * 构建请求url
+     * @param testUrl
+     * @return
+     */
+    private String buildRequestUrl(String testUrl) {
+        StringBuilder paramUrlSB = new StringBuilder();
+        final SimpleBooleanProperty isFrist = new SimpleBooleanProperty(true);
+
+        treeTableRequest.getRoot().getChildren().forEach(commadReqVOTreeItem ->{
+            if(!StringUtils.isEmpty(commadReqVOTreeItem.getValue().getTest())) {
+                if(isFrist.get()) {
+                    isFrist.set(false);
+                } else {
+                    paramUrlSB.append("&");
+                }
+                paramUrlSB.append(commadReqVOTreeItem.getValue().getName());
+                paramUrlSB.append("=");
+                paramUrlSB.append(commadReqVOTreeItem.getValue().getTest());
+            }
+
+//            paramsStr += paramEntry.getKey() + "=" + String.valueOf(paramEntry.getValue());
+
+        });
+
+        //http请求的地址
+        String requestParamUrl;
+        if(paramUrlSB.length() > 0) {
+            requestParamUrl = testUrl + "?" + paramUrlSB.toString();
+        } else {
+            requestParamUrl = testUrl;
+        }
+        return requestParamUrl;
     }
 
     /**
@@ -1071,6 +1096,16 @@ public class MainViewController extends BaseController {
 
         }
     }
+
+    /**
+     * 重新构建请求内容
+     */
+    private void rebuildReqText() {
+        String testUrl = txtRequestUrl.getText();
+        String requestUrl = buildRequestUrl(testUrl);
+        txtAreaRequest.setText(requestUrl);
+    }
+
 
     /************************************************************************************************* 测试协议end ****************************************************************************************************/
 
