@@ -599,6 +599,35 @@ public class MainViewController extends BaseController {
         trclumReqMust.setCellValueFactory(new TreeItemPropertyValueFactory("must"));
         trclumReqTest.setCellValueFactory(new TreeItemPropertyValueFactory("test"));
 
+        trclumReqTest.setCellFactory(new Callback<TreeTableColumn<CommadReqVO, String>, TreeTableCell<CommadReqVO, String>>() {
+            @Override
+            public TreeTableCell<CommadReqVO, String> call(TreeTableColumn<CommadReqVO, String> param) {
+                return new TreeTableCell<CommadReqVO, String>() {
+                    @Override
+                    public void updateItem(String item, boolean empty) {
+                        if(!empty) {
+                            if(null != item && getTreeTableRow().getTreeItem() != null) {
+
+                                TextField textField = new TextField(item);
+
+                                textField.textProperty().bindBidirectional(getTreeTableRow().getTreeItem().getValue().testProperty());
+                                setGraphic(textField);
+
+                                setGraphic(textField);
+                                textField.requestFocus();
+                                textField.end();
+
+                            }
+
+                        } else {
+                            setGraphic(null);
+                        }
+                        super.updateItem(item, empty);
+                    }
+                };
+            }
+        });
+
         treeTableRequest.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
@@ -946,21 +975,25 @@ public class MainViewController extends BaseController {
         String requestParamUrl = testUrl + "?" + paramUrlSB.toString();
 
         ConsoleLogUtils.log("请求URL : [" + requestParamUrl + "]");
+        ThreadPoolManager.getInstance().execute(()-> {
+            String requestResult = HttpRequestUtils.getHttpResult(requestParamUrl, "GET");
 
-        String requestResult = HttpRequestUtils.getHttpResult(requestParamUrl, "GET");
+            if(null == requestResult || "".equals(requestResult)) {
+                Platform.runLater(()-> {
+                    txtAreaResonse.setText("请求异常或超时!");
+                 });
+                //请求返回超时
+                return;
+            }
 
-        if(null == requestResult || "".equals(requestResult)) {
-            txtAreaResonse.setText("请求异常或超时!");
-            //请求返回超时
-            return;
-        }
+            String formatRequestResult = JSONFormatUtils.formatJson(requestResult);
 
-        String formatRequestResult = JSONFormatUtils.formatJson(requestResult);
-
-        Platform.runLater(()-> {
-            //设置返回数据
-            txtAreaResonse.setText(formatRequestResult);
+            Platform.runLater(()-> {
+                //设置返回数据
+                txtAreaResonse.setText(formatRequestResult);
+            });
         });
+
 
     }
 
@@ -990,18 +1023,28 @@ public class MainViewController extends BaseController {
         });
         String json = jsonObject.toJSONString();
 
-        String requestResult = HttpRequestUtils.getHttpBodyResult(testUrl, json);
 
-        if(null == requestResult || "".equals(requestResult)) {
-            //请求返回超时
-            txtAreaResonse.setText("请求异常或超时!");
-            return;
-        }
+        ThreadPoolManager.getInstance().execute(()-> {
+            String requestResult = HttpRequestUtils.getHttpBodyResult(testUrl, json);
+            if(null == requestResult || "".equals(requestResult)) {
+                //请求返回超时
+                Platform.runLater(()-> {
+                    txtAreaResonse.setText("请求异常或超时!");
+                });
+                return;
+            }
 
-        String formatRequestResult = JSONFormatUtils.formatJson(requestResult);
+            String formatRequestResult = JSONFormatUtils.formatJson(requestResult);
+            //设置返回数据
+            Platform.runLater(()-> {
+                txtAreaResonse.setText(formatRequestResult);
+            });
 
-        //设置返回数据
-        txtAreaResonse.setText(formatRequestResult);
+
+        });
+
+
+
 
     }
 
