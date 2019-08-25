@@ -276,7 +276,7 @@ public class MainViewController extends BaseController {
                     protected void updateItem(BaseCommadVO item, boolean empty) {
 
                         if(!empty) {
-                            String text = item.getRemark();//item.getRemark() + "(" + item.getPath() + ")";
+                            String text = "[" + item.getMethod() + "]" + item.getRemark();//item.getRemark() + "(" + item.getPath() + ")";
                             boolean mulitChooseCommad = true;
                             if(mulitChooseCommad) {
 
@@ -962,7 +962,6 @@ public class MainViewController extends BaseController {
      */
     private void notEncryptTest(String testUrl) {
 
-
         String requestParamUrl =  buildRequestUrl(testUrl);
         ConsoleLogUtils.log("请求URL : [" + requestParamUrl + "]");
         ThreadPoolManager.getInstance().execute(()-> {
@@ -997,7 +996,7 @@ public class MainViewController extends BaseController {
         final SimpleBooleanProperty isFrist = new SimpleBooleanProperty(true);
 
         treeTableRequest.getRoot().getChildren().forEach(commadReqVOTreeItem ->{
-            if(!StringUtils.isEmpty(commadReqVOTreeItem.getValue().getTest())) {
+            if(null != commadReqVOTreeItem.getValue().getTest()) {
                 if(isFrist.get()) {
                     isFrist.set(false);
                 } else {
@@ -1028,27 +1027,8 @@ public class MainViewController extends BaseController {
      */
     private void bodyTest(String testUrl) {
 
-
-        JSONObject jsonObject = new JSONObject();
-
-        treeTableRequest.getRoot().getChildren().forEach(commadReqVOTreeItem ->{
-            if(!commadReqVOTreeItem.getValue().getChildrens().isEmpty()) {
-                final Map<String, Object> paramMap = new HashMap<>(commadReqVOTreeItem.getValue().getChildrens().size());
-
-                buildInnerJson(commadReqVOTreeItem.getValue().getChildrens(), paramMap);
-                List<Map<String, Object>> paramList = new ArrayList<>();
-                paramList.add(paramMap);
-                jsonObject.put(commadReqVOTreeItem.getValue().getName(), paramList);
-            } else {
-                if(!StringUtils.isEmpty(commadReqVOTreeItem.getValue().getTest())) {
-                    jsonObject.put(commadReqVOTreeItem.getValue().getName(), commadReqVOTreeItem.getValue().getTest());
-                }
-            }
-
-        });
-        String json = jsonObject.toJSONString();
-
-
+        String json = buildBodyRequestParam();
+        ConsoleLogUtils.log("请求URL : [" + testUrl + json  + "]");
         ThreadPoolManager.getInstance().execute(()-> {
             String requestResult = HttpRequestUtils.getHttpBodyResult(testUrl, json);
             if(null == requestResult || "".equals(requestResult)) {
@@ -1068,9 +1048,32 @@ public class MainViewController extends BaseController {
 
         });
 
+    }
 
+    /**
+     * 构建body请求参数
+     * @return
+     */
+    private String buildBodyRequestParam() {
+        JSONObject jsonObject = new JSONObject();
 
+        treeTableRequest.getRoot().getChildren().forEach(commadReqVOTreeItem ->{
+            if(!commadReqVOTreeItem.getValue().getChildrens().isEmpty()) {
+                final Map<String, Object> paramMap = new HashMap<>(commadReqVOTreeItem.getValue().getChildrens().size());
 
+                buildInnerJson(commadReqVOTreeItem.getValue().getChildrens(), paramMap);
+                List<Map<String, Object>> paramList = new ArrayList<>();
+                paramList.add(paramMap);
+                jsonObject.put(commadReqVOTreeItem.getValue().getName(), paramList);
+            } else {
+                if(null != commadReqVOTreeItem.getValue().getTest()) {
+                    jsonObject.put(commadReqVOTreeItem.getValue().getName(), commadReqVOTreeItem.getValue().getTest());
+                }
+            }
+
+        });
+        String json = jsonObject.toJSONString();
+        return json;
     }
 
     /**
@@ -1088,9 +1091,8 @@ public class MainViewController extends BaseController {
                 buildInnerJson(commadReqVO.getChildrens(), innerParamMap);
                 continue;
             }
-            if(!StringUtils.isEmpty(commadReqVO.getTest())) {
+            if(null != commadReqVO.getTest()) {
                 paramMap.put(commadReqVO.getName(), commadReqVO.getTest());
-
 
             }
 
@@ -1102,7 +1104,16 @@ public class MainViewController extends BaseController {
      */
     private void rebuildReqText() {
         String testUrl = txtRequestUrl.getText();
-        String requestUrl = buildRequestUrl(testUrl);
+        String requestUrl;
+        if(cbIsBody.isSelected()) {
+            String jsonParam = buildBodyRequestParam();
+            if(StringUtils.isNotEmpty(jsonParam)) {
+                jsonParam = JSONFormatUtils.formatJson(jsonParam);
+            }
+            requestUrl = testUrl + "\n" + jsonParam;
+        } else {
+            requestUrl = buildRequestUrl(testUrl);
+        }
         txtAreaRequest.setText(requestUrl);
     }
 

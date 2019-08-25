@@ -177,9 +177,9 @@
                                  <children>
                                     <HBox alignment="CENTER_LEFT" prefHeight="39.0" prefWidth="555.0" spacing="2.0">
                                        <children>
-                                          <Label text="请求链接:" />
-                                          <TextField fx:id="txtRequestUrl" HBox.hgrow="ALWAYS" />
-                                          <Button mnemonicParsing="false" onAction="#processCopyURL" text="复制URL" />
+                                          <Label styleClass="font-14" text="请求链接:" />
+                                          <TextField fx:id="txtRequestUrl" styleClass="font-14" HBox.hgrow="ALWAYS" />
+                                          <Button mnemonicParsing="false" onAction="#processCopyURL" styleClass="font-14" text="复制URL" />
                                        </children>
                                        <padding>
                                           <Insets left="1.0" right="1.0" />
@@ -230,13 +230,13 @@
                                           <VBox>
                                              <children>
                                                 <Label text="请求内容:" />
-                                                <TextArea fx:id="txtAreaRequest" editable="false" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
+                                                <TextArea fx:id="txtAreaRequest" editable="false" prefHeight="200.0" prefWidth="200.0" styleClass="font-14" wrapText="true" VBox.vgrow="ALWAYS" />
                                              </children>
                                           </VBox>
                                           <VBox>
                                              <children>
                                                 <Label text="返回内容:" />
-                                                <TextArea fx:id="txtAreaResonse" editable="false" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
+                                                <TextArea fx:id="txtAreaResonse" editable="false" prefHeight="200.0" prefWidth="200.0" styleClass="font-14" wrapText="true" VBox.vgrow="ALWAYS" />
                                              </children>
                                           </VBox>
                                        </items>
@@ -261,7 +261,7 @@
                                     <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
                                  </padding>
                                  <children>
-                                    <TextArea fx:id="txtAreaConsole" editable="false" prefHeight="200.0" prefWidth="200.0" styleClass="font-12" VBox.vgrow="ALWAYS" />
+                                    <TextArea fx:id="txtAreaConsole" editable="false" prefHeight="200.0" prefWidth="200.0" styleClass="font-14" VBox.vgrow="ALWAYS" />
                                  </children>
                               </VBox>
                            </children>

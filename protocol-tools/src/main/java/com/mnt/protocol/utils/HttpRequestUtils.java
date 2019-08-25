@@ -61,7 +61,7 @@ public class HttpRequestUtils {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            result = e.getMessage().toString();
+            result = e.getMessage();
         }
 
         return result;
@@ -80,6 +80,13 @@ public class HttpRequestUtils {
 
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpPost httpPost = new HttpPost(url);
+
+        RequestConfig requestConfig = RequestConfig.custom()
+                .setConnectionRequestTimeout(4000)
+                .setConnectTimeout(4000)
+                .setSocketTimeout(4000).build();
+        httpPost.setConfig(requestConfig);
+
         httpPost.addHeader("Content-Type", "application/json");
         CloseableHttpResponse response = null;
 
@@ -95,7 +102,7 @@ public class HttpRequestUtils {
 
         } catch (Exception e) {
             e.printStackTrace();
-            result = e.getMessage().toString();
+            result = e.getMessage();
         }
         finally {
             try {
@@ -122,7 +129,17 @@ public class HttpRequestUtils {
 
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpPost httpPost = new HttpPost(url);
+
+        RequestConfig requestConfig = RequestConfig.custom()
+                .setConnectionRequestTimeout(4000)
+                .setConnectTimeout(4000)
+                .setSocketTimeout(4000).build();
+
+
         httpPost.addHeader("Content-Type", "application/json");
+
+        httpPost.setConfig(requestConfig);
+
         CloseableHttpResponse response = null;
         Map<String , String> headers = UserData.getUserConfig().getHeaders();
 
