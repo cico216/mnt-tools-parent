@@ -5,6 +5,8 @@ import com.mnt.gui.fx.loader.FXMLLoaderUtil;
 import com.mnt.protocol.model.UserData;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -52,9 +54,35 @@ public class RequestSettingController extends BaseController {
             vbParams.getChildren().add(headerParamController);
 
         }
-
+        addListener();
 
     }
+
+    /**
+     * 添加监听
+     */
+    private void addListener() {
+        this.setOnKeyPressed((event) -> {
+            esc(event);
+        });
+        vbParams.setOnKeyPressed((event) -> {
+            esc(event);
+        });
+
+    }
+
+    /**
+     * 退出事件
+     * @param event
+     */
+    private void esc(KeyEvent event) {
+        KeyCode keyCode = event.getCode();
+        if(keyCode == KeyCode.ESCAPE) {
+            //quit
+            currStage.close();
+        }
+    }
+
 
 
     @FXML

@@ -8,6 +8,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
 import java.io.File;
@@ -51,10 +53,31 @@ public class SettingController extends BaseController {
         txtProjectPath.setText(projectPath);
 
 
-
+        addListener();
 
     }
 
+    /**
+     * 添加监听
+     */
+    private void addListener() {
+        this.setOnKeyPressed((event) -> {
+            esc(event);
+        });
+
+    }
+
+    /**
+     * 退出事件
+     * @param event
+     */
+    private void esc(KeyEvent event) {
+        KeyCode keyCode = event.getCode();
+        if(keyCode == KeyCode.ESCAPE) {
+            //quit
+            currStage.close();
+        }
+    }
 
 
     @FXML
