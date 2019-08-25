@@ -5,7 +5,7 @@ package $package;
 import ${importPackage};
 #end
 #end
-import com.jiangroom.common.utils.PropertyCloneUtils;
+import com.mnt.tools.utils.PropertyCloneUtils;
 
 
 /**
