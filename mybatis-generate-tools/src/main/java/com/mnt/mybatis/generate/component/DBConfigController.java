@@ -6,7 +6,6 @@ import com.mnt.mybatis.generate.core.BaseDBLoadTemplate;
 import com.mnt.mybatis.generate.core.load.TemplateClassLoad;
 import com.mnt.mybatis.generate.model.UserData;
 import com.mnt.mybatis.generate.model.db.JDBCInfo;
-import com.sun.istack.internal.Nullable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -229,7 +228,6 @@ public class DBConfigController extends BaseController {
      * 获取当前选择的链接
      * @return
      */
-    @Nullable
     private JDBCInfo getCurrSelJDBCInfo() {
         return listDbConfigs.getSelectionModel().getSelectedItem();
     }

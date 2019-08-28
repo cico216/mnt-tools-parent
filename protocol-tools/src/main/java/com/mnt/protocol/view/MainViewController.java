@@ -76,7 +76,20 @@ public class MainViewController extends BaseController {
      * 添加监听
      */
     void addListener() {
+        this.setOnKeyPressed((event) -> {
 
+            KeyCode keyCode = event.getCode();
+            if(event.isControlDown() && keyCode == KeyCode.S) {
+                //save code
+                generateCode();
+
+            }
+            if(keyCode == KeyCode.F5) {
+                //update
+                processUpdate(null);
+                DialogFactory.getInstance().showSuccessMsg("刷新成功", "重新加载数据成功", ()->{});
+            }
+        });
     }
 
 

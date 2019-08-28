@@ -9,7 +9,6 @@ import com.mnt.mybatis.generate.model.UserData;
 import com.mnt.mybatis.generate.model.generate.CodeGenerateInfo;
 import com.mnt.mybatis.generate.model.generate.GenerateConfig;
 import com.mnt.mybatis.generate.model.view.PropertyType;
-import com.sun.istack.internal.Nullable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -342,7 +341,6 @@ public class GenerateConfigController extends BaseController {
      * 获取当前选择的链接
      * @return
      */
-    @Nullable
     private GenerateConfig getCurrSelGenerateInfo() {
         return listGenerateConfigs.getSelectionModel().getSelectedItem();
     }
