@@ -72,43 +72,7 @@ public abstract class ProtoCodeGenerateTemplate {
 	 */
 	public abstract String getGeneratePath(ProtoModel protoModel);
 	
-	
-	/**
-	 * 获取controller模板名称
-	 * @return
-	 */
-	public abstract String getControllerTemplateName();
 
-	/**
-	 * 获取请求参数模板名称
-	 * @return
-	 */
-	public abstract String getReqParamTemplateName();
-
-	/**
-	 * 获取答复参数模板名称
-	 * @return
-	 */
-	public abstract String getRespParamemplateName();
-
-	/**
-	 * 获取内部类请求参数模板名称
-	 * @return
-	 */
-	public abstract String getInnerReqParamTemplateName();
-
-	/**
-	 * 获取内部类答复参数模板名称
-	 * @return
-	 */
-	public abstract String getInnerRespParamemplateName();
-	
-	/**
-	 * 获取包路径
-	 * @return
-	 */
-	public abstract String getPackagePath();
-	
 	
 //	/**
 //	 * 获取对应的实体包路径

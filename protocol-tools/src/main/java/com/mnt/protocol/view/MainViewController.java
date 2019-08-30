@@ -177,8 +177,11 @@ public class MainViewController extends BaseController {
             return;
         }
 
-        String selectType = "java";
-
+        String selectType = UserData.getUserConfig().getGenerateCodeType();
+        if(StringUtils.isEmpty(selectType)) {
+            DialogFactory.getInstance().showFaildMsg("生成代码错误", "请选择你是干啥的", ()->{});
+            return;
+        }
         try {
             ProtoModel protoModel = ProtoModelConvertUtils.convert(baseProtoVO, baseCommadVOs);
 

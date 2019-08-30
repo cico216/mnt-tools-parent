@@ -6,6 +6,7 @@ import com.mnt.protocol.vo.BaseCommadVO;
 import com.mnt.protocol.vo.BaseProtoVO;
 import com.mnt.protocol.vo.CommadReqVO;
 import com.mnt.protocol.vo.CommadRespVO;
+import org.apache.commons.lang.StringUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -29,8 +30,10 @@ public class ProtoModelConvertUtils {
 
         result.setUser(UserData.getUserConfig().getUser());
 
-        String type = "java";
-
+        String type = UserData.getUserConfig().getGenerateCodeType();
+        if(StringUtils.isEmpty(type)) {
+            throw new NullPointerException("请选择你是干啥的");
+        }
         //设置配置相关选项
         GenerateConfigInfo generateConfigInfo = getByType(baseProtoVO, type);
 

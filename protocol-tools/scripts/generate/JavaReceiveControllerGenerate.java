@@ -19,13 +19,12 @@ import java.util.Map;
 /**
  * java 接收 controller 生成
  */
-public class JavaReceiveControllerGenerate extends ProtoCodeGenerateTemplate
-{
+public class JavaReceiveControllerGenerate extends ProtoCodeGenerateTemplate {
 
 
     @Override
     public String getType() {
-        return "java";
+        return "java.receive";
     }
 
     @Override
@@ -188,7 +187,7 @@ public class JavaReceiveControllerGenerate extends ProtoCodeGenerateTemplate
     /**
      * 转换内部类答复参数
      * @param innerRespParamsMap
-     * @return
+     * @return 生成代码
      */
     private String convertRespInnerClass(Map<CommadRespParam, List<CommadRespParam>> innerRespParamsMap) {
 
@@ -221,7 +220,7 @@ public class JavaReceiveControllerGenerate extends ProtoCodeGenerateTemplate
 
     /**
      * 获取保留代码
-     * @return
+     * @return 保留的代码块
      */
     public List<ActionModel> getHoldControllerCode(String filePath, List<ActionModel> actionModels, List<String> importPackages) {
         File file = new File(filePath);
@@ -236,7 +235,7 @@ public class JavaReceiveControllerGenerate extends ProtoCodeGenerateTemplate
 
                 fr = new FileReader(file);
                 BufferedReader br=new BufferedReader(fr);
-                String line = "" ;
+                String line ;
                 while ((line = br.readLine()) != null) {
 
                     if(line.startsWith("import ") && line.endsWith(";")) {
@@ -290,34 +289,52 @@ public class JavaReceiveControllerGenerate extends ProtoCodeGenerateTemplate
                 + PathUtils.getSeparator();
     }
 
-    @Override
-    public String getControllerTemplateName() {
-        return "java.receive.controller.vm";
+    /**
+     * 基础模板路径
+     * @return 基础模板前缀
+     */
+    private String baseTmpPath() {
+        return "java/java.receive.";
     }
 
-    @Override
-    public String getReqParamTemplateName() {
-        return "java.receive.reqparam.vm";
+    /**
+     * 获取controller模板路径
+     * @return 模板文件名
+     */
+    private String getControllerTemplateName() {
+        return baseTmpPath() + "controller.vm";
     }
 
-    @Override
-    public String getRespParamemplateName() {
-        return "java.receive.respparam.vm";
+    /**
+     * 获取请求参数模板路径
+     * @return 模板文件名
+     */
+    private String getReqParamTemplateName() {
+        return baseTmpPath() + "reqparam.vm";
     }
 
-    @Override
-    public String getInnerReqParamTemplateName() {
-        return "java.receive.innerreqparam.vm";
+    /**
+     * 获取答复参数模板路径
+     * @return 模板文件名
+     */
+    private String getRespParamemplateName() {
+        return baseTmpPath() + "respparam.vm";
     }
 
-    @Override
-    public String getInnerRespParamemplateName() {
-        return "java.receive.innerrespparam.vm";
+    /**
+     * 获取请求嵌套参数模板路径
+     * @return 模板文件名
+     */
+    private String getInnerReqParamTemplateName() {
+        return baseTmpPath() + "innerreqparam.vm";
     }
 
-
-    @Override
-    public String getPackagePath() {
-        return null;
+    /**
+     * 获取答复嵌套参数模板路径
+     * @return 模板文件名
+     */
+    private String getInnerRespParamemplateName() {
+        return baseTmpPath() + "innerrespparam.vm";
     }
+
 }

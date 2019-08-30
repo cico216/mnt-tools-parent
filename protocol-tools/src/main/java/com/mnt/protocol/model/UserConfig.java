@@ -29,4 +29,10 @@ public class UserConfig {
      * 请求头参数
      */
     private Map<String , String> headers;
+
+    /**
+     * 生成代码类型
+     */
+    private String generateCodeType;
+
 }

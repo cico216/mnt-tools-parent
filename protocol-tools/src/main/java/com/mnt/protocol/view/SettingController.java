@@ -1,9 +1,13 @@
 package com.mnt.protocol.view;
 
 import com.mnt.gui.fx.base.BaseController;
+import com.mnt.gui.fx.controls.dialog.DialogFactory;
 import com.mnt.gui.fx.controls.file.FileChooserFacotry;
 import com.mnt.gui.fx.loader.FXMLLoaderUtil;
+import com.mnt.protocol.core.TemplateClassLoad;
 import com.mnt.protocol.model.UserData;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
@@ -11,6 +15,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
+import org.apache.commons.lang.StringUtils;
 
 import java.io.File;
 
@@ -30,11 +35,10 @@ public class SettingController extends BaseController {
     @FXML
     private TextField txtProjectPath;
 
-
     private Stage currStage;
 
-    @FXML
-    private TextField txtTestCasePath;
+    private ObservableList<String> itemTypes = FXCollections.observableArrayList();
+
 
     public SettingController(Stage stage) {
         this.currStage = stage;
@@ -52,8 +56,29 @@ public class SettingController extends BaseController {
         String projectPath = UserData.getUserConfig().getProjectPath();
         txtProjectPath.setText(projectPath);
 
+        initComboBox();
+
+
 
         addListener();
+
+    }
+
+    /**
+     * 初始化代码生成类型
+     */
+    private void initComboBox() {
+        combType.setItems(itemTypes);
+
+        TemplateClassLoad.PROTO_CODE_GENERATE_TEMPLATE.getScripts().forEach((baseCodeGenerate)-> {
+            itemTypes.add(baseCodeGenerate.getType());
+        });
+
+        //设置最后一次选择
+        String generateCodeType = UserData.getUserConfig().getGenerateCodeType();
+        if(StringUtils.isNotEmpty(generateCodeType)) {
+            combType.getSelectionModel().select(generateCodeType);
+        }
 
     }
 
@@ -88,9 +113,18 @@ public class SettingController extends BaseController {
     @FXML
     void processConfirm(ActionEvent event) {
 
+        String generateType = combType.getSelectionModel().getSelectedItem();
+        if(null == generateType) {
+            DialogFactory.getInstance().showFaildMsg("保存配置错误", "请选择生成的命令", ()->{});
+            return ;
+        }
+
+
         UserData.getUserConfig().setUser(txtUserName.getText());
 
         UserData.getUserConfig().setProjectPath(txtProjectPath.getText());
+
+        UserData.getUserConfig().setGenerateCodeType(generateType);
 
         UserData.saveUserConfig();
 

@@ -1,0 +1,70 @@
+import httpUtils from '@/common/httpUitls.js'
+
+/*
+    $remark 通讯协议列表
+    author: $user
+    date  : $date
+*/
+
+//基础一级路径
+const bastPath = "/$protoName/";
+
+const $protoName = {
+    /*
+
+    import $protoName from '@/protos/index/${protoName}.js';
+    let ${protoName}Handler = ${protoName}.methods;
+
+    */
+        methods: {
+#foreach($action in $actions)
+
+            /*
+                //$action.remark 请求参数
+                let ${action.reqName} = {};
+#foreach( $reqParam in ${action.commadReqParams} )
+                ${action.reqName}.${reqParam.name} = ${reqParam.name}; //${reqParam.remark}
+#end
+                //$action.remark 请求返回
+                ${protoName}Handler.${action.actionName}(${action.reqName}, function(${action.respName}) {
+#foreach( $respParam in ${action.commadRespParams} )
+#if(${respParam.name}  == "data")
+#foreach( $dataRespParam in ${respParam.childrens} )
+                    let ${dataRespParam.name} = ${action.respName}.${dataRespParam.name}; //${dataRespParam.remark}
+#end
+#end
+#end
+
+                });
+
+            */
+            ${action.actionName}(${action.reqName}, success, fail = null) {
+#if(${action.method}  == "GET")
+                httpUtils.doGet({
+#elseif(${action.method} == "POST")
+                httpUtils.doPost({
+#else
+                httpUtils.doGet({
+#end
+                    url: bastPath + '$action.requestMapper',
+                    data:{
+#foreach( $reqParam in ${action.commadReqParams} )
+                            '${reqParam.name}': ${action.reqName}.${reqParam.name}, //${reqParam.remark}
+#end
+                        },
+                    success:function (data) {
+                        success(data);
+                    },
+                    fail:fail
+                });
+            },
+
+#end
+        },
+        /*									append__start									*/
+${holdCode}
+        /*									append__end										*/
+
+    };
+export default $protoName;
+
