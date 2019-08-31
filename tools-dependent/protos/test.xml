@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<protos path="test" name="Test" testUrl="http://127.0.0.1:8080" remark="测试">
+    <generates>
+        <generate type="java.receive" actionPackage="com.mnt.test.action" projectName="mnt-super-sign" />
+        <generate type="vue.uniapp" actionPackage="index" projectName="mix-mall 电商项目模版" />
+    </generates>
+    <action path="listCompany" remark="模糊匹配公司" method="POST" body="ture">
+        <request >
+            <param name="keyWord" 	remark="搜索关键词" 		type="String" 	must="true"     length="16"	test="武汉"/>
+        </request>
+        <response>
+            <param name="code" 		remark="错误编码" 	type="Integer" />
+            <param name="message" 	remark="错误信息" 	type="String" />
+            <param name="data" 		remark="返回数据" 	type="String" >
+                <param name="id" 	remark="唯一id" 	type="Long" />
+                <param name="name" 	remark="公司名称" 	type="String" />
+            </param>
+        </response>
+    </action>
+
+    <action path="listGroup" remark="模糊匹配公司" method="GET" body="false">
+        <request >
+           
+        </request>
+        <response>
+            <param name="code" 		remark="错误编码" 	type="Integer" />
+            <param name="message" 	remark="错误信息" 	type="String" />
+            <param name="data" 		remark="返回数据" 	type="String" >
+                <param name="groups" 			remark="栏目列表" 		type="List"     typeClass="String" test="[1.jpg,2.jpg]"/>
+            </param>
+        </response>
+    </action>
+
+</protos>

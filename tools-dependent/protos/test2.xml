@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<protos path="demo" name="Demo" testUrl="http://127.0.0.1:8080" remark="demo代码2">
+    <generates>
+        <generate type="java.receive" actionPackage="com.mnt.test.action" projectName="mnt-super-sign" />
+        <generate type="vue.uniapp" actionPackage="index" projectName="mix-mall 电商项目模版" />
+    </generates>
+    <action path="simpleTest" remark="简单测试" method="POST" body="false">
+        <request >
+            <param name="simpleTest" 	remark="业主手机号" 		type="String" 	must="true"     length="16"	test="200"/>
+        </request>
+        <response>
+            <param name="code" 		remark="错误编码" 	type="Integer" />
+            <param name="message" 	remark="错误信息" 	type="String" />
+            <param name="data" 		remark="返回数据" 	type="String" >
+                <param name="msgId" 	remark="短信校验id" 		type="String" />
+            </param>
+        </response>
+        <!--<test>http://192.168.1.93:8090/proprietorSpace/sendVcode?telPhone=13080627834</test>-->
+    </action>
+
+    <action path="mulitParamTest" remark="多参数测试" method="POST" body="false">
+        <request >
+            <param name="msgId" 	remark="短信id" 			type="String" 	must="true" 		length="64" 	test=""/>
+            <param name="telPhone" 	remark="业主手机号码" 	type="String" 	must="true" 		length="11" 	test=""/>
+            <param name="idCard" 	remark="身份证号" 		type="String" 	must="true" 		length="18" 	test=""/>
+            <param name="vCode" 	remark="验证码" 			type="String" 	must="true" 		length="6" 		test=""/>
+            <param name="openId" 	remark="微信标识id" 		type="String" 	must="true" 		length="128" 	test=""/>
+        </request>
+        <response>
+            <param name="code" 		remark="错误编码" 	type="Integer" />
+            <param name="message" 	remark="错误信息" 	type="String" />
+            <param name="data" 		remark="返回数据" 	type="String" >
+                <param name="proprietorId" 		remark="业主id" 		type="Long" />
+            </param>
+        </response>
+        <!--<test>http://192.168.1.93:8090/proprietorSpace/bind?msgId=1&telPhone=13080627834&idCard=420102197607070813&vCode=123456&openId=777</test>-->
+    </action>
+
+    <action path="listParamsTest" remark="list参数测试" method="POST" body="true">
+        <request >
+            <param name="openId" 	remark="业主OpenId" 		type="String" 	must="true" 	length="128" 	test=""/>
+            <param name="openId2" 	remark="业主OpenId" 		type="String" 	must="true" 	length="128" 	test=""/>
+        </request>
+        <response>
+            <param name="code" 		remark="错误编码" 	type="Integer" />
+            <param name="message" 	remark="错误信息" 	type="String" />
+            <param name="data" 		remark="返回数据" 	type="String" >
+                <param name="proprietorId" 	remark="业主id" 		type="Long" />
+                <param name="userName" 	remark="业主名称" 	type="String" />
+            </param>
+        </response>
+        <!--<test>http://192.168.1.93:8090/proprietorSpace/view?openId=666</test>-->
+    </action>
+
+    <action path="innerListParamsTest" remark="map参数测试" method="GET" body="false">
+        <request >
+            <param name="proprietorId" 	remark="业主id" 		type="Long" 	must="true" 	length="8" 	test="200"/>
+            <param name="proprietorId3" 	remark="业主id" 		type="Date"  format="yyyy-MM-dd"	must="true" 	length="8" 	test="200"/>
+        </request>
+        <response>
+            <param name="code" 		remark="错误编码" 	type="Integer" />
+            <param name="message" 	remark="错误信息" 	type="String"  />
+            <param name="data" 		remark="返回数据" 	type="String" >
+                <param name="bdecoraImgUrls" 			remark="装修前图片列表" 		type="List"     typeClass="String" test="[1.jpg,2.jpg]"/>
+                <param name="adecoraImgUrls" 			remark="装修后图片列表" 		type="List"     typeClass="String"/>
+                <param name="rentStartDate" 	remark="委托开始时间" 	type="Date" />
+                <param name="rentEndDate" 		remark="委托结束时间" 	type="String" />
+                <param name="premisesName" 		remark="楼盘名称" 		type="String" />
+                <param name="premisesAddress" 	remark="行政地址" 		type="String" />
+                <param name="propertyAddress" 	remark="物业地址" 		type="String" />
+                <param name="jrVersion" 		remark="配置" 			type="String" />
+                <param name="gatherProduct" 	remark="委托产品" 		type="String" />
+                <param name="buildArea" 		remark="建筑面积" 		type="Float" />
+                <param name="bedrooms" 			remark="房间列表" 		type="List" typeClass="com.jiangroom.api.gatherhouse.entity.BedroomInfo">
+                    <param name="id" 				remark="房间id" 			type="Long" />
+                    <param name="bedroomNo" 		remark="卧室编号" 		type="Date" />
+                    <param name="bedroomName" 		remark="卧室名称" 		type="String" />
+                    <param name="roomStatus" 		remark="房间状态" 		type="String" />
+                    <param name="roomPictures" 		remark="房间展示图片" 	type="String" />
+                    <param name="orientation" 		remark="朝向(2:朝南)" 			            type="String" />
+                    <param name="hasToilet" 		remark="有无独卫(1:有,其他为无)" 		        type="String" />
+                    <param name="spruceType" 		remark="装修风格(1:可可,2:原麦,3:起司)" 		type="String" />
+                    <param name="hasBalcony" 		remark="有无阳台(1:有,其他为无)" 		        type="String" />
+                    <param name="hasBayWindow" 		remark="有无飘窗(1:有,其他为无 可能为空)" 		type="String" />
+                    <param name="proprietorPersonVOs" 			remark="租客信息列表" 		    type="List"  typeClass="com.jiangroom.api.proprietor.vo.ProprietorBedroomInfoVO" >
+                        <param name="userName" 			remark="租户姓名" 		        type="String" />
+                        <param name="userSex" 			remark="租户性别" 		        type="String" />
+                        <param name="industry" 			remark="行业方向" 		        type="String" />
+                        <param name="age" 				remark="年龄" 			        type="Integer" />
+                        <param name="authenticationId" 	remark="实名认证成功标志"        type="String" />
+                    </param>
+                </param>
+            </param>
+        </response>
+        <!--<test>http://192.168.1.93:8090/proprietorSpace/getHousekeep?proprietorId=1</test>-->
+    </action>
+
+    <action path="responseListTest" remark="list返回测试" method="POST" body="false">
+        <request >
+            <param name="proprietorId" 	remark="业主id" 		type="Long" 	must="true" 	length="8" 	test=""/>
+        </request>
+        <response>
+            <param name="code" 		remark="错误编码" 	type="Integer" />
+            <param name="message" 	remark="错误信息" 	type="String" />
+            <param name="data" 		remark="返回数据" 	type="String" >
+                <param name="count" 		remark="房屋数量" 		type="Integer" />
+            </param>
+        </response>
+        <!--<test>http://192.168.1.93:8090/proprietorSpace/getHouseCount?proprietorId=1</test>-->
+    </action>
+
+    <action path="responseMapTest" remark="map返回测试" method="POST" body="false">
+        <request >
+            <param name="proprietorId" 	remark="业主id" 		type="Long" 		must="true" 	length="8" 	test=""/>
+            <param name="pageIndex" 	remark="页面索引" 	type="Integer" 		must="true" 	length="4" 	test=""/>
+            <param name="pageSize" 		remark="页面大小" 	type="Integer" 		must="true" 	length="4" 	test=""/>
+        </request>
+        <response>
+            <param name="code" 		remark="错误编码" 	type="Integer" />
+            <param name="message" 	remark="错误信息" 	type="String" />
+            <param name="data" 		remark="返回数据" 	type="String" >
+                <param name="houses" 	remark="房屋列表" 	type="List" typeClass="" >
+                    <param name="contractNo" 		remark="合同号" 			type="String" />
+                    <param name="contractId" 		remark="合同Id" 			type="Long" />
+                    <param name="houseNo" 			remark="房源编号" 		    type="String" />
+                    <param name="HouseName" 		remark="房屋名称" 		    type="Date"   format="yyyy-MM-dd" />
+                    <param name="premisesAddress" 	remark="楼盘地址" 		    type="String" />
+                    <param name="rentStartDate" 	remark="委托开始时间" 	    type="String" />
+                    <param name="rentEndDate" 		remark="委托结束时间" 	    type="String" />
+                    <param name="isInVacancy" 		remark="是否在空置期" 	    type="Boolean" />
+                </param>
+            </param>
+        </response>
+        <!--<test>http://192.168.1.93:8090/proprietorSpace/listHouse?proprietorId=1&pageIndex=0&pageSize=10</test>-->
+    </action>
+
+</protos>
