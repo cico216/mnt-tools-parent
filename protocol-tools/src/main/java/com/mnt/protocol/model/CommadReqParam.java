@@ -30,6 +30,16 @@ public class CommadReqParam {
      */
     private Integer length;
 
+    /**
+     * 最大值
+     */
+    private Integer max;
+
+    /**
+     * 最小值
+     */
+    private Integer min;
+
 
     /**
      * 是否必传
@@ -50,6 +60,11 @@ public class CommadReqParam {
      * date日期格式
      */
     private String format;
+
+    /**
+     * 校验通知
+     */
+    private String valMsg;
 
     /**
      * 请求参数列表
@@ -123,5 +138,29 @@ public class CommadReqParam {
 
     public void setFormat(String format) {
         this.format = format;
+    }
+
+    public Integer getMax() {
+        return max;
+    }
+
+    public void setMax(Integer max) {
+        this.max = max;
+    }
+
+    public Integer getMin() {
+        return min;
+    }
+
+    public void setMin(Integer min) {
+        this.min = min;
+    }
+
+    public String getValMsg() {
+        return valMsg;
+    }
+
+    public void setValMsg(String valMsg) {
+        this.valMsg = valMsg;
     }
 }

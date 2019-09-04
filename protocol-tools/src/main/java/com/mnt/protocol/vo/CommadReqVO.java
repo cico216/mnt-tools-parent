@@ -33,6 +33,21 @@ public class CommadReqVO {
     private SimpleIntegerProperty length = new SimpleIntegerProperty(0);
 
     /**
+     * 最小长度
+     */
+    private SimpleIntegerProperty min = new SimpleIntegerProperty(0);
+
+    /**
+     * 最大长度
+     */
+    private SimpleIntegerProperty max = new SimpleIntegerProperty(0);
+
+    /**
+     * 参数类型
+     */
+    private SimpleStringProperty limit = new SimpleStringProperty("");
+
+    /**
      * 是否必传
      */
     private SimpleBooleanProperty must = new SimpleBooleanProperty(false);
@@ -51,6 +66,11 @@ public class CommadReqVO {
      * date格式化
      */
     private SimpleStringProperty format = new SimpleStringProperty("");
+
+    /**
+     * 验证通知
+     */
+    private SimpleStringProperty valMsg = new SimpleStringProperty("");
 
     List<CommadReqVO> childrens = new ArrayList<>(10);
 
@@ -152,5 +172,53 @@ public class CommadReqVO {
 
     public void setFormat(String format) {
         this.format.set(format);
+    }
+
+    public int getMin() {
+        return min.get();
+    }
+
+    public SimpleIntegerProperty minProperty() {
+        return min;
+    }
+
+    public void setMin(int min) {
+        this.min.set(min);
+    }
+
+    public int getMax() {
+        return max.get();
+    }
+
+    public SimpleIntegerProperty maxProperty() {
+        return max;
+    }
+
+    public void setMax(int max) {
+        this.max.set(max);
+    }
+
+    public String getLimit() {
+        return limit.get();
+    }
+
+    public SimpleStringProperty limitProperty() {
+        return limit;
+    }
+
+    public void setLimit(String limit) {
+        this.limit.set(limit);
+    }
+
+    public String getValMsg() {
+        return valMsg.get();
+    }
+
+    public SimpleStringProperty valMsgProperty() {
+        return valMsg;
+    }
+
+    public void setValMsg(String valMsg) {
+        this.valMsg.set(valMsg);
     }
 }

@@ -611,7 +611,7 @@ public class MainViewController extends BaseController {
         trclumReqName.setCellValueFactory(new TreeItemPropertyValueFactory("name"));
         trclumReqRemark.setCellValueFactory(new TreeItemPropertyValueFactory("remark"));
         trclumReqType.setCellValueFactory(new TreeItemPropertyValueFactory("type"));
-        trclumReqLength.setCellValueFactory(new TreeItemPropertyValueFactory("length"));
+        trclumReqLength.setCellValueFactory(new TreeItemPropertyValueFactory("limit"));
         trclumReqMust.setCellValueFactory(new TreeItemPropertyValueFactory("must"));
         trclumReqTest.setCellValueFactory(new TreeItemPropertyValueFactory("test"));
 

@@ -6,6 +6,7 @@ import com.mnt.protocol.vo.BaseCommadVO;
 import com.mnt.protocol.vo.BaseProtoVO;
 import com.mnt.protocol.vo.CommadReqVO;
 import com.mnt.protocol.vo.CommadRespVO;
+import org.apache.commons.lang.StringUtils;
 import org.dom4j.Node;
 
 import java.io.File;
@@ -188,12 +189,30 @@ public class ProtoVOUtils {
             commadReqVO.setRemark(node.valueOf("@remark"));
             commadReqVO.setType(node.valueOf("@type"));
             commadReqVO.setTypeClass(node.valueOf("@typeClass"));
+            commadReqVO.setValMsg(node.valueOf("@valMsg"));
             String length = node.valueOf("@length");
 
+            String limit = length;
+            String min =  node.valueOf("@min");
+            String max =  node.valueOf("@max");
+
+            if(!StringUtils.isEmpty(min) || !StringUtils.isEmpty(max)) {
+                limit = "[" + min + "," + max + "]";
+            }
+
+            commadReqVO.setLimit(limit);
             try {
-                commadReqVO.setLength(Integer.valueOf(length));
+                if(!StringUtils.isEmpty(length)) {
+                    commadReqVO.setLength(Integer.parseInt(length));
+                }
+                if(!StringUtils.isEmpty(min)) {
+                    commadReqVO.setMin(Integer.parseInt(min));
+                }
+                if(!StringUtils.isEmpty(max)) {
+                    commadReqVO.setMax(Integer.parseInt(max));
+                }
             } catch (Exception e) {
-                ConsoleLogUtils.log( "[" + commadReqVO.getName() + "]length 必须为数字");
+                ConsoleLogUtils.log( "[" + commadReqVO.getName() + "]length, max, min必须为数字");
                 ConsoleLogUtils.log(e);
             }
 

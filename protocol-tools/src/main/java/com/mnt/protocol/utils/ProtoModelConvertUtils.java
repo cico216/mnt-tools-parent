@@ -173,10 +173,13 @@ public class ProtoModelConvertUtils {
         for (CommadReqVO commadReqVO : commadReqVOs) {
             commadReqParam = new CommadReqParam();
             commadReqParam.setLength(commadReqVO.getLength());
+            commadReqParam.setMin(commadReqVO.getMin());
+            commadReqParam.setMax(commadReqVO.getMax());
             commadReqParam.setMust(commadReqVO.isMust());
             commadReqParam.setName(commadReqVO.getName());
             commadReqParam.setRemark(commadReqVO.getRemark());
             commadReqParam.setType(commadReqVO.getTest());
+            commadReqParam.setValMsg(commadReqVO.getValMsg());
 
             String type = ParamTypeUtils.convertType(commadReqVO.getType());
 

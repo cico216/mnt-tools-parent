@@ -138,7 +138,7 @@
                                                             <TreeTableColumn fx:id="trclumReqName" prefWidth="75.0" text="参数名" />
                                                             <TreeTableColumn fx:id="trclumReqRemark" prefWidth="75.0" text="参数注释" />
                                                             <TreeTableColumn fx:id="trclumReqType" prefWidth="75.0" text="参数类型" />
-                                                            <TreeTableColumn fx:id="trclumReqLength" prefWidth="75.0" text="长度限制" />
+                                                            <TreeTableColumn fx:id="trclumReqLength" prefWidth="75.0" text="参数限制" />
                                                             <TreeTableColumn fx:id="trclumReqMust" prefWidth="75.0" text="是否必传" />
                                                             <TreeTableColumn fx:id="trclumReqTest" prefWidth="75.0" text="参数样例" />
                                                          </columns>
