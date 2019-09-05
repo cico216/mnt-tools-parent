@@ -17,26 +17,6 @@ import java.lang.reflect.Modifier;
 public class PropertyCloneUtils {
 
 	
-	/**
-	 * 将 dto的属性克隆到 vo
-	 * @param fromDto
-	 * @param toVO
-	 */
-	public static <PK> void cloneDtoToVO(GenericDomain<PK> fromDto, Object toVO)
-	{
-		clone(fromDto, toVO);
-	}
-	
-	/**
-	 * 将vo的属性克隆岛 dto
-	 * @param fromVO
-	 * @param toDto
-	 */
-	public static <PK> void cloneVOToDto(Object fromVO, GenericDomain<PK> toDto)
-	{
-		clone(fromVO, toDto);
-	}
-	
 	
 	/**
 	 * 属性克隆
@@ -120,7 +100,7 @@ public class PropertyCloneUtils {
 				return;
 			}
 			
-			Class<?> type = tofield.getClass();
+			Class<?> type = tofield.getType();
 			fromField.setAccessible(true);
 			tofield.setAccessible(true);
 			
@@ -129,29 +109,41 @@ public class PropertyCloneUtils {
 				return;
 			}
 			
-			if(type.isAssignableFrom(String.class) || type.isAssignableFrom(Character.class) || type.isAssignableFrom(char.class))
+			if(type.isAssignableFrom(String.class))
 			{
 					tofield.set(toObj, fromField.get(fromObj));
 			}
-			else if(type.isAssignableFrom(Integer.class) || type.isAssignableFrom(int.class) ||type.isAssignableFrom(Short.class) || type.isAssignableFrom(short.class) || type.isAssignableFrom(Byte.class) || type.isAssignableFrom(byte.class))
+			else if(type.isAssignableFrom(int.class))
 			{
 				tofield.setInt(toObj, fromField.getInt(fromObj));
 			}
-			else if(type.isAssignableFrom(Boolean.class)|| type.isAssignableFrom(boolean.class))
+			else if(type.isAssignableFrom(boolean.class))
 			{
 				tofield.setBoolean(toObj, fromField.getBoolean(fromObj));
 			}
-			else if(type.isAssignableFrom(Float.class)|| type.isAssignableFrom(float.class))
+			else if(type.isAssignableFrom(float.class))
 			{
 				tofield.setFloat(toObj, fromField.getFloat(fromObj));
 			}
-			else if(type.isAssignableFrom(Long.class)|| type.isAssignableFrom(long.class))
+			else if(type.isAssignableFrom(long.class))
 			{
 				tofield.setLong(toObj, fromField.getLong(fromObj));
 			}
-			else if(type.isAssignableFrom(Double.class)|| type.isAssignableFrom(double.class))
+			else if(type.isAssignableFrom(double.class))
 			{
 				tofield.setDouble(toObj, fromField.getDouble(fromObj));
+			}
+			else if(type.isAssignableFrom(char.class))
+			{
+				tofield.setChar(toObj, fromField.getChar(fromObj));
+			}
+			else if(type.isAssignableFrom(short.class))
+			{
+				tofield.setShort(toObj, fromField.getShort(fromObj));
+			}
+			else if(type.isAssignableFrom(byte.class))
+			{
+				tofield.setByte(toObj, fromField.getByte(fromObj));
 			}
 			else 
 			{
