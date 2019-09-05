@@ -19,6 +19,7 @@
     <properties>
         <mnt-version>1.2</mnt-version>
         <mnt-tools-version>1.0-SNAPSHOT</mnt-tools-version>
+        <junit.version>4.13-beta-3</junit.version>
         <velocity.version>1.7</velocity.version>
         <lombok.version>1.18.8</lombok.version>
         <fastjson.version>1.2.59</fastjson.version>
@@ -41,6 +42,13 @@
             <artifactId>lombok</artifactId>
             <scope>provided</scope>
         </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
 
@@ -124,6 +132,13 @@
                 <groupId>org.mybatis</groupId>
                 <artifactId>mybatis</artifactId>
                 <version>${mybatis.version}</version>
+            </dependency>
+
+            <!-- 单元测试 -->
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>${junit.version}</version>
             </dependency>
 
         </dependencies>
