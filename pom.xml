@@ -17,8 +17,8 @@
     </modules>
 
     <properties>
-        <mnt-version>1.2</mnt-version>
-        <mnt-tools-version>1.0-SNAPSHOT</mnt-tools-version>
+        <mnt.version>1.1.1</mnt.version>
+        <mnt.tools.version>1.0-SNAPSHOT</mnt.tools.version>
         <junit.version>4.13-beta-3</junit.version>
         <velocity.version>1.7</velocity.version>
         <lombok.version>1.18.8</lombok.version>
@@ -59,19 +59,19 @@
             <dependency>
                 <groupId>com.github.cico216</groupId>
                 <artifactId>fx-pc</artifactId>
-                <version>${mnt-version}</version>
+                <version>${mnt.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>com.github.cico216</groupId>
                 <artifactId>mnt-core</artifactId>
-                <version>${mnt-version}</version>
+                <version>${mnt.version}</version>
             </dependency>
             <!-- 公共依赖 -->
             <dependency>
                 <groupId>com.mnt.tools</groupId>
                 <artifactId>tools-common</artifactId>
-                <version>${mnt-tools-version}</version>
+                <version>${mnt.tools.version}</version>
             </dependency>
             <!-- velocity依赖 -->
             <dependency>
