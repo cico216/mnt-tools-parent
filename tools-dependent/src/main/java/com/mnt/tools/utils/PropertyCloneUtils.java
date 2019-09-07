@@ -3,10 +3,12 @@ package com.mnt.tools.utils;
 
 import com.mnt.tools.anno.prop.PropField;
 import com.mnt.tools.anno.prop.PropNoClone;
-import com.mnt.tools.dep.GenericDomain;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * 属性克隆工具类 用来复制 vo 和 dto 的属性
@@ -86,10 +88,10 @@ public class PropertyCloneUtils {
 	
 	/**
 	 * 给字段设置值
-	 * @param tofield
-	 * @param fieldName
-	 * @param fromObj
-	 * @param toObj
+	 * @param tofield 写入value的字段
+	 * @param fieldName 字段名
+	 * @param fromObj 来源对象
+	 * @param toObj 写入值得对象
 	 */
 	private static void setFieldValue(Field tofield, String fieldName, Object fromObj, Object toObj)
 	{
@@ -160,5 +162,53 @@ public class PropertyCloneUtils {
 			}
 		}
 	}
+
+    /**
+     * List对象clone
+     * @param fromList 来源list
+     * @param clazz clone 后的类型 clazz
+     * @param <T> clone 后的类型
+     * @param <F> clone来源泛型
+     * @return
+     */
+    public static <T, F> List<T> cloneList(List<F> fromList, Class<T> clazz) {
+	    return cloneList(fromList, clazz, null);
+    }
+
+    /**
+     * List对象clone
+     * @param fromList 来源list
+     * @param clazz clone 后的类型 clazz
+     * @param <T> clone 后的类型
+     * @param <F> clone来源泛型
+     * @param consumer 需要在循环中处理的事情
+     * @return
+     */
+	public static <T, F> List<T> cloneList(List<F> fromList, Class<T> clazz, Consumer<T> consumer) {
+
+	    if(null == fromList) {
+	        return null;
+        }
+
+        List<T> result = new ArrayList<>(fromList.size());
+	    T t;
+        for (F f : fromList) {
+            try {
+                t = clazz.newInstance();
+                clone(f, t);
+                //如果需要在遍历中处理事情
+                if(consumer != null) {
+                    consumer.accept(t);
+                }
+                result.add(t);
+            } catch (InstantiationException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+
+        return result;
+    }
 	
 }
