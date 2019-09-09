@@ -63,6 +63,12 @@ public class $reqParamName  {
     ${innerClassStr}
 #end
 
+
+/* append__start */
+
+#if(${holdCode})
+${holdCode}
+#else
     /**
      * 拷贝属性到指定对象 List 除外
      */
@@ -70,5 +76,8 @@ public class $reqParamName  {
         PropertyCloneUtils.clone(this, obj);
 
     }
+#end
+
+/* append__end */
 
 }

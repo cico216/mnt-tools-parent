@@ -188,6 +188,7 @@ public class ProtoVOUtils {
             commadReqVO.setName(node.valueOf("@name"));
             commadReqVO.setRemark(node.valueOf("@remark"));
             commadReqVO.setType(node.valueOf("@type"));
+            commadReqVO.setValid(node.valueOf("@valid"));
             commadReqVO.setTypeClass(node.valueOf("@typeClass"));
             commadReqVO.setValMsg(node.valueOf("@valMsg"));
             String length = node.valueOf("@length");
@@ -197,7 +198,12 @@ public class ProtoVOUtils {
             String max =  node.valueOf("@max");
 
             if(!StringUtils.isEmpty(min) || !StringUtils.isEmpty(max)) {
-                limit = "[" + min + "," + max + "]";
+                limit = "[" + (StringUtils.isEmpty(min) ? "- ∞" : min) + "," + (StringUtils.isEmpty(max) ? "+ ∞" : max) + "]";
+                //如果为string类型 则最小值为0
+                if("string".equals(String.valueOf(commadReqVO.getType()).toLowerCase())) {
+                    limit.replace("- ∞", "0");
+                }
+
             }
 
             commadReqVO.setLimit(limit);

@@ -180,6 +180,7 @@ public class ProtoModelConvertUtils {
             commadReqParam.setRemark(commadReqVO.getRemark());
             commadReqParam.setType(commadReqVO.getTest());
             commadReqParam.setValMsg(commadReqVO.getValMsg());
+            commadReqParam.setValid(commadReqVO.getValid());
 
             String type = ParamTypeUtils.convertType(commadReqVO.getType());
 

@@ -67,6 +67,11 @@ public class CommadReqParam {
     private String valMsg;
 
     /**
+     * 校验注解
+     */
+    private String valid;
+
+    /**
      * 请求参数列表
      */
     private List<CommadReqParam> childrens = new ArrayList<>();
@@ -162,5 +167,13 @@ public class CommadReqParam {
 
     public void setValMsg(String valMsg) {
         this.valMsg = valMsg;
+    }
+
+    public String getValid() {
+        return valid;
+    }
+
+    public void setValid(String valid) {
+        this.valid = valid;
     }
 }

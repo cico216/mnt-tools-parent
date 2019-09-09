@@ -4,9 +4,9 @@
         <generate type="java.receive" actionPackage="com.mnt.test.action" projectName="mnt-super-sign" />
         <generate type="vue.uniapp" actionPackage="index" projectName="mix-mall 电商项目模版" />
     </generates>
-    <action path="listCompany" remark="模糊匹配公司" method="POST" body="ture">
+    <action path="listCompany" remark="模糊匹配公司" method="POST" body="true">
         <request >
-            <param name="keyWord" 	remark="搜索关键词" 		type="String" 	must="true"  max="16" min="0" valMsg="关键词最大长度为16"	test="武汉"/>
+            <param name="keyWord" 	remark="搜索关键词" 		type="String" 	must="true"  max="16" min="0" valid='"123"' valMsg="关键词最大长度为16"	test="武汉"/>
         </request>
         <response>
             <param name="code" 		remark="错误编码" 	type="Integer" />

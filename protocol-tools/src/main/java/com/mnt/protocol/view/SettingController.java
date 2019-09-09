@@ -10,6 +10,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
@@ -35,6 +36,9 @@ public class SettingController extends BaseController {
     @FXML
     private TextField txtProjectPath;
 
+    @FXML
+    private CheckBox cbGenerateValid;
+
     private Stage currStage;
 
     private ObservableList<String> itemTypes = FXCollections.observableArrayList();
@@ -55,6 +59,8 @@ public class SettingController extends BaseController {
 
         String projectPath = UserData.getUserConfig().getProjectPath();
         txtProjectPath.setText(projectPath);
+
+        cbGenerateValid.setSelected(UserData.getUserConfig().getGenerateValid());
 
         initComboBox();
 
@@ -125,6 +131,8 @@ public class SettingController extends BaseController {
         UserData.getUserConfig().setProjectPath(txtProjectPath.getText());
 
         UserData.getUserConfig().setGenerateCodeType(generateType);
+
+        UserData.getUserConfig().setGenerateValid(cbGenerateValid.isSelected());
 
         UserData.saveUserConfig();
 

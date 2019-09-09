@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.mnt.tools.dep.BaseController;
 import com.mnt.tools.dep.AjaxResult;
 
-
 /**
 * $remark
 *
@@ -31,11 +30,11 @@ ${holdCode}
 #foreach( $action in $actions)
     /**
      * $action.remark
-     * @param ${action.reqName} ${action.remark}请求参数
+     * @param ${action.reqName} ${action.remark}请求参数 ${action.body}
      */
     @RequestMapping("$action.requestMapper")
 #if(${action.body})
-    public AjaxResult ${action.actionName}(@org.springframework.web.bind.annotation.RequestBody ${action.reqClass} ${action.reqName}) {
+    public AjaxResult ${action.actionName}(@RequestBody ${action.reqClass} ${action.reqName}) {
 #else
     public AjaxResult ${action.actionName}(${action.reqClass} ${action.reqName}) {
 #end

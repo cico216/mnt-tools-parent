@@ -57,6 +57,11 @@ public class $respParamName {
     ${innerClassStr}
 #end
 
+/* append__start */
+
+#if(${holdCode})
+${holdCode}
+#else
     /**
      * 拷贝指定对象属性到当前类的新实例 List除外
      */
@@ -69,6 +74,7 @@ public class $respParamName {
         return null;
 #end
     }
-
+#end
+/* append__end */
 
 }

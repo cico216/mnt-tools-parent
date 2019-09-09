@@ -72,6 +72,11 @@ public class CommadReqVO {
      */
     private SimpleStringProperty valMsg = new SimpleStringProperty("");
 
+    /**
+     * 校验注解
+     */
+    private SimpleStringProperty valid = new SimpleStringProperty("");
+
     List<CommadReqVO> childrens = new ArrayList<>(10);
 
     public String getName() {
@@ -220,5 +225,17 @@ public class CommadReqVO {
 
     public void setValMsg(String valMsg) {
         this.valMsg.set(valMsg);
+    }
+
+    public String getValid() {
+        return valid.get();
+    }
+
+    public SimpleStringProperty validProperty() {
+        return valid;
+    }
+
+    public void setValid(String valid) {
+        this.valid.set(valid);
     }
 }

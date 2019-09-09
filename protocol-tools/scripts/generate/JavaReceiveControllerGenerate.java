@@ -243,7 +243,8 @@ public class JavaReceiveControllerGenerate extends ProtoCodeGenerateTemplate {
                         if(!line.contains("import org.springframework.web.bind.annotation.RequestMapping;") &&
                                 !line.contains("import org.springframework.web.bind.annotation.RestController;") &&
                                 !line.contains("import com.mnt.tools.dep.BaseController;") &&
-                                !line.contains("import com.mnt.tools.dep.AjaxResult;")
+                                !line.contains("import com.mnt.tools.dep.AjaxResult;") &&
+                                !line.contains("import org.springframework.web.bind.annotation.RequestBody;")
                                 ) {
                             String packageStr = line.trim().replace("import ", "").replace(";", "");
                             if(!importPackages.contains(packageStr)) {
@@ -259,6 +260,12 @@ public class JavaReceiveControllerGenerate extends ProtoCodeGenerateTemplate {
                         for (ActionModel actionUrl : actionModels) {
                             if(line.contains("@RequestMapping(\"" + actionUrl.getRequestMapper() + "\")")) {
                                 removeActions.add(actionUrl);
+                            }
+                            //request body 包引入
+                            if(actionUrl.getBody()) {
+                                if(!importPackages.contains("org.springframework.web.bind.annotation.RequestBody")) {
+                                    importPackages.add("org.springframework.web.bind.annotation.RequestBody");
+                                }
                             }
                         }
 
