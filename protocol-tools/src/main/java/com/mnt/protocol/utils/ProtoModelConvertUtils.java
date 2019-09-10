@@ -373,7 +373,7 @@ public class ProtoModelConvertUtils {
             }
 
         }else if("integer".equals(lowType) || "long".equals(lowType)) {
-            result += TAB + "@NotNull(message=\"" + validMsg + "\")\n";
+            result += TAB + "@NotNull(message=\"" + remark + "不能为空\")\n";
             if(!StringUtils.isEmpty(min)) {
                 result += TAB + "@Min(message=\"" + remark + "最小值为" + min + "\")\n";
             }
@@ -381,7 +381,7 @@ public class ProtoModelConvertUtils {
                 result += TAB + "@Max(message=\"" + remark + "最大值为" + max + "\")\n";
             }
         } else if("double".equals(lowType) || "float".equals(lowType) || "bigdecimal".equals(lowType)) {
-            result += TAB + "@NotNull(message=\"" + validMsg + "\")\n";
+            result += TAB + "@NotNull(message=\"" + remark + "不能为空\")\n";
             if(!StringUtils.isEmpty(min)) {
                 result += TAB + "@DecimalMin(message=\"" + remark + "最小值为" + min + "\")\n";
             }
@@ -389,7 +389,7 @@ public class ProtoModelConvertUtils {
                 result += TAB + "@DecimalMax(message=\"" + remark + "最大值为" + max + "\")\n";
             }
         } else {
-            result += TAB + "@NotNull(message=\"" + validMsg + "\")\n";
+            result += TAB + "@NotNull(message=\"" + remark + "不能为空\")\n";
         }
 
         if(!StringUtils.isEmpty(valid)) {
