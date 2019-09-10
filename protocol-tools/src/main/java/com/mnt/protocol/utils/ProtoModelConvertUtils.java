@@ -366,7 +366,7 @@ public class ProtoModelConvertUtils {
             result += TAB + "@NotBlank(message=\"" + remark + "不能为空\")\n";
             if(!StringUtils.isEmpty(min) || !StringUtils.isEmpty(max)) {
                 if(StringUtils.isEmpty(min)) {
-                    min = "0";
+                    min = "1";
                 }
                 result += TAB + "@Length(min = "+ min + ", max = "+ max + ", message = \"" + remark + "长度位于" + min + "到" + max + "\")\n";
                 checkAndAdd(actionReqImportsClass, "org.hibernate.validator.constraints.Length");
@@ -375,18 +375,18 @@ public class ProtoModelConvertUtils {
         }else if("integer".equals(lowType) || "long".equals(lowType)) {
             result += TAB + "@NotNull(message=\"" + remark + "不能为空\")\n";
             if(!StringUtils.isEmpty(min)) {
-                result += TAB + "@Min(message=\"" + remark + "最小值为" + min + "\")\n";
+                result += TAB + "@Min(value= " + min + " ,message=\"" + remark + "最小值为" + min + "\")\n";
             }
             if(!StringUtils.isEmpty(max)) {
-                result += TAB + "@Max(message=\"" + remark + "最大值为" + max + "\")\n";
+                result += TAB + "@Max(value= " + max + " ,message=\"" + remark + "最大值为" + max + "\")\n";
             }
         } else if("double".equals(lowType) || "float".equals(lowType) || "bigdecimal".equals(lowType)) {
             result += TAB + "@NotNull(message=\"" + remark + "不能为空\")\n";
             if(!StringUtils.isEmpty(min)) {
-                result += TAB + "@DecimalMin(message=\"" + remark + "最小值为" + min + "\")\n";
+                result += TAB + "@DecimalMin(value= \"" + min + "\" ,message=\"" + remark + "最小值为" + min + "\")\n";
             }
             if(!StringUtils.isEmpty(max)) {
-                result += TAB + "@DecimalMax(message=\"" + remark + "最大值为" + max + "\")\n";
+                result += TAB + "@DecimalMax(value= \"" + max + "\" ,message=\"" + remark + "最大值为" + max + "\")\n";
             }
         } else {
             result += TAB + "@NotNull(message=\"" + remark + "不能为空\")\n";

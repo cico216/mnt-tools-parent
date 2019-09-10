@@ -6,7 +6,7 @@
     </generates>
     <action path="simpleTest" remark="简单测试" method="POST" body="false">
         <request >
-            <param name="simpleTest" 	remark="业主手机号" 		type="String" 	must="true"     length="16"	test="200"/>
+            <param name="simpleTest" 	remark="业主手机号" 		type="String" 	must="true" max="11" min="11" test="200"/>
         </request>
         <response>
             <param name="code" 		remark="错误编码" 	type="Integer" />
@@ -20,11 +20,11 @@
 
     <action path="mulitParamTest" remark="多参数测试" method="POST" body="false">
         <request >
-            <param name="msgId" 	remark="短信id" 			type="String" 	must="true" 		length="64" 	test=""/>
-            <param name="telPhone" 	remark="业主手机号码" 	type="String" 	must="true" 		length="11" 	test=""/>
-            <param name="idCard" 	remark="身份证号" 		type="String" 	must="true" 		length="18" 	test=""/>
-            <param name="vCode" 	remark="验证码" 			type="String" 	must="true" 		length="6" 		test=""/>
-            <param name="openId" 	remark="微信标识id" 		type="String" 	must="true" 		length="128" 	test=""/>
+            <param name="msgId" 	remark="短信id" 			type="String" 	must="true" 		max="64"  	test=""/>
+            <param name="telPhone" 	remark="业主手机号码" 	type="String" 	must="true" 		 max="11" min="11" 	test=""/>
+            <param name="idCard" 	remark="身份证号" 		type="String" 	must="true" 		 max="18" min="15" 	test=""/>
+            <param name="vCode" 	remark="验证码" 			type="String" 	must="true" 		 max="6" min="6" 		test=""/>
+            <param name="openId" 	remark="微信标识id" 		type="String" 	must="true" 		 max="128"  	test=""/>
         </request>
         <response>
             <param name="code" 		remark="错误编码" 	type="Integer" />
@@ -38,8 +38,8 @@
 
     <action path="listParamsTest" remark="list参数测试" method="POST" body="true">
         <request >
-            <param name="openId" 	remark="业主OpenId" 		type="String" 	must="true" 	length="128" 	test=""/>
-            <param name="openId2" 	remark="业主OpenId" 		type="String" 	must="true" 	length="128" 	test=""/>
+            <param name="openId" 	remark="业主OpenId" 		type="String" 	must="true" 	max="128" 	test="1546467asdfasease"/>
+            <param name="age" 	    remark="业主年纪" 		    type="Float" 	must="true" 	max="120.1"   min="18.5"	test="18.5"/>
         </request>
         <response>
             <param name="code" 		remark="错误编码" 	type="Integer" />
@@ -54,8 +54,8 @@
 
     <action path="innerListParamsTest" remark="map参数测试" method="GET" body="false">
         <request >
-            <param name="proprietorId" 	remark="业主id" 		type="Long" 	must="true" 	length="8" 	test="200"/>
-            <param name="proprietorId3" 	remark="业主id" 		type="Date"  format="yyyy-MM-dd"	must="true" 	length="8" 	test="200"/>
+            <param name="proprietorId" 	remark="业主id" 		type="Long" 	must="true"   	test="200"/>
+            <param name="proprietorId3" 	remark="业主id" 		type="Date"  format="yyyy-MM-dd"	must="true"  	test="200"/>
         </request>
         <response>
             <param name="code" 		remark="错误编码" 	type="Integer" />
@@ -97,7 +97,7 @@
 
     <action path="responseListTest" remark="list返回测试" method="POST" body="false">
         <request >
-            <param name="proprietorId" 	remark="业主id" 		type="Long" 	must="true" 	length="8" 	test=""/>
+            <param name="proprietorId" 	remark="业主id" 		type="Long" 	must="true" 	test=""/>
         </request>
         <response>
             <param name="code" 		remark="错误编码" 	type="Integer" />
@@ -111,9 +111,9 @@
 
     <action path="responseMapTest" remark="map返回测试" method="POST" body="false">
         <request >
-            <param name="proprietorId" 	remark="业主id" 		type="Long" 		must="true" 	length="8" 	test=""/>
-            <param name="pageIndex" 	remark="页面索引" 	type="Integer" 		must="true" 	length="4" 	test=""/>
-            <param name="pageSize" 		remark="页面大小" 	type="Integer" 		must="true" 	length="4" 	test=""/>
+            <param name="proprietorId" 	remark="业主id" 		type="Long" 		must="true"  	test=""/>
+            <param name="pageIndex" 	remark="页面索引" 	type="Integer" 		must="true" 	test=""/>
+            <param name="pageSize" 		remark="页面大小" 	type="Integer" 		must="true" 	 max="50" min="5" 	test=""/>
         </request>
         <response>
             <param name="code" 		remark="错误编码" 	type="Integer" />

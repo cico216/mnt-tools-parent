@@ -6,7 +6,7 @@
     </generates>
     <action path="listCompany" remark="模糊匹配公司" method="POST" body="true">
         <request >
-            <param name="keyWord" 	remark="搜索关键词" 		type="String" 	must="true"  max="16" min="1" valid='' valMsg="关键词最大长度为16"	test="武汉"/>
+            <param name="keyWord" 	remark="搜索关键词" 		type="String" 	must="true"  max="16" min="1" valid=''	test="武汉"/>
         </request>
         <response>
             <param name="code" 		remark="错误编码" 	type="Integer" />
