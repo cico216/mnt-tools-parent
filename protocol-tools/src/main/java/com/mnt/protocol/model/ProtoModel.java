@@ -45,6 +45,11 @@ public class ProtoModel {
     private String date;
 
     /**
+     * 是否生成验证代码啊
+     */
+    private boolean generateValid;
+
+    /**
      * 请求列表
      */
     private List<ActionModel> actions;
@@ -112,5 +117,13 @@ public class ProtoModel {
 
     public void setGenerateConfigInfo(GenerateConfigInfo generateConfigInfo) {
         this.generateConfigInfo = generateConfigInfo;
+    }
+
+    public boolean isGenerateValid() {
+        return generateValid;
+    }
+
+    public void setGenerateValid(boolean generateValid) {
+        this.generateValid = generateValid;
     }
 }

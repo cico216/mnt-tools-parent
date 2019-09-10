@@ -35,12 +35,12 @@ public class CommadReqVO {
     /**
      * 最小长度
      */
-    private SimpleIntegerProperty min = new SimpleIntegerProperty(0);
+    private SimpleStringProperty min = new SimpleStringProperty("");
 
     /**
      * 最大长度
      */
-    private SimpleIntegerProperty max = new SimpleIntegerProperty(0);
+    private SimpleStringProperty max = new SimpleStringProperty("");
 
     /**
      * 参数类型
@@ -179,27 +179,27 @@ public class CommadReqVO {
         this.format.set(format);
     }
 
-    public int getMin() {
+    public String getMin() {
         return min.get();
     }
 
-    public SimpleIntegerProperty minProperty() {
+    public SimpleStringProperty minProperty() {
         return min;
     }
 
-    public void setMin(int min) {
+    public void setMin(String min) {
         this.min.set(min);
     }
 
-    public int getMax() {
+    public String getMax() {
         return max.get();
     }
 
-    public SimpleIntegerProperty maxProperty() {
+    public SimpleStringProperty maxProperty() {
         return max;
     }
 
-    public void setMax(int max) {
+    public void setMax(String max) {
         this.max.set(max);
     }
 

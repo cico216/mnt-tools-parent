@@ -22,18 +22,14 @@ public class $reqParamName  {
     /**
     * $reqParam.remark
     */
+${reqParam.validCode}
 #if($reqParam.type == "Date")
 #if($body)
     @JsonFormat(pattern = "${reqParam.format}")
-    @DateTimeFormat(pattern = "${reqParam.format}")
-    private $reqParam.type ${reqParam.name};
-#else
-    @DateTimeFormat(pattern = "${reqParam.format}")
-    private $reqParam.type ${reqParam.name};
 #end
-#else
-    private $reqParam.type ${reqParam.name};
+    @DateTimeFormat(pattern = "${reqParam.format}")
 #end
+    private $reqParam.type ${reqParam.name};
 #end
 
 #foreach( $reqParam in $reqParams)
@@ -66,7 +62,7 @@ public class $reqParamName  {
 
 /* append__start */
 
-#if(${holdCode})
+#if(${holdCode.indexOf("valueTo")}!=-1)
 ${holdCode}
 #else
     /**

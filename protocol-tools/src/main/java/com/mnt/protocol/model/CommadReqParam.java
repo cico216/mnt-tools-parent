@@ -33,12 +33,12 @@ public class CommadReqParam {
     /**
      * 最大值
      */
-    private Integer max;
+    private String max;
 
     /**
      * 最小值
      */
-    private Integer min;
+    private String min;
 
 
     /**
@@ -70,6 +70,11 @@ public class CommadReqParam {
      * 校验注解
      */
     private String valid;
+
+    /**
+     * 校验代码
+     */
+    private String validCode;
 
     /**
      * 请求参数列表
@@ -145,19 +150,19 @@ public class CommadReqParam {
         this.format = format;
     }
 
-    public Integer getMax() {
+    public String getMax() {
         return max;
     }
 
-    public void setMax(Integer max) {
+    public void setMax(String max) {
         this.max = max;
     }
 
-    public Integer getMin() {
+    public String getMin() {
         return min;
     }
 
-    public void setMin(Integer min) {
+    public void setMin(String min) {
         this.min = min;
     }
 
@@ -175,5 +180,13 @@ public class CommadReqParam {
 
     public void setValid(String valid) {
         this.valid = valid;
+    }
+
+    public String getValidCode() {
+        return validCode;
+    }
+
+    public void setValidCode(String validCode) {
+        this.validCode = validCode;
     }
 }

@@ -212,10 +212,10 @@ public class ProtoVOUtils {
                     commadReqVO.setLength(Integer.parseInt(length));
                 }
                 if(!StringUtils.isEmpty(min)) {
-                    commadReqVO.setMin(Integer.parseInt(min));
+                    commadReqVO.setMin(min);
                 }
                 if(!StringUtils.isEmpty(max)) {
-                    commadReqVO.setMax(Integer.parseInt(max));
+                    commadReqVO.setMax(max);
                 }
             } catch (Exception e) {
                 ConsoleLogUtils.log( "[" + commadReqVO.getName() + "]length, max, min必须为数字");

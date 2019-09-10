@@ -30,6 +30,8 @@ public class ProtoModelConvertUtils {
 
         result.setUser(UserData.getUserConfig().getUser());
 
+        result.setGenerateValid(UserData.getUserConfig().getGenerateValid());
+
         String type = UserData.getUserConfig().getGenerateCodeType();
         if(StringUtils.isEmpty(type)) {
             throw new NullPointerException("请选择你是干啥的");
@@ -46,6 +48,11 @@ public class ProtoModelConvertUtils {
 
         List<String> importPackages = new ArrayList<>();
         result.setImportPackages(importPackages);
+
+        //引入验证注解
+        if(result.isGenerateValid()) {
+            importPackages.add("org.springframework.validation.annotation.Validated");
+        }
 
         //当前控制层所在controller
         String actionPackage = generateConfigInfo.getPackageName();
@@ -178,9 +185,21 @@ public class ProtoModelConvertUtils {
             commadReqParam.setMust(commadReqVO.isMust());
             commadReqParam.setName(commadReqVO.getName());
             commadReqParam.setRemark(commadReqVO.getRemark());
-            commadReqParam.setType(commadReqVO.getTest());
+            commadReqParam.setType(commadReqVO.getType());
             commadReqParam.setValMsg(commadReqVO.getValMsg());
             commadReqParam.setValid(commadReqVO.getValid());
+
+            //生成校验代码
+
+            //加入引用
+            if(UserData.getUserConfig().getGenerateValid()) {
+                checkAndAdd(actionReqImportsClass, "javax.validation.constraints.*");
+                String validCode = generateValid(commadReqVO.isMust(), commadReqVO.getType(), commadReqVO.getRemark(), commadReqVO.getMin(), commadReqVO.getMax(), commadReqVO.getValid(), commadReqVO.getValMsg(), actionReqImportsClass);
+                commadReqParam.setValidCode(validCode);
+            } else {
+                commadReqParam.setValidCode("");
+            }
+
 
             String type = ParamTypeUtils.convertType(commadReqVO.getType());
 
@@ -320,5 +339,65 @@ public class ProtoModelConvertUtils {
 
     }
 
+    /**
+     * 一个tab
+     */
+    private static final String TAB = "    ";
+
+    /**
+     * 生成验证代码
+     * @param must 是否必须
+     * @param type 参数类型
+     * @param remark 备注
+     * @param min 最小值
+     * @param max 最大值
+     * @param valid 验证代码
+     * @param validMsg 验证错误提示信息
+     *
+     */
+    private static String generateValid(Boolean must, String type, String remark, String min, String max, String valid, String validMsg, List<String> actionReqImportsClass) {
+        String result = "";
+        //如果不是必须
+        if(!must) {
+            return result;
+        }
+        String lowType = String.valueOf(type).toLowerCase();
+        if("string".equals(lowType)) {
+            result += TAB + "@NotBlank(message=\"" + remark + "不能为空\")\n";
+            if(!StringUtils.isEmpty(min) || !StringUtils.isEmpty(max)) {
+                if(StringUtils.isEmpty(min)) {
+                    min = "0";
+                }
+                result += TAB + "@Length(min = "+ min + ", max = "+ max + ", message = \"" + remark + "长度位于" + min + "到" + max + "\")\n";
+                checkAndAdd(actionReqImportsClass, "org.hibernate.validator.constraints.Length");
+            }
+
+        }else if("integer".equals(lowType) || "long".equals(lowType)) {
+            result += TAB + "@NotNull(message=\"" + validMsg + "\")\n";
+            if(!StringUtils.isEmpty(min)) {
+                result += TAB + "@Min(message=\"" + remark + "最小值为" + min + "\")\n";
+            }
+            if(!StringUtils.isEmpty(max)) {
+                result += TAB + "@Max(message=\"" + remark + "最大值为" + max + "\")\n";
+            }
+        } else if("double".equals(lowType) || "float".equals(lowType) || "bigdecimal".equals(lowType)) {
+            result += TAB + "@NotNull(message=\"" + validMsg + "\")\n";
+            if(!StringUtils.isEmpty(min)) {
+                result += TAB + "@DecimalMin(message=\"" + remark + "最小值为" + min + "\")\n";
+            }
+            if(!StringUtils.isEmpty(max)) {
+                result += TAB + "@DecimalMax(message=\"" + remark + "最大值为" + max + "\")\n";
+            }
+        } else {
+            result += TAB + "@NotNull(message=\"" + validMsg + "\")\n";
+        }
+
+        if(!StringUtils.isEmpty(valid)) {
+            result += "\n" + valid;
+        } else {
+            result = result.substring(0, result.length() - 1);
+        }
+        return result;
+    }
 
 }

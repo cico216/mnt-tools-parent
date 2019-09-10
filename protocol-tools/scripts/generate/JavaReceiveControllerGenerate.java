@@ -52,6 +52,7 @@ public class JavaReceiveControllerGenerate extends ProtoCodeGenerateTemplate {
         controllerParams.put("package", protoModel.getGenerateConfigInfo().getPackageName());
         controllerParams.put("remark", protoModel.getRemark());
         controllerParams.put("user", protoModel.getUser());
+        controllerParams.put("generateValid", protoModel.isGenerateValid());
         controllerParams.put("date", protoModel.getDate());
         controllerParams.put("requestMapper", protoModel.getRequestMapper());
         controllerParams.put("controllerName", protoModel.getControllerName());
@@ -80,8 +81,8 @@ public class JavaReceiveControllerGenerate extends ProtoCodeGenerateTemplate {
                 reqParams.put("innerClassStr", innerReqClassStr);
 
                 String reqParamPath = generatePath + PathUtils.packageToPath(actionModel.getReqPackage())  + PathUtils.getSeparator() + actionModel.getReqClass() + ".java";
-
-
+                String reqParaHoldCode = getHoldCode(reqParamPath);
+                reqParams.put("holdCode", reqParaHoldCode);
 
                 //创建路径
                 checkAndCreateDir( generatePath + PathUtils.packageToPath(actionModel.getReqPackage()));
@@ -108,6 +109,8 @@ public class JavaReceiveControllerGenerate extends ProtoCodeGenerateTemplate {
 
                 String respParamPath = generatePath + PathUtils.packageToPath(actionModel.getRespPackage()) + PathUtils.getSeparator() + actionModel.getRespClass() + ".java";
 
+                String resqParaHoldCode = getHoldCode(respParamPath);
+                respParams.put("holdCode", resqParaHoldCode);
                 //创建路径
                 checkAndCreateDir(generatePath + PathUtils.packageToPath(actionModel.getRespPackage()));
 

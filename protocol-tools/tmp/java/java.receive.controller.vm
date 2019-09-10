@@ -33,11 +33,7 @@ ${holdCode}
      * @param ${action.reqName} ${action.remark}请求参数 ${action.body}
      */
     @RequestMapping("$action.requestMapper")
-#if(${action.body})
-    public AjaxResult ${action.actionName}(@RequestBody ${action.reqClass} ${action.reqName}) {
-#else
-    public AjaxResult ${action.actionName}(${action.reqClass} ${action.reqName}) {
-#end
+    public AjaxResult ${action.actionName}(#if(${action.body})@RequestBody #end#if(${generateValid})@Validated #end${action.reqClass} ${action.reqName}) {
 
         //TODO 请求参数复制到指定对象
         ${action.reqName}.valueTo(null);

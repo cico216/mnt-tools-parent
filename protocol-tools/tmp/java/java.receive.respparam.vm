@@ -59,7 +59,7 @@ public class $respParamName {
 
 /* append__start */
 
-#if(${holdCode})
+#if(${holdCode.indexOf("valueFrom")}!=-1)
 ${holdCode}
 #else
     /**
