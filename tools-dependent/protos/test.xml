@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <protos path="test" name="Test" testUrl="http://127.0.0.1:8080" remark="测试">
     <generates>
-        <generate type="java.receive" actionPackage="com.mnt.test.action" projectName="mnt-super-sign" />
+        <generate type="java.receive" actionPackage="com.mnt.test.action" projectName="mnt-super-sign" apiProjectName="mnt-super-sign" />
         <generate type="vue.uniapp" actionPackage="index" projectName="mix-mall 电商项目模版" />
     </generates>
     <action path="listCompany" remark="模糊匹配公司" method="POST" body="true">

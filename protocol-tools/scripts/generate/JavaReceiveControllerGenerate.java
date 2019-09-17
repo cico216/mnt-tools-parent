@@ -6,6 +6,7 @@ import com.mnt.protocol.model.*;
 import com.mnt.protocol.utils.ConsoleLogUtils;
 import com.mnt.protocol.utils.NameUtils;
 import com.mnt.protocol.utils.PathUtils;
+import org.apache.commons.lang.StringUtils;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -62,6 +63,8 @@ public class JavaReceiveControllerGenerate extends ProtoCodeGenerateTemplate {
 
         VelocityUtils.getInstance().parseTemplate(getControllerTemplateName(), controllerPath, controllerParams);
 
+        //兼容 cloud api的情况
+        generatePath = getApiGeneratePath(protoModel);
 
         for (ActionModel actionModel : protoModel.getActions()) {
             try{
@@ -295,6 +298,17 @@ public class JavaReceiveControllerGenerate extends ProtoCodeGenerateTemplate {
     public String getGeneratePath(ProtoModel protoModel) {
         return UserData.getUserConfig().getProjectPath() + PathUtils.getSeparator() +
                 protoModel.getGenerateConfigInfo().getProjectName() + PathUtils.getSeparator() + "src"+ PathUtils.getSeparator() +
+                "main" + PathUtils.getSeparator() + "java"
+                + PathUtils.getSeparator();
+    }
+
+    private String getApiGeneratePath(ProtoModel protoModel) {
+        if(StringUtils.isEmpty(protoModel.getGenerateConfigInfo().getApiProjectName())) {
+            return getGeneratePath(protoModel);
+        }
+
+        return UserData.getUserConfig().getProjectPath() + PathUtils.getSeparator() +
+                protoModel.getGenerateConfigInfo().getApiProjectName() + PathUtils.getSeparator() + "src"+ PathUtils.getSeparator() +
                 "main" + PathUtils.getSeparator() + "java"
                 + PathUtils.getSeparator();
     }
