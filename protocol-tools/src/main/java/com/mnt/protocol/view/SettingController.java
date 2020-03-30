@@ -76,7 +76,7 @@ public class SettingController extends BaseController {
     private void initComboBox() {
         combType.setItems(itemTypes);
 
-        TemplateClassLoad.PROTO_CODE_GENERATE_TEMPLATE.getScripts().forEach((baseCodeGenerate)-> {
+        TemplateClassLoad.PROTO_CODE_GENERATE_TEMPLATE.forEach((baseCodeGenerate)-> {
             itemTypes.add(baseCodeGenerate.getType());
         });
 

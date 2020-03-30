@@ -103,7 +103,7 @@ public class GenerateConfigController extends BaseController {
     private void initRadio() {
         hbDbTypes.getChildren().clear();
 
-        List<BaseCodeGenerateTemplate> baseCodeGenerateTemplates = TemplateClassLoad.BASE_CODE_GENERATE_TEMPLATE.getScripts();
+        List<BaseCodeGenerateTemplate> baseCodeGenerateTemplates = TemplateClassLoad.BASE_CODE_GENERATE_TEMPLATE;
         dbTypesRadios = new HashMap<>(baseCodeGenerateTemplates.size());
         codeGenerateScript = new HashMap<>(baseCodeGenerateTemplates.size());
         radioToggleGroup = new ToggleGroup();

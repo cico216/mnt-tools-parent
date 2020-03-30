@@ -303,7 +303,7 @@ public class MainViewController extends BaseController {
         if(null == jdbcInfo){
             return;
         }
-        for (BaseDBLoadTemplate baseDBLoadTemplate : TemplateClassLoad.BASE_DB_INFO_LOAD_TEMPLATE.getScripts()) {
+        for (BaseDBLoadTemplate baseDBLoadTemplate : TemplateClassLoad.BASE_DB_INFO_LOAD_TEMPLATE) {
             if(baseDBLoadTemplate.getKey().equals(jdbcInfo.getDbType())) {
                 dbLoadTemplate = baseDBLoadTemplate;
                 break;
@@ -417,7 +417,7 @@ public class MainViewController extends BaseController {
                         dbModels.add(dbModel);
                     }
 
-                    TemplateClassLoad.BASE_CODE_GENERATE_TEMPLATE.getScripts().stream().filter((script)-> script.getDBType().equals(getSelJDBCInfo().getDbType())).forEach(script -> {
+                    TemplateClassLoad.BASE_CODE_GENERATE_TEMPLATE.stream().filter((script)-> script.getDBType().equals(getSelJDBCInfo().getDbType())).forEach(script -> {
                         script.generate(dbModels, generateConfig);
                     });
 

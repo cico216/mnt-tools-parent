@@ -3,6 +3,10 @@ package com.mnt.protocol.core;
 import com.mnt.base.classloader.ClassLoadSupport;
 import com.mnt.base.classloader.anno.ClassLoad;
 
+import java.net.URLClassLoader;
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  * 代码生成脚本加载类
@@ -12,7 +16,44 @@ import com.mnt.base.classloader.anno.ClassLoad;
  */
 public class TemplateClassLoad {
 
-	@ClassLoad(srcPath="scripts/generate")
-	public static ClassLoadSupport<ProtoCodeGenerateTemplate> PROTO_CODE_GENERATE_TEMPLATE;
+	/**
+	 * 协议生成模板
+	 */
+	public static List<ProtoCodeGenerateTemplate> PROTO_CODE_GENERATE_TEMPLATE;
+
+
+	/**
+	 * 初始化类加载
+	 * @param classes
+	 * @param classLoad
+	 */
+	public static void init(List<Class<?>> classes, URLClassLoader classLoad) {
+		PROTO_CODE_GENERATE_TEMPLATE = new ArrayList<>();
+		for (Class<?> c : classes) {
+			if(ProtoCodeGenerateTemplate.class.equals(c.getSuperclass())) {
+
+				try {
+					PROTO_CODE_GENERATE_TEMPLATE.add((ProtoCodeGenerateTemplate)c.newInstance());
+				} catch (InstantiationException e) {
+					e.printStackTrace();
+				} catch (IllegalAccessException e) {
+					e.printStackTrace();
+				}
+			}
+
+		}
+//		System.err.println(PROTO_CODE_GENERATE_TEMPLATE);
+
+
+
+	}
+
+
+	/**
+	 * 卸载class
+	 */
+	public static void unloadClass() {
+		PROTO_CODE_GENERATE_TEMPLATE.clear();
+	}
 
 }

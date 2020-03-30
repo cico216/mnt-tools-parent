@@ -31,7 +31,8 @@ public class StartInit extends InitContext {
 	public void init(List<Class<?>> classes, URLClassLoader classLoad) {
 		try {
 			//初始化动态编译脚本
-			ClassLoadUtil.loadClass(TemplateClassLoad.class, classLoad);
+			TemplateClassLoad.init(classes, classLoad);
+//			ClassLoadUtil.loadClass(TemplateClassLoad.class, classLoad);
 		} catch (Exception e) {
 			e.printStackTrace();
 			log.error("加载模板脚本失败", e);

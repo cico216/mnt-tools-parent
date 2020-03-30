@@ -185,7 +185,7 @@ public class MainViewController extends BaseController {
         try {
             ProtoModel protoModel = ProtoModelConvertUtils.convert(baseProtoVO, baseCommadVOs);
 
-            TemplateClassLoad.PROTO_CODE_GENERATE_TEMPLATE.getScripts().forEach((baseCodeGenerate)-> {
+            TemplateClassLoad.PROTO_CODE_GENERATE_TEMPLATE.forEach((baseCodeGenerate)-> {
 
                 if(selectType.equals(baseCodeGenerate.getType())) {
                     baseCodeGenerate.generate(protoModel);

@@ -105,7 +105,7 @@ public class DBConfigController extends BaseController {
     private void initRadio() {
         hbDbTypes.getChildren().clear();
 
-        List<BaseDBLoadTemplate> dbLoadTemplates = TemplateClassLoad.BASE_DB_INFO_LOAD_TEMPLATE.getScripts();
+        List<BaseDBLoadTemplate> dbLoadTemplates = TemplateClassLoad.BASE_DB_INFO_LOAD_TEMPLATE;
         dbTypesRadios = new HashMap<>(dbLoadTemplates.size());
         dbTypesScript = new HashMap<>(dbLoadTemplates.size());
         radioToggleGroup = new ToggleGroup();

@@ -31,7 +31,7 @@ public class StartInit extends InitContext {
 	public void init(List<Class<?>> classes, URLClassLoader classLoad) {
 
 		try {
-			ClassLoadUtil.loadClass(TemplateClassLoad.class, classLoad);
+			TemplateClassLoad.init(classes, classLoad);
 		} catch (Exception e) {
 			e.printStackTrace();
 			log.error("启动失败", e);
@@ -45,7 +45,7 @@ public class StartInit extends InitContext {
 	@Override
 	public void shutdown() {
 		try {
-			TemplateClassLoad.PROTO_CODE_GENERATE_TEMPLATE.unloadClass();
+			TemplateClassLoad.unloadClass();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
