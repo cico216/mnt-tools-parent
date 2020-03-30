@@ -1,7 +1,6 @@
 package scripts.generate;
 
 import com.mnt.common.utils.VelocityUtils;
-
 import com.mnt.protocol.core.ProtoCodeGenerateTemplate;
 import com.mnt.protocol.model.*;
 import com.mnt.protocol.utils.ConsoleLogUtils;
@@ -21,7 +20,7 @@ import java.util.Map;
 /**
  * java 接收 controller 生成
  */
-public class JavaReceiveControllerGenerate extends ProtoCodeGenerateTemplate {
+public class JavaLogicServerGenerate extends ProtoCodeGenerateTemplate {
 
 
     @Override

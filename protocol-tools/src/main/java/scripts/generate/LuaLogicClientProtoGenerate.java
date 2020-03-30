@@ -13,7 +13,7 @@ import java.util.Map;
 /**
  * vue uniapp 协议代码生成
  */
-public class VueUniappProtoGenerate extends ProtoCodeGenerateTemplate {
+public class LuaLogicClientProtoGenerate extends ProtoCodeGenerateTemplate {
 
 
     @Override
