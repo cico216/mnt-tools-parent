@@ -15,9 +15,6 @@
         <module name="tools-dependent" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="netty-protocol-tools" target="1.8" />
-    </bytecodeTargetLevel>
   </component>
   <component name="TypeScriptCompiler">
     <option name="recompileOnChanges" value="true" />

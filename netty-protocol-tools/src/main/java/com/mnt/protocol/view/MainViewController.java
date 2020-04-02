@@ -1,7 +1,6 @@
 package com.mnt.protocol.view;
 
-import com.alibaba.fastjson.JSONObject;
-import com.mnt.base.thread.ThreadPoolManager;
+
 import com.mnt.gui.fx.base.BaseController;
 import com.mnt.gui.fx.controls.dialog.DialogFactory;
 import com.mnt.gui.fx.controls.file.FileChooserFacotry;
@@ -10,12 +9,10 @@ import com.mnt.protocol.core.TemplateClassLoad;
 import com.mnt.protocol.model.ProtoModel;
 import com.mnt.protocol.model.UserData;
 import com.mnt.protocol.utils.*;
-import com.mnt.protocol.vo.BaseCommadVO;
+import com.mnt.protocol.vo.BaseCommandVO;
 import com.mnt.protocol.vo.BaseProtoVO;
-import com.mnt.protocol.vo.CommadReqVO;
-import com.mnt.protocol.vo.CommadRespVO;
-import javafx.application.Platform;
-import javafx.beans.property.SimpleBooleanProperty;
+import com.mnt.protocol.vo.CommandParamVO;
+
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -28,13 +25,11 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.TreeItemPropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
@@ -44,15 +39,11 @@ import javafx.util.Callback;
 import org.apache.commons.lang.StringUtils;
 
 import java.awt.*;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.StringSelection;
-import java.awt.datatransfer.Transferable;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.*;
 import java.util.List;
-import java.util.concurrent.ArrayBlockingQueue;
 
 /**
  * 通讯协议工具类
@@ -67,8 +58,6 @@ public class MainViewController extends BaseController {
         super.init();
         initProtoList();
         initProtoInfo();
-        initProtoTest();
-        initConsole();
         addListener();
     }
 
@@ -105,7 +94,6 @@ public class MainViewController extends BaseController {
 
         File dir = new File(defaultPath);
         if(null != dir && dir.isDirectory()) {
-            ConsoleLogUtils.log("协议文件夹路径 : " + dir.getAbsolutePath());
             loadProto(defaultPath);
         }
     }
@@ -128,20 +116,19 @@ public class MainViewController extends BaseController {
         UserData.getUserConfig().setLastSelectedDir(dir.getAbsolutePath());
         UserData.saveUserConfig();
         if(null != dir && dir.isDirectory()) {
-            ConsoleLogUtils.log(dir.getAbsolutePath());
             loadProto(dir.getAbsolutePath());
         }
     }
 
-    @FXML
-    void processMenuRequestSetting(ActionEvent event) {
-        Stage innerStage = new Stage();
-        innerStage.initModality(Modality.APPLICATION_MODAL);
-        innerStage.initStyle(StageStyle.DECORATED);
-        innerStage.setScene(new Scene(new RequestSettingController(innerStage)));
-        innerStage.initOwner(stage);
-        innerStage.showAndWait();
-    }
+//    @FXML
+//    void processMenuRequestSetting(ActionEvent event) {
+//        Stage innerStage = new Stage();
+//        innerStage.initModality(Modality.APPLICATION_MODAL);
+//        innerStage.initStyle(StageStyle.DECORATED);
+//        innerStage.setScene(new Scene(new RequestSettingController(innerStage)));
+//        innerStage.initOwner(stage);
+//        innerStage.showAndWait();
+//    }
 
     @FXML
     void processMenuSetting(ActionEvent event) {
@@ -165,14 +152,14 @@ public class MainViewController extends BaseController {
 
         BaseProtoVO baseProtoVO = getSelectedProto();
 
-        List<BaseCommadVO> baseCommadVOs = getCreateSelected();
+        List<BaseCommandVO> baseCommandVOs = getCreateSelected();
 
         if(null == baseProtoVO) {
             DialogFactory.getInstance().showFaildMsg("生成代码错误", "请选择协议", ()->{});
             return;
         }
 
-        if(null == baseCommadVOs || baseCommadVOs.isEmpty()) {
+        if(null == baseCommandVOs || baseCommandVOs.isEmpty()) {
             DialogFactory.getInstance().showFaildMsg("生成代码错误", "请选择生成的命令", ()->{});
             return;
         }
@@ -183,7 +170,7 @@ public class MainViewController extends BaseController {
             return;
         }
         try {
-            ProtoModel protoModel = ProtoModelConvertUtils.convert(baseProtoVO, baseCommadVOs);
+            ProtoModel protoModel = ProtoModelConvertUtils.convert(baseProtoVO, baseCommandVOs);
 
             TemplateClassLoad.PROTO_CODE_GENERATE_TEMPLATE.forEach((baseCodeGenerate)-> {
 
@@ -194,9 +181,8 @@ public class MainViewController extends BaseController {
 
         } catch (Exception e) {
             e.printStackTrace();
-            ConsoleLogUtils.log("代码生成失败!");
-            ConsoleLogUtils.log(e);
-            DialogFactory.getInstance().showFaildMsg("生成代码错误", "生成异常", ()->{});
+            DialogFactory.getInstance().showConfirm("生成代码错误", e.getLocalizedMessage(), ()->{});
+//            DialogFactory.getInstance().showFaildMsg("生成代码错误", "生成异常", ()->{});
             return;
         }
 
@@ -222,11 +208,11 @@ public class MainViewController extends BaseController {
     private ListView<BaseProtoVO> listViewProtos;
 
     @FXML
-    private ListView<BaseCommadVO> listViewCommad;
+    private ListView<BaseCommandVO> listViewCommad;
 
     private ObservableList<BaseProtoVO> itemProtos = FXCollections.observableArrayList();
 
-    private ObservableList<BaseCommadVO> itemCommads = FXCollections.observableArrayList();
+    private ObservableList<BaseCommandVO> itemCommads = FXCollections.observableArrayList();
 
     /**
      * 上一步栈
@@ -284,15 +270,15 @@ public class MainViewController extends BaseController {
             }
         });
 
-        listViewCommad.setCellFactory(new Callback<ListView<BaseCommadVO>, ListCell<BaseCommadVO>>() {
+        listViewCommad.setCellFactory(new Callback<ListView<BaseCommandVO>, ListCell<BaseCommandVO>>() {
             @Override
-            public ListCell<BaseCommadVO> call(ListView<BaseCommadVO> param) {
-                return new ListCell<BaseCommadVO>(){
+            public ListCell<BaseCommandVO> call(ListView<BaseCommandVO> param) {
+                return new ListCell<BaseCommandVO>(){
                     @Override
-                    protected void updateItem(BaseCommadVO item, boolean empty) {
+                    protected void updateItem(BaseCommandVO item, boolean empty) {
 
                         if(!empty) {
-                            String text = "[" + item.getMethod() + "]" + item.getRemark();//item.getRemark() + "(" + item.getPath() + ")";
+                            String text = "[" + item.getName() + "-" + item.getOpCode() + "]" + item.getRemark();//item.getRemark() + "(" + item.getPath() + ")";
                             boolean mulitChooseCommad = true;
                             if(mulitChooseCommad) {
 
@@ -343,8 +329,8 @@ public class MainViewController extends BaseController {
                 itemCommads.clear();
 
                 if(null != newValue && !newValue.isDir()) {
-                    List<BaseCommadVO> baseCommadVOs = ProtoVOUtils.getCommads(newValue.getXmlObject());
-                    itemCommads.addAll(baseCommadVOs);
+                    List<BaseCommandVO> BaseCommandVOs = ProtoVOUtils.getCommads(newValue.getXmlObject());
+                    itemCommads.addAll(BaseCommandVOs);
                 }
 
             }
@@ -365,10 +351,10 @@ public class MainViewController extends BaseController {
             }
         });
 
-        listViewCommad.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<BaseCommadVO>() {
+        listViewCommad.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<BaseCommandVO>() {
             @Override
-            public void changed(ObservableValue<? extends BaseCommadVO> observable, BaseCommadVO oldValue, BaseCommadVO newValue) {
-                selectCommad(newValue);
+            public void changed(ObservableValue<? extends BaseCommandVO> observable, BaseCommandVO oldValue, BaseCommandVO newValue) {
+                selectCommand(newValue);
             }
         });
     }
@@ -440,7 +426,8 @@ public class MainViewController extends BaseController {
 
             } catch (Exception e) {
                 e.printStackTrace();
-                ConsoleLogUtils.log("文件加载失败 : " + file.getAbsolutePath() + " | " + e.getLocalizedMessage());
+                DialogFactory.getInstance().showConfirm("文件加载失败" + file.getAbsolutePath(), e.getLocalizedMessage(), ()->{});
+//                ConsoleLogUtils.log("文件加载失败 : " + file.getAbsolutePath() + " | " + e.getLocalizedMessage());
             }
         }
 
@@ -471,8 +458,8 @@ public class MainViewController extends BaseController {
      * 获取所有选中
      * @return
      */
-    private List<BaseCommadVO> getCreateSelected() {
-        List<BaseCommadVO> result = new ArrayList<>();
+    private List<BaseCommandVO> getCreateSelected() {
+        List<BaseCommandVO> result = new ArrayList<>();
 
         itemCommads.forEach((itemCommad) -> {
             if(itemCommad.isChoose()) {
@@ -487,7 +474,7 @@ public class MainViewController extends BaseController {
      * 获取选择的命令
      * @return
      */
-    private BaseCommadVO getSelectedCommad() {
+    private BaseCommandVO getSelectedCommad() {
         return listViewCommad.getSelectionModel().getSelectedItem();
     }
 
@@ -555,19 +542,19 @@ public class MainViewController extends BaseController {
     private CheckBox cbIsReceive;
 
     @FXML
-    private TreeTableView<?> treeTableRequest;
+    private TreeTableView<CommandParamVO> treeTableRequest;
 
     @FXML
-    private TreeTableColumn<?, ?> trclumReqName;
+    private TreeTableColumn<CommandParamVO, String> trclumName;
 
     @FXML
-    private TreeTableColumn<?, ?> trclumReqRemark;
+    private TreeTableColumn<CommandParamVO, String> trclumRemark;
 
     @FXML
-    private TreeTableColumn<?, ?> trclumReqType;
+    private TreeTableColumn<CommandParamVO, String> trclumType;
 
     @FXML
-    private TreeTableColumn<?, ?> trclumReqTest;
+    private TreeTableColumn<CommandParamVO, String> trclumTypeClass;
 
 
     /**
@@ -582,149 +569,19 @@ public class MainViewController extends BaseController {
     private void initReqTree() {
         //req
         treeTableRequest.getSelectionModel().setCellSelectionEnabled(true);
-        trclumReqName.setCellValueFactory(new TreeItemPropertyValueFactory("name"));
-        trclumReqRemark.setCellValueFactory(new TreeItemPropertyValueFactory("remark"));
-        trclumReqType.setCellValueFactory(new TreeItemPropertyValueFactory("type"));
-        trclumReqLength.setCellValueFactory(new TreeItemPropertyValueFactory("limit"));
-        trclumReqMust.setCellValueFactory(new TreeItemPropertyValueFactory("must"));
-        trclumReqTest.setCellValueFactory(new TreeItemPropertyValueFactory("test"));
-
-        trclumReqTest.setCellFactory(new Callback<TreeTableColumn<CommadReqVO, String>, TreeTableCell<CommadReqVO, String>>() {
-            @Override
-            public TreeTableCell<CommadReqVO, String> call(TreeTableColumn<CommadReqVO, String> param) {
-                return new TreeTableCell<CommadReqVO, String>() {
-                    @Override
-                    public void updateItem(String item, boolean empty) {
-                        if(!empty) {
-                            if(null != item && getTreeTableRow().getTreeItem() != null) {
-
-                                TextField textField = new TextField(item);
-
-                                textField.textProperty().bindBidirectional(getTreeTableRow().getTreeItem().getValue().testProperty());
-                                setGraphic(textField);
-
-                                setGraphic(textField);
-                                textField.requestFocus();
-                                textField.end();
-                                textField.textProperty().addListener((observable, oldValue, newValue) -> {
-                                    if(null != newValue) {
-                                        rebuildReqText();
-                                    }
-                                });
-
-                            }
-
-                        } else {
-                            setGraphic(null);
-                        }
-                        super.updateItem(item, empty);
-                    }
-                };
-            }
-        });
-
-        treeTableRequest.setOnKeyPressed(new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent event) {
-                if(event.isControlDown() && event.getCode() == KeyCode.C) {
-                    ObservableList<TreeTablePosition<CommadReqVO,?>> selectCells = treeTableRequest.getSelectionModel().getSelectedCells();
-                    if(null != selectCells && !selectCells.isEmpty()) {
-                        TreeItem<CommadReqVO> item = selectCells.get(0).getTreeItem();
-                        int selectIndex = selectCells.get(0).getColumn();
-                        String selectVal = null;
-                        if(selectIndex == 0) {
-                            selectVal = item.getValue().getName();
-                        } else if(selectIndex == 1) {
-                            selectVal = item.getValue().getRemark();
-                        } else if(selectIndex == 2) {
-                            selectVal = item.getValue().getType();
-                        } else if(selectIndex == 3) {
-                            selectVal = String.valueOf(item.getValue().getLength());
-                        } else if(selectIndex == 4) {
-                            selectVal = String.valueOf(item.getValue().isMust());
-                        } else if(selectIndex == 5) {
-                            selectVal = item.getValue().getTest();
-                        } else {
-
-                        }
-
-                        if(null != selectVal) {
-                            setSysClipboardText(selectVal);
-                        }
+        trclumName.setCellValueFactory(new TreeItemPropertyValueFactory("name"));
+        trclumRemark.setCellValueFactory(new TreeItemPropertyValueFactory("remark"));
+        trclumType.setCellValueFactory(new TreeItemPropertyValueFactory("type"));
+        trclumTypeClass.setCellValueFactory(new TreeItemPropertyValueFactory("typeClass"));
 
 
-                    }
-
-
-                }
-            }
-        });
-
-        //resp
-        treeTableResponse.getSelectionModel().setCellSelectionEnabled(true);
-        trclumRespName.setCellValueFactory(new TreeItemPropertyValueFactory("name"));
-        trclumRespRemark.setCellValueFactory(new TreeItemPropertyValueFactory("remark"));
-        trclumRespType.setCellValueFactory(new TreeItemPropertyValueFactory("type"));
-        trclumRespTest.setCellValueFactory(new TreeItemPropertyValueFactory("test"));
-        trclumRespTypeClass.setCellValueFactory(new TreeItemPropertyValueFactory("typeClass"));
-
-        treeTableResponse.setOnKeyPressed(new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent event) {
-                if(event.isControlDown() && event.getCode() == KeyCode.C) {
-                    ObservableList<TreeTablePosition<CommadRespVO,?>> selectCells = treeTableResponse.getSelectionModel().getSelectedCells();
-                    if(null != selectCells && !selectCells.isEmpty()) {
-                        TreeItem<CommadRespVO> item = selectCells.get(0).getTreeItem();
-                        int selectIndex = selectCells.get(0).getColumn();
-                        String selectVal = null;
-                        if(selectIndex == 0) {
-                            selectVal = item.getValue().getName();
-                        } else if(selectIndex == 1) {
-                            selectVal = item.getValue().getRemark();
-                        } else if(selectIndex == 2) {
-                            selectVal = item.getValue().getType();
-                        } else if(selectIndex == 3) {
-                            selectVal = item.getValue().getTest();
-                        }  else {
-
-                        }
-
-                        if(null != selectVal) {
-                            setSysClipboardText(selectVal);
-                        }
-                    }
-
-
-                }
-            }
-        });
-
-//        trclumReqTest.setCellFactory(new Callback<TreeTableColumn<CommadReqVO, String>, TreeTableCell<CommadReqVO, String>>() {
-//            @Override
-//            public TreeTableCell<CommadReqVO, String> call(TreeTableColumn<CommadReqVO, String> param) {
-//                return new TreeTableCell<CommadReqVO, String>() {
-//                    @Override
-//                    public void updateItem(String item, boolean empty) {
-//                        if(!empty) {
-//
-//                            TextField textField = new TextField(item);
-//                            textField.textProperty().bindBidirectional(getTreeTableRow().getTreeItem().getValue().testProperty());
-//                            setGraphic(textField);
-//                        } else {
-//                            setGraphic(null);
-//                        }
-//                        super.updateItem(item, empty);
-//                    }
-//                };
-//            }
-//        });
     }
 
     /**
      * 选择协议
      * @param baseCommad
      */
-    private void selectCommad(BaseCommadVO baseCommad) {
+    private void selectCommand(BaseCommandVO baseCommad) {
 
         if(null == baseCommad) {
             return;
@@ -735,95 +592,44 @@ public class MainViewController extends BaseController {
             treeTableRequest.getRoot().getChildren().clear();
         }
 
-        BaseProtoVO baseProtoVO = getSelectedProto();
-        //请求一级路径
-        String path = ProtoVOUtils.getProtoPath(baseProtoVO.getXmlObject());
+        txtCommandCode.setText(String.valueOf(baseCommad.getOpCode()));
 
-        txtUrlPathFrist.setText(path);
-        txtUrlPathScoend.setText(baseCommad.getPath());
+        //是否为客户端发送
+        boolean isClient = "c".equals(baseCommad.getSrc());
 
-//        //设置请求方法
-//        String method = baseCommad.getMethod();
-//        lblReqMethod.setText(method);
+        cbIsSend.setSelected(isClient);
+        cbIsReceive.setSelected(!isClient);
 
-        //是否为body
-        boolean isBody = baseCommad.isBody();
-        cbIsBody.setSelected(isBody);
 
 
         //解析请求参数
-        List<CommadReqVO> commadReqVOs = ProtoVOUtils.parseCommadReqVOsToCommadVO(baseCommad);
+        List<CommandParamVO> commandParamVOs = ProtoVOUtils.parseCommandParamVOsToCommadVO(baseCommad);
 
-//        for (CommadReqVO commadReqVO : commadReqVOs) {
-//
-//
-//            treeTableRequest.getRoot().getChildren().add();
-//        }
+
         treeTableRequest.setRoot(new TreeItem<>());
-        setReqChildren(treeTableRequest.getRoot(), commadReqVOs);
-
-        //解析答复参数
-        treeTableResponse.setRoot(new TreeItem<>());
-        List<CommadRespVO> commadResp = ProtoVOUtils.parseCommadRespVOsToCommadVO(baseCommad);
-        setRespChildren(treeTableResponse.getRoot(), commadResp);
+        setParamChildren(treeTableRequest.getRoot(), commandParamVOs);
 
 
-        //设置测试界面
 
-        copyRequestUrl = null;
-
-        String testUrl = ProtoVOUtils.getProtoTestUrl(baseProtoVO.getXmlObject());
-
-        if(null == testUrl) {
-            testUrl = "";
-        }
-
-        //移除最后一个斜杠
-        if(testUrl.endsWith("/")) {
-            testUrl = testUrl.substring(0, testUrl.length() - 1);
-        }
-
-        copyRequestUrl = testUrl + "/" + path + "/" + baseCommad.getPath();
-
-        txtRequestUrl.setText(copyRequestUrl);
-
-        rebuildReqText();
     }
 
     /**
      * 递归设置子节点
      * @param baseCommadItem
-     * @param commadReqVOs
+     * @param commandParamVOs
      */
-    private void setReqChildren(TreeItem<CommadReqVO> baseCommadItem, List<CommadReqVO> commadReqVOs) {
-        TreeItem<CommadReqVO> treeItem;
-        for (CommadReqVO commadReqVO : commadReqVOs) {
-            treeItem =  new TreeItem<>(commadReqVO);
+    private void setParamChildren(TreeItem<CommandParamVO> baseCommadItem, List<CommandParamVO> commandParamVOs) {
+        TreeItem<CommandParamVO> treeItem;
+        for (CommandParamVO commandParamVO : commandParamVOs) {
+            treeItem =  new TreeItem<>(commandParamVO);
             baseCommadItem.getChildren().add(treeItem);
-            if(!commadReqVO.getChildrens().isEmpty()) {
-                setReqChildren(treeItem, commadReqVO.getChildrens());
+            if(!commandParamVO.getChildrens().isEmpty()) {
+                setParamChildren(treeItem, commandParamVO.getChildrens());
             }
 
         }
     }
 
-    /**
-     * 递归设置返回子节点
-     * @param baseCommadItem
-     * @param commadRespVOs
-     */
-    private void setRespChildren(TreeItem<CommadRespVO> baseCommadItem, List<CommadRespVO> commadRespVOs) {
-        TreeItem<CommadRespVO> treeItem;
-        for (CommadRespVO commadRespVO : commadRespVOs) {
-            treeItem =  new TreeItem<>(commadRespVO);
-            treeItem.setExpanded(true);
-            baseCommadItem.getChildren().add(treeItem);
-            if(!commadRespVO.getChildrens().isEmpty()) {
-                setRespChildren(treeItem, commadRespVO.getChildrens());
-            }
-
-        }
-    }
 
 
     /************************************************************************************************* 协议信息end *****************************************************************************************************/

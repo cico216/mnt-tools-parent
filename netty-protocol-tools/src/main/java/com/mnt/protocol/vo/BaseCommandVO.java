@@ -1,13 +1,14 @@
 package com.mnt.protocol.vo;
 
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import org.dom4j.Node;
 
 /**
  * 基础命令vo
  */
-public class BaseCommadVO {
+public class BaseCommandVO {
 
     /**
      * 是否选择
@@ -15,26 +16,26 @@ public class BaseCommadVO {
     private SimpleBooleanProperty choose = new SimpleBooleanProperty(false);
 
     /**
-     * 命令名称
+     * 命令备注
      */
     private SimpleStringProperty remark = new SimpleStringProperty("");
 
     /**
-     * 命令路径
+     * 命令名称
      */
-    private SimpleStringProperty path = new SimpleStringProperty("");
-
+    private SimpleStringProperty name = new SimpleStringProperty("");
 
     /**
-     * 请求方法类型
+     * 命令编码
      */
-    private SimpleStringProperty method = new SimpleStringProperty("");
-
+    private SimpleIntegerProperty opCode = new SimpleIntegerProperty();
 
     /**
-     * 请求方法类型
+     * 命令来源
      */
-    private SimpleBooleanProperty body = new SimpleBooleanProperty(false);
+    private SimpleStringProperty src = new SimpleStringProperty("");
+
+
 
     /**
      * 当前节点
@@ -74,39 +75,39 @@ public class BaseCommadVO {
         this.currNode = currNode;
     }
 
-    public String getPath() {
-        return path.get();
+    public String getName() {
+        return name.get();
     }
 
-    public SimpleStringProperty pathProperty() {
-        return path;
+    public SimpleStringProperty nameProperty() {
+        return name;
     }
 
-    public void setPath(String path) {
-        this.path.set(path);
+    public void setName(String name) {
+        this.name.set(name);
     }
 
-    public String getMethod() {
-        return method.get();
+    public int getOpCode() {
+        return opCode.get();
     }
 
-    public SimpleStringProperty methodProperty() {
-        return method;
+    public SimpleIntegerProperty opCodeProperty() {
+        return opCode;
     }
 
-    public void setMethod(String method) {
-        this.method.set(method);
+    public void setOpCode(int opCode) {
+        this.opCode.set(opCode);
     }
 
-    public boolean isBody() {
-        return body.get();
+    public String getSrc() {
+        return src.get();
     }
 
-    public SimpleBooleanProperty bodyProperty() {
-        return body;
+    public SimpleStringProperty srcProperty() {
+        return src;
     }
 
-    public void setBody(boolean body) {
-        this.body.set(body);
+    public void setSrc(String src) {
+        this.src.set(src);
     }
 }

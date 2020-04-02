@@ -12,6 +12,17 @@ public class BaseProtoVO {
 
     private SimpleStringProperty filePath = new SimpleStringProperty("");
 
+    /**
+     * 命令号范围
+     */
+    private SimpleStringProperty codeLimit = new SimpleStringProperty("");
+
+
+    /**
+     * 模块名称
+     */
+    private SimpleStringProperty moduleName = new SimpleStringProperty("");
+
     private boolean isDir;
 
     private XMLParseUtils.XMLObject xmlObject;
@@ -54,6 +65,30 @@ public class BaseProtoVO {
 
     public void setDir(boolean dir) {
         isDir = dir;
+    }
+
+    public String getCodeLimit() {
+        return codeLimit.get();
+    }
+
+    public SimpleStringProperty codeLimitProperty() {
+        return codeLimit;
+    }
+
+    public void setCodeLimit(String path) {
+        this.codeLimit.set(path);
+    }
+
+    public String getModuleName() {
+        return moduleName.get();
+    }
+
+    public SimpleStringProperty moduleNameProperty() {
+        return moduleName;
+    }
+
+    public void setModuleName(String method) {
+        this.moduleName.set(method);
     }
 
     /**

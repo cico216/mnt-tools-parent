@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<protos codeLimit="10000-10050" moduleName="Common"  remark="基础模块">
+    <generates>
+        <generate type="java.game.server" cmdPackage="com.mnt.test.action" projectName="mnt-super-sign" />
+        <generate type="lua.game.client" cmdPackage="index" projectName="mix-mall 电商项目模版" />
+    </generates>
+    <cmd name="SendHeart" opCode="10001" remark="发送心跳" src="c">
+        <param name="time" 	    type="Long"     remark="当前时间" 	typeClass="com.jiangroom.api.gatherhouse.entity.BedroomInfo" />
+    </cmd>
+
+    <cmd name="BackHeart" opCode="10002" remark="回复心跳" src="s">
+        <param name="time" 	type="Long"  remark="当前时间" 	 	/>
+    </cmd>
+</protos>

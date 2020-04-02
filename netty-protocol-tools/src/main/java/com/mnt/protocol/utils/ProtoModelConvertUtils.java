@@ -2,10 +2,9 @@ package com.mnt.protocol.utils;
 
 
 import com.mnt.protocol.model.*;
-import com.mnt.protocol.vo.BaseCommadVO;
+import com.mnt.protocol.vo.BaseCommandVO;
 import com.mnt.protocol.vo.BaseProtoVO;
-import com.mnt.protocol.vo.CommadReqVO;
-import com.mnt.protocol.vo.CommadRespVO;
+import com.mnt.protocol.vo.CommandParamVO;
 import org.apache.commons.lang.StringUtils;
 
 import java.text.SimpleDateFormat;
@@ -25,12 +24,10 @@ public class ProtoModelConvertUtils {
      * @param selectedCommads
      * @return
      */
-    public static ProtoModel convert(BaseProtoVO baseProtoVO, List<BaseCommadVO> selectedCommads) {
+    public static ProtoModel convert(BaseProtoVO baseProtoVO, List<BaseCommandVO> selectedCommads) {
         ProtoModel result = new ProtoModel();
 
         result.setUser(UserData.getUserConfig().getUser());
-
-        result.setGenerateValid(UserData.getUserConfig().getGenerateValid());
 
         String type = UserData.getUserConfig().getGenerateCodeType();
         if(StringUtils.isEmpty(type)) {
@@ -46,24 +43,15 @@ public class ProtoModelConvertUtils {
 
         result.setGenerateConfigInfo(generateConfigInfo);
 
-        List<String> importPackages = new ArrayList<>();
-        result.setImportPackages(importPackages);
-
-        //引入验证注解
-        if(result.isGenerateValid()) {
-            importPackages.add("org.springframework.validation.annotation.Validated");
-        }
 
         //当前控制层所在controller
         String actionPackage = generateConfigInfo.getPackageName();
 
         //控制层名称
         String name = ProtoVOUtils.getProtoName(baseProtoVO.getXmlObject());
-        result.setControllerName(name + "Controller");
 
-        //请求一级路径
-        String path = ProtoVOUtils.getProtoPath(baseProtoVO.getXmlObject());
-        result.setRequestMapper(path);
+
+
 
         //注释信息
         String remark = ProtoVOUtils.getProtoRemark(baseProtoVO.getXmlObject());
@@ -74,8 +62,8 @@ public class ProtoModelConvertUtils {
         result.setDate(date);
 
         //设置详情命令参数
-        List<ActionModel> actions = convertAction(name, actionPackage, importPackages, selectedCommads);
-        result.setActions(actions);
+        List<CommandModel> commands = convertCommand(selectedCommads);
+        result.setCommands(commands);
         return result;
     }
 
@@ -94,72 +82,38 @@ public class ProtoModelConvertUtils {
     }
 
     /**
-     * 转换每一个请求
-     * @param importPackages
-     * @param baseCommadVOs
+     * 转换每一个命令
+     * @param baseCommandVOs 命令集合
      * @return
      */
-    private static List<ActionModel> convertAction(String actionName, String actionPackage, List<String> importPackages, List<BaseCommadVO> baseCommadVOs) {
-        List<ActionModel> result = new ArrayList<>(baseCommadVOs.size());
-        ActionModel actionModel;
-        for (BaseCommadVO baseCommadVO : baseCommadVOs) {
-            actionModel = new ActionModel();
+    private static List<CommandModel> convertCommand(List<BaseCommandVO> baseCommandVOs) {
+        List<CommandModel> result = new ArrayList<>(baseCommandVOs.size());
+        CommandModel commandModel;
+        for (BaseCommandVO baseCommadVO : baseCommandVOs) {
+            commandModel = new CommandModel();
             //首字母大写请求路径
-            String upperName = NameUtils.upperFristStr(baseCommadVO.getPath());
-            actionModel.setActionName(baseCommadVO.getPath());
-            actionModel.setRequestMapper(baseCommadVO.getPath());
-            actionModel.setRemark(baseCommadVO.getRemark());
-            actionModel.setMethod(actionModel.getMethod());
-            actionModel.setBody(baseCommadVO.isBody());
-            //请求参数类
-            String requestParamClass = NameUtils.upperFristStr(actionName) + upperName + "RequestParam";
-            actionModel.setReqClass(requestParamClass);
-            //请求参数名
-            String requestParamName = NameUtils.lowerFristStr(actionName) + upperName + "RequestParam";
-            actionModel.setReqName(requestParamName);
+//            String upperName = NameUtils.upperFristStr(baseCommadVO.getPath());
+            commandModel.setName(baseCommadVO.getName());
+            commandModel.setOpCode(baseCommadVO.getOpCode());
+            commandModel.setRemark(baseCommadVO.getRemark());
+            commandModel.setSrc(commandModel.getSrc());
 
-            //答复参数类
-            String responseParamClass = NameUtils.upperFristStr(actionName) + upperName + "ResponseParam";
-            actionModel.setRespClass(responseParamClass);
-
-            //答复参数名
-            String responseParamName = NameUtils.lowerFristStr(actionName) + upperName + "ResponseParam";
-            actionModel.setRespName(responseParamName);
-
-            //参数所在包
-            String reqParamPackage = actionPackage + ".param.req";
-            String respParamPackage = actionPackage + ".param.resp";
 
             //引入class
-            importPackages.add(reqParamPackage + "." + requestParamClass);
-            importPackages.add(respParamPackage + "." + responseParamClass);
+            List<String> commandImportClass = new ArrayList<>();
+            commandModel.setCommandImportClass(commandImportClass);
 
-            actionModel.setReqPackage(reqParamPackage);
-            actionModel.setRespPackage(respParamPackage);
+            Map<CommandParam, List<CommandParam>> innerReqParams = new HashMap<>();
+            commandModel.setInnerParams(innerReqParams);
 
-            List<String> actionReqImportsClass = new ArrayList<>();
-            actionModel.setReqImprotClass(actionReqImportsClass);
 
-            Map<CommadReqParam, List<CommadReqParam>> innerReqParams = new HashMap<>();
-            actionModel.setInnerReqParams(innerReqParams);
             //请求参数设置
-            List<CommadReqVO> commadReqVOs = ProtoVOUtils.parseCommadReqVOsToCommadVO(baseCommadVO);
-            List<CommadReqParam> commadReqParams = convertToReqParam(commadReqVOs, innerReqParams, actionReqImportsClass, baseCommadVO.isBody());
-            actionModel.setCommadReqParams(commadReqParams);
-
-            //返回参数导入的包
-            List<String> actionRespImportsClass = new ArrayList<>();
-            actionModel.setRespImprotClass(actionRespImportsClass);
-
-            Map<CommadRespParam, List<CommadRespParam>> innerRespParams = new HashMap<>();
-            actionModel.setInnerRespParams(innerRespParams);
-            //答复参数设置
-            List<CommadRespVO> commadRespVOs = ProtoVOUtils.parseCommadRespVOsToCommadVO(baseCommadVO);
-            List<CommadRespParam> commadRespParams = convertToRespParam(commadRespVOs, innerRespParams, actionRespImportsClass);
-            actionModel.setCommadRespParams(commadRespParams);
+            List<CommandParamVO> commandVOs = ProtoVOUtils.parseCommandParamVOsToCommadVO(baseCommadVO);
+            List<CommandParam> commandParams = convertToReqParam(commandVOs, innerReqParams, commandImportClass);
+            commandModel.setCommandParams(commandParams);
 
 
-            result.add(actionModel);
+            result.add(commandModel);
         }
 
         return result;
@@ -171,34 +125,20 @@ public class ProtoModelConvertUtils {
      * @param commadReqVOs
      * @return
      */
-    private static List<CommadReqParam>  convertToReqParam(List<CommadReqVO> commadReqVOs,  Map<CommadReqParam, List<CommadReqParam>> innerReqParams, List<String> actionReqImportsClass, boolean isBody) {
+    private static List<CommandParam>  convertToReqParam(List<CommandParamVO> commadReqVOs,  Map<CommandParam, List<CommandParam>> innerReqParams, List<String> commandImportClass) {
 
-        List<CommadReqParam> result = new ArrayList<>();
+        List<CommandParam> result = new ArrayList<>();
 
-        CommadReqParam commadReqParam;
+        CommandParam commandParam;
         //设置请求参数
-        for (CommadReqVO commadReqVO : commadReqVOs) {
-            commadReqParam = new CommadReqParam();
-            commadReqParam.setLength(commadReqVO.getLength());
-            commadReqParam.setMin(commadReqVO.getMin());
-            commadReqParam.setMax(commadReqVO.getMax());
-            commadReqParam.setMust(commadReqVO.isMust());
-            commadReqParam.setName(commadReqVO.getName());
-            commadReqParam.setRemark(commadReqVO.getRemark());
-            commadReqParam.setType(commadReqVO.getType());
-            commadReqParam.setValMsg(commadReqVO.getValMsg());
-            commadReqParam.setValid(commadReqVO.getValid());
+        for (CommandParamVO commadReqVO : commadReqVOs) {
+            commandParam = new CommandParam();
+            commandParam.setName(commadReqVO.getName());
+            commandParam.setRemark(commadReqVO.getRemark());
+            commandParam.setType(commadReqVO.getType());
+            commandParam.setTypeClass(commadReqVO.getTypeClass());
 
-            //生成校验代码
 
-            //加入引用
-            if(UserData.getUserConfig().getGenerateValid()) {
-                checkAndAdd(actionReqImportsClass, "javax.validation.constraints.*");
-                String validCode = generateValid(commadReqVO.isMust(), commadReqVO.getType(), commadReqVO.getRemark(), commadReqVO.getMin(), commadReqVO.getMax(), commadReqVO.getValid(), commadReqVO.getValMsg(), actionReqImportsClass);
-                commadReqParam.setValidCode(validCode);
-            } else {
-                commadReqParam.setValidCode("");
-            }
 
 
             String type = ParamTypeUtils.convertType(commadReqVO.getType());
@@ -208,7 +148,7 @@ public class ProtoModelConvertUtils {
             DefaultLoadClassEnums defaultLoadClassEnums =  DefaultLoadClassEnums.getByName(type);
             if(null != defaultLoadClassEnums) {
 
-                checkAndAdd(actionReqImportsClass, defaultLoadClassEnums.getImportClass());
+                checkAndAdd(commandImportClass, defaultLoadClassEnums.getImportClass());
                 //集合泛型处理
                 if(defaultLoadClassEnums == DefaultLoadClassEnums.LIST) {
 
@@ -220,10 +160,7 @@ public class ProtoModelConvertUtils {
 
 
                 } else if(defaultLoadClassEnums == DefaultLoadClassEnums.DATE) {
-                    checkAndAdd(actionReqImportsClass, "org.springframework.format.annotation.DateTimeFormat");
-                    if(isBody) {
-                        checkAndAdd(actionReqImportsClass, "com.fasterxml.jackson.annotation.JsonFormat");
-                    }
+                    checkAndAdd(commandImportClass, "org.springframework.format.annotation.DateTimeFormat");
                 }
             }
 
@@ -231,95 +168,21 @@ public class ProtoModelConvertUtils {
 
             if(null != typeClassLoadClassEnums) {
 
-                checkAndAdd(actionReqImportsClass, typeClassLoadClassEnums.getImportClass());
+                checkAndAdd(commandImportClass, typeClassLoadClassEnums.getImportClass());
             }
 
-            commadReqParam.setType(type);
-            commadReqParam.setTypeClass(commadReqVO.getTypeClass());
-            commadReqParam.setMethodName(NameUtils.upperFristStr(commadReqVO.getName()));
-            commadReqParam.setFormat(commadReqVO.getFormat());
+            commandParam.setType(type);
+            commandParam.setTypeClass(commadReqVO.getTypeClass());
 
             //递归获取子集
             if(!commadReqVO.getChildrens().isEmpty()) {
-                List<CommadReqParam> commadReqParams = convertToReqParam(commadReqVO.getChildrens(), innerReqParams, actionReqImportsClass, isBody);
+                List<CommandParam> commandParams = convertToReqParam(commadReqVO.getChildrens(), innerReqParams, commandImportClass);
 //                String innerClassName = NameUtils.upperFristStr(commadReqVO.getName());
-                innerReqParams.put(commadReqParam, commadReqParams);
-                commadReqParam.getChildrens().addAll(commadReqParams);
+                innerReqParams.put(commandParam, commandParams);
+                commandParam.getChildrens().addAll(commandParams);
             }
 
-            result.add(commadReqParam);
-        }
-
-        return result;
-    }
-
-
-    /**
-     * 转换为答复参数列表
-     * @param commadRespVOs
-     * @return
-     */
-    private static List<CommadRespParam>  convertToRespParam(List<CommadRespVO> commadRespVOs, Map<CommadRespParam, List<CommadRespParam>> innerRespParams, List<String> actionRespImportsClass) {
-
-        List<CommadRespParam> result = new ArrayList<>();
-
-        CommadRespParam commadRespParam;
-        //设置请求参数
-        for (CommadRespVO commadRespVO : commadRespVOs) {
-            commadRespParam = new CommadRespParam();
-            commadRespParam.setName(commadRespVO.getName());
-            commadRespParam.setRemark(commadRespVO.getRemark());
-
-            String type = ParamTypeUtils.convertType(commadRespVO.getType());
-
-            String typeClass = ParamTypeUtils.convertType(commadRespVO.getTypeClass());
-
-            DefaultLoadClassEnums defaultLoadClassEnums =  DefaultLoadClassEnums.getByName(type);
-            if(null != defaultLoadClassEnums) {
-
-                checkAndAdd(actionRespImportsClass, defaultLoadClassEnums.getImportClass());
-
-                //集合泛型处理
-                if(defaultLoadClassEnums == DefaultLoadClassEnums.LIST) {
-
-                    if(null == typeClass) {
-                        type = type + "<" + NameUtils.buildInnerClassName(commadRespVO.getName()) + ">";
-                    } else {
-                        type = type + "<" + typeClass + ">";
-                    }
-                } else if(defaultLoadClassEnums == DefaultLoadClassEnums.DATE) {
-                    checkAndAdd(actionRespImportsClass, "com.fasterxml.jackson.annotation.JsonFormat");
-                }
-
-            }
-
-            //泛型类是否需要加载
-            DefaultLoadClassEnums typeClassLoadClassEnums =  DefaultLoadClassEnums.getByName(typeClass);
-
-            if(null != typeClassLoadClassEnums) {
-
-                checkAndAdd(actionRespImportsClass, typeClassLoadClassEnums.getImportClass());
-            }
-
-            commadRespParam.setType(type);
-            commadRespParam.setTypeClass(commadRespVO.getTypeClass());
-            commadRespParam.setMethodName(NameUtils.upperFristStr(commadRespVO.getName()));
-            commadRespParam.setFormat(commadRespVO.getFormat());
-
-            //递归获取子集
-            if(!commadRespVO.getChildrens().isEmpty()) {
-
-                List<CommadRespParam> commadRespParams = convertToRespParam(commadRespVO.getChildrens(), innerRespParams, actionRespImportsClass);
-//                String innerClassName = NameUtils.upperFristStr(commadRespVO.getName());
-                //不生成data子类
-                if(!"data".equals(commadRespVO.getName())) {
-                    innerRespParams.put(commadRespParam, commadRespParams);
-                }
-
-                commadRespParam.getChildrens().addAll(commadRespParams);
-            }
-
-            result.add(commadRespParam);
+            result.add(commandParam);
         }
 
         return result;
@@ -337,67 +200,6 @@ public class ProtoModelConvertUtils {
             classList.add(classPackage);
         }
 
-    }
-
-    /**
-     * 一个tab
-     */
-    private static final String TAB = "    ";
-
-    /**
-     * 生成验证代码
-     * @param must 是否必须
-     * @param type 参数类型
-     * @param remark 备注
-     * @param min 最小值
-     * @param max 最大值
-     * @param valid 验证代码
-     * @param validMsg 验证错误提示信息
-     *
-     */
-    private static String generateValid(Boolean must, String type, String remark, String min, String max, String valid, String validMsg, List<String> actionReqImportsClass) {
-        String result = "";
-        //如果不是必须
-        if(!must) {
-            return result;
-        }
-        String lowType = String.valueOf(type).toLowerCase();
-        if("string".equals(lowType)) {
-            result += TAB + "@NotBlank(message=\"" + remark + "不能为空\")\n";
-            if(!StringUtils.isEmpty(min) || !StringUtils.isEmpty(max)) {
-                if(StringUtils.isEmpty(min)) {
-                    min = "1";
-                }
-                result += TAB + "@Length(min = "+ min + ", max = "+ max + ", message = \"" + remark + "长度位于" + min + "到" + max + "\")\n";
-                checkAndAdd(actionReqImportsClass, "org.hibernate.validator.constraints.Length");
-            }
-
-        }else if("integer".equals(lowType) || "long".equals(lowType)) {
-            result += TAB + "@NotNull(message=\"" + remark + "不能为空\")\n";
-            if(!StringUtils.isEmpty(min)) {
-                result += TAB + "@Min(value= " + min + " ,message=\"" + remark + "最小值为" + min + "\")\n";
-            }
-            if(!StringUtils.isEmpty(max)) {
-                result += TAB + "@Max(value= " + max + " ,message=\"" + remark + "最大值为" + max + "\")\n";
-            }
-        } else if("double".equals(lowType) || "float".equals(lowType) || "bigdecimal".equals(lowType)) {
-            result += TAB + "@NotNull(message=\"" + remark + "不能为空\")\n";
-            if(!StringUtils.isEmpty(min)) {
-                result += TAB + "@DecimalMin(value= \"" + min + "\" ,message=\"" + remark + "最小值为" + min + "\")\n";
-            }
-            if(!StringUtils.isEmpty(max)) {
-                result += TAB + "@DecimalMax(value= \"" + max + "\" ,message=\"" + remark + "最大值为" + max + "\")\n";
-            }
-        } else {
-            result += TAB + "@NotNull(message=\"" + remark + "不能为空\")\n";
-        }
-
-        if(!StringUtils.isEmpty(valid)) {
-            result += "\n" + valid;
-        } else {
-            result = result.substring(0, result.length() - 1);
-        }
-        return result;
     }
 
 }

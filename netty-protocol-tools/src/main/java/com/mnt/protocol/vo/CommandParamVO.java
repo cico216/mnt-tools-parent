@@ -1,14 +1,16 @@
 package com.mnt.protocol.vo;
 
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 每一条答复vo
+ * 每一条命令参数vo
  */
-public class CommadRespVO {
+public class CommandParamVO {
 
     /**
      * 参数名
@@ -26,21 +28,12 @@ public class CommadRespVO {
     private SimpleStringProperty type = new SimpleStringProperty("");
 
     /**
-     * 测试值
-     */
-    private SimpleStringProperty test = new SimpleStringProperty("");
-
-    /**
      * 类型泛型参数
      */
     private SimpleStringProperty typeClass = new SimpleStringProperty("");
 
-    /**
-     * date格式化
-     */
-    private SimpleStringProperty format = new SimpleStringProperty("");
 
-    List<CommadRespVO> childrens = new ArrayList<>(10);
+    private List<CommandParamVO> childrens = new ArrayList<>(10);
 
     public String getName() {
         return name.get();
@@ -78,17 +71,7 @@ public class CommadRespVO {
         this.type.set(type);
     }
 
-    public String getTest() {
-        return test.get();
-    }
 
-    public SimpleStringProperty testProperty() {
-        return test;
-    }
-
-    public void setTest(String test) {
-        this.test.set(test);
-    }
 
     public String getTypeClass() {
         return typeClass.get();
@@ -102,23 +85,9 @@ public class CommadRespVO {
         this.typeClass.set(typeClass);
     }
 
-    public List<CommadRespVO> getChildrens() {
+    public List<CommandParamVO> getChildrens() {
         return childrens;
     }
 
-    public void setChildrens(List<CommadRespVO> childrens) {
-        this.childrens = childrens;
-    }
 
-    public String getFormat() {
-        return format.get();
-    }
-
-    public SimpleStringProperty formatProperty() {
-        return format;
-    }
-
-    public void setFormat(String format) {
-        this.format.set(format);
-    }
 }

@@ -90,8 +90,8 @@ public abstract class ProtoCodeGenerateTemplate {
 //
 //		return packagePath;
 //	}
-	
-	
+
+
 	/**
 	 * 获取保留代码
 	 * @return
@@ -103,17 +103,17 @@ public abstract class ProtoCodeGenerateTemplate {
 			try {
 				boolean isStart = false;
 				FileReader fr;
-				
+
 					fr = new FileReader(file);
-				
+
 				BufferedReader br=new BufferedReader(fr);
 		        String line = "" ;
 		        while ((line = br.readLine()) != null) {
-		        	
+
 		        	if(line.contains(APPEND_END)) {
 		        		break;
 		        	}
-		        	
+
 		        	if(isStart) {
 //		        		if(!line.trim().isEmpty()) {
 		        		sbResult.append(line + "\n");
@@ -125,14 +125,14 @@ public abstract class ProtoCodeGenerateTemplate {
 		        }
 		        br.close();
 		        fr.close();
-		        
+
 		        return sbResult.toString();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			
+
 		}
-		
+
 		return "";
 	}
 	

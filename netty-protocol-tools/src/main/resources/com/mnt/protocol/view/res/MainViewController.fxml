@@ -36,7 +36,6 @@
                             <Menu mnemonicParsing="false" text="设置">
                               <items>
                                 <MenuItem mnemonicParsing="false" onAction="#processMenuSetting" text="代码生成设置" />
-                                    <MenuItem mnemonicParsing="false" onAction="#processMenuRequestSetting" text="测试请求设置" />
                               </items>
                             </Menu>
                             <Menu mnemonicParsing="false" text="关于我们">
@@ -124,7 +123,6 @@
                                                    <children>
                                                       <HBox alignment="CENTER_LEFT" spacing="10.0">
                                                          <children>
-                                                            <Label text="请求参数:" />
                                                             <Label text="命令号:" />
                                                             <TextField fx:id="txtCommandCode" editable="false" />
                                                             <Label text="命令类型:" />
@@ -134,10 +132,10 @@
                                                       </HBox>
                                                       <TreeTableView fx:id="treeTableRequest" prefHeight="230.0" prefWidth="498.0" showRoot="false" VBox.vgrow="ALWAYS">
                                                          <columns>
-                                                            <TreeTableColumn fx:id="trclumReqName" prefWidth="75.0" text="参数名" />
-                                                            <TreeTableColumn fx:id="trclumReqRemark" prefWidth="75.0" text="参数注释" />
-                                                            <TreeTableColumn fx:id="trclumReqType" prefWidth="75.0" text="参数类型" />
-                                                            <TreeTableColumn fx:id="trclumReqTest" prefWidth="75.0" text="参数样例" />
+                                                            <TreeTableColumn fx:id="trclumName" prefWidth="75.0" text="参数名" />
+                                                            <TreeTableColumn fx:id="trclumRemark" prefWidth="75.0" text="参数注释" />
+                                                            <TreeTableColumn fx:id="trclumType" prefWidth="75.0" text="参数类型" />
+                                                            <TreeTableColumn fx:id="trclumTypeClass" prefWidth="75.0" text="参数子类型" />
                                                          </columns>
                                                          <columnResizePolicy>
                                                             <TreeTableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

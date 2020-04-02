@@ -1,6 +1,5 @@
 package com.mnt.protocol.init;
 
-import com.mnt.base.classloader.ClassLoadUtil;
 import com.mnt.gui.fx.init.InitContext;
 import com.mnt.protocol.core.TemplateClassLoad;
 import com.mnt.protocol.model.UserData;

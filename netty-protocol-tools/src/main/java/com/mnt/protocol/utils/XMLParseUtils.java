@@ -44,7 +44,6 @@ public class XMLParseUtils {
 
         } catch (DocumentException e) {
             e.printStackTrace();
-            ConsoleLogUtils.log(e.toString());
         }
     }
 

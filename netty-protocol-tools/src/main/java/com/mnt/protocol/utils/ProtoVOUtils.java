@@ -2,11 +2,9 @@ package com.mnt.protocol.utils;
 
 
 import com.mnt.protocol.model.GenerateConfigInfo;
-import com.mnt.protocol.vo.BaseCommadVO;
+import com.mnt.protocol.vo.BaseCommandVO;
 import com.mnt.protocol.vo.BaseProtoVO;
-import com.mnt.protocol.vo.CommadReqVO;
-import com.mnt.protocol.vo.CommadRespVO;
-import org.apache.commons.lang.StringUtils;
+import com.mnt.protocol.vo.CommandParamVO;
 import org.dom4j.Node;
 
 import java.io.File;
@@ -129,18 +127,16 @@ public class ProtoVOUtils {
      * @param xmlObject
      * @return
      */
-    public static List<BaseCommadVO> getCommads(XMLParseUtils.XMLObject xmlObject) {
-        List<Node> nodes = xmlObject.findEle("protos/action");
-        List<BaseCommadVO> result = new ArrayList<>(nodes.size());
-        BaseCommadVO vo;
+    public static List<BaseCommandVO> getCommads(XMLParseUtils.XMLObject xmlObject) {
+        List<Node> nodes = xmlObject.findEle("protos/cmd");
+        List<BaseCommandVO> result = new ArrayList<>(nodes.size());
+        BaseCommandVO vo;
         for (Node node : nodes) {
-            vo = new BaseCommadVO();
-            vo.setPath(node.valueOf("@path"));
+            vo = new BaseCommandVO();
+            vo.setName(node.valueOf("@name"));
             vo.setRemark(node.valueOf("@remark"));
-            vo.setMethod(node.valueOf("@method").toUpperCase());
-            String body = node.valueOf("@body");
-            vo.setBody(Boolean.valueOf(body));
-
+            vo.setOpCode(Integer.parseInt(node.valueOf("@opCode")));
+            vo.setSrc(node.valueOf("@src"));
             vo.setCurrNode(node);
             result.add(vo);
         }
@@ -173,115 +169,30 @@ public class ProtoVOUtils {
      * 解析详细命令
      * @return
      */
-    public static List<CommadReqVO> parseCommadReqVOsToCommadVO(BaseCommadVO baseCommadVO) {
-        Node requestNode = baseCommadVO.getCurrNode().selectSingleNode("request");
-        List<CommadReqVO> result = new ArrayList<>();
-        setCommadReqChildrenCommadVO(requestNode, result);
+    public static List<CommandParamVO> parseCommandParamVOsToCommadVO(BaseCommandVO BaseCommandVO) {
+        Node requestNode = BaseCommandVO.getCurrNode();
+        List<CommandParamVO> result = new ArrayList<>();
+        setCommandChildrenCommandVO(requestNode, result);
         return result;
     }
 
-    private static void setCommadReqChildrenCommadVO(Node requestNode, List<CommadReqVO> result) {
+    private static void setCommandChildrenCommandVO(Node requestNode, List<CommandParamVO> result) {
         List<Node> paramNodes = requestNode.selectNodes("param");
 
-        CommadReqVO commadReqVO;
+        CommandParamVO commandParamVO;
         for (Node node : paramNodes) {
-            commadReqVO = new CommadReqVO();
-            commadReqVO.setName(node.valueOf("@name"));
-            commadReqVO.setRemark(node.valueOf("@remark"));
-            commadReqVO.setType(node.valueOf("@type"));
-            commadReqVO.setValid(node.valueOf("@valid"));
-            commadReqVO.setTypeClass(node.valueOf("@typeClass"));
-            commadReqVO.setValMsg(node.valueOf("@valMsg"));
-            String length = node.valueOf("@length");
+            commandParamVO = new CommandParamVO();
+            commandParamVO.setName(node.valueOf("@name"));
+            commandParamVO.setRemark(node.valueOf("@remark"));
+            commandParamVO.setType(node.valueOf("@type"));
+            commandParamVO.setTypeClass(node.valueOf("@typeClass"));
 
-            String limit = length;
-            String min =  node.valueOf("@min");
-            String max =  node.valueOf("@max");
 
-            if(!StringUtils.isEmpty(min) || !StringUtils.isEmpty(max)) {
-                limit = "[" + (StringUtils.isEmpty(min) ? "- ∞" : min) + "," + (StringUtils.isEmpty(max) ? "+ ∞" : max) + "]";
-                //如果为string类型 则最小值为0
-                if("string".equals(String.valueOf(commadReqVO.getType()).toLowerCase())) {
-                    limit.replace("- ∞", "0");
-                }
-
-            }
-
-            commadReqVO.setLimit(limit);
-            try {
-                if(!StringUtils.isEmpty(length)) {
-                    commadReqVO.setLength(Integer.parseInt(length));
-                }
-                if(!StringUtils.isEmpty(min)) {
-                    commadReqVO.setMin(min);
-                }
-                if(!StringUtils.isEmpty(max)) {
-                    commadReqVO.setMax(max);
-                }
-            } catch (Exception e) {
-                ConsoleLogUtils.log( "[" + commadReqVO.getName() + "]length, max, min必须为数字");
-                ConsoleLogUtils.log(e);
-            }
-
-            String must = node.valueOf("@must");
-            commadReqVO.setMust(Boolean.valueOf(must));
-            commadReqVO.setTest(node.valueOf("@test"));
-            commadReqVO.setFormat(node.valueOf("@format"));
-            result.add(commadReqVO);
+            result.add(commandParamVO);
 
             List<Node> innerParamNodes = requestNode.selectNodes("param");
             if(!innerParamNodes.isEmpty()) {
-                setCommadReqChildrenCommadVO(node, commadReqVO.getChildrens());
-            }
-
-        }
-
-    }
-
-
-    /**
-     * 解析详细命令
-     * @return
-     */
-    public static List<CommadRespVO> parseCommadRespVOsToCommadVO(BaseCommadVO baseCommadVO) {
-        Node requestNode = baseCommadVO.getCurrNode().selectSingleNode("response");
-        List<CommadRespVO> result = new ArrayList<>();
-
-
-        boolean isDataStart = false;
-        if(isDataStart) {
-            List<Node> paramNodes = requestNode.selectNodes("param");
-            //答复参数从data开始解析
-            for (Node dataNode : paramNodes) {
-                if("data".equals(dataNode.valueOf("@name"))) {
-                    setCommadRespChildrenCommadVO(dataNode, result);
-                }
-            }
-        } else {
-            setCommadRespChildrenCommadVO(requestNode, result);
-        }
-
-
-        return result;
-    }
-
-    private static void setCommadRespChildrenCommadVO(Node requestNode, List<CommadRespVO> result) {
-        List<Node> paramNodes = requestNode.selectNodes("param");
-
-        CommadRespVO commadRespVO;
-        for (Node node : paramNodes) {
-            commadRespVO = new CommadRespVO();
-            commadRespVO.setName(node.valueOf("@name"));
-            commadRespVO.setRemark(node.valueOf("@remark"));
-            commadRespVO.setType(node.valueOf("@type"));
-            commadRespVO.setTypeClass(node.valueOf("@typeClass"));
-            commadRespVO.setTest(node.valueOf("@test"));
-            commadRespVO.setFormat(node.valueOf("@format"));
-            result.add(commadRespVO);
-
-            List<Node> innerParamNodes = requestNode.selectNodes("param");
-            if(!innerParamNodes.isEmpty()) {
-                setCommadRespChildrenCommadVO(node, commadRespVO.getChildrens());
+                setCommandChildrenCommandVO(node, commandParamVO.getChildrens());
             }
 
         }
