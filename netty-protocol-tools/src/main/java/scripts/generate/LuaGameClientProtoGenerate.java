@@ -31,18 +31,15 @@ public class LuaGameClientProtoGenerate extends ProtoCodeGenerateTemplate {
         checkAndCreateDir(generatePath);
 
         for (CommandModel commandModel : protoModel.getCommands()) {
-            String protosJavaFilePath =  generatePath + PathUtils.getSeparator() + commandModel.getName() + ".java";
+
+            String protosLuaFilePath =  generatePath + PathUtils.getSeparator() + commandModel.getName() + ".lua";
 
             //获取保留代码
-            String holdCode = getHoldCode(protosJavaFilePath);
+            String holdCode = getHoldCode(protosLuaFilePath);
 
             Map<String, Object> protosParams = new HashMap<>();
 
-            protosParams.put("user", protoModel.getUser());
-            protosParams.put("date", protoModel.getDate());
 
-            protosParams.put("remark", commandModel.getRemark());
-            protosParams.put("opCode", commandModel.getOpCode());
 
             //模板名称
             String tmpName;
@@ -51,19 +48,42 @@ public class LuaGameClientProtoGenerate extends ProtoCodeGenerateTemplate {
             //判断是发送代码还是接收代码
             if("s".equals(commandModel.getSrc())) {
                 tmpName = getSendProtoTemplateName();
+                className = commandModel.getName() + "SendablePacket";
+                String luaClassDir = generatePath + "Sendpacks" + PathUtils.getSeparator() + protoModel.getModuleName() +  PathUtils.getSeparator();
+                checkAndCreateDir(luaClassDir);
+
                 parseSendParams(commandModel.getCommandParams(), commandModel.getInnerParams());
 
             } else {
                 tmpName = getReceiveProtoTemplateName();
+
+                className = commandModel.getName() + "ReceivablePacket";
+                String luaClassDir = generatePath + "Receivpacks" + PathUtils.getSeparator() + protoModel.getModuleName() +  PathUtils.getSeparator();
+                checkAndCreateDir(luaClassDir);
+
                 parseReceiveParams(commandModel.getCommandParams(), commandModel.getInnerParams());
 
             }
+
+            String sendDecrParams = "";
+            for (CommandParam commandParam : commandModel.getCommandParams()) {
+                sendDecrParams += ", " + commandParam.getName();
+            }
+            //发送的参数声明
+            protosParams.put("sendDecrParams", sendDecrParams);
+
+            protosParams.put("user", protoModel.getUser());
+            protosParams.put("date", protoModel.getDate());
+
+            protosParams.put("remark", commandModel.getRemark());
+            protosParams.put("opCode", commandModel.getOpCode());
+
             protosParams.put("params", commandModel.getCommandParams());
             protosParams.put("name", className);
             protosParams.put("holdCode", holdCode);
 
             try{
-                VelocityUtils.getInstance().parseTemplate(tmpName, protosJavaFilePath, protosParams);
+                VelocityUtils.getInstance().parseTemplate(tmpName, protosLuaFilePath, protosParams);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -81,23 +101,23 @@ public class LuaGameClientProtoGenerate extends ProtoCodeGenerateTemplate {
         String typeName = commandParam.getType();
         String codeTmp = "";
         if("String".equals(typeName)) {
-            codeTmp = "writeString(buffer, #{name});";
+            codeTmp = "buf:writeString(#{name})";
         } else if("Long".equals(typeName)) {
-            codeTmp = "writeLong(buffer, #{name});";
+            codeTmp = "buf:writeLong(#{name})";
         } else if("Integer".equals(typeName)) {
-            codeTmp = "writeInt(buffer, #{name});";
+            codeTmp = "buf:writeInt( #{name})";
         } else if("Boolean".equals(typeName)) {
-            codeTmp = "writeBoolean(buffer, #{name});";
+            codeTmp = "buf:writeBoolean(#{name})";
         } else if("Float".equals(typeName)) {
-            codeTmp = "writeBoolean(buffer, #{name});";
+            codeTmp = "buf:writeBoolean(#{name})";
         } else if("Double".equals(typeName)) {
-            codeTmp = "writeDouble(buffer, #{name});";
+            codeTmp = "buf:writeDouble(#{name})";
         } else if("Charset".equals(typeName)) {
-            codeTmp = "writeChar(buffer, #{name});";
+            codeTmp = "buf:writeChar(#{name})";
         } else if("Byte".equals(typeName)) {
-            codeTmp = "writeByte(buffer, #{name});";
+            codeTmp = "buf:writeByte( #{name})";
         } else if("Short".equals(typeName)) {
-            codeTmp = "writeShort(buffer, #{name});";
+            codeTmp = "buf:writeShort( #{name})";
         }
 
         return codeTmp;
@@ -129,7 +149,7 @@ public class LuaGameClientProtoGenerate extends ProtoCodeGenerateTemplate {
      * @return
      */
     private String parseInnerSendParam(CommandParam commandParam, List<CommandParam> innerParams) {
-        String result = "writeInt(buffer, #{name})\n";
+        String result = "buf:writeInt(#{name})\n";
         result += "for(Name name : #{name}) { \n";
         for (CommandParam innerCommandParam : innerParams) {
             if(innerCommandParam.getChildrens().isEmpty()) {
@@ -154,23 +174,23 @@ public class LuaGameClientProtoGenerate extends ProtoCodeGenerateTemplate {
         String typeName = commandParam.getType();
         String codeTmp = "";
         if("String".equals(typeName)) {
-            codeTmp = "#{name} = readString();";
+            codeTmp = "local #{name} = buf:ReadString()";
         } else if("Long".equals(typeName)) {
-            codeTmp = "#{name} = readLong();";
+            codeTmp = "local #{name} = buf:ReadLong()";
         } else if("Integer".equals(typeName)) {
-            codeTmp = "#{name} = readInt();";
+            codeTmp = "local #{name} = buf:ReadInt()";
         } else if("Boolean".equals(typeName)) {
-            codeTmp = "#{name} = readBoolean();";
+            codeTmp = "local #{name} = buf:ReadBoolean()";
         } else if("Float".equals(typeName)) {
-            codeTmp = "#{name} = readFloat();";
+            codeTmp = "local #{name} = buf:ReadFloat()";
         } else if("Double".equals(typeName)) {
-            codeTmp = "#{name} = readDouble();";
+            codeTmp = "local #{name} = buf:ReadDouble()";
         } else if("Charset".equals(typeName)) {
-            codeTmp = "#{name} = readChar();";
+            codeTmp = "local #{name} = buf:ReadChar()";
         } else if("Byte".equals(typeName)) {
-            codeTmp = "#{name} = readByte();";
+            codeTmp = "local #{name} = buf:ReadByte()";
         } else if("Short".equals(typeName)) {
-            codeTmp = "#{name} = readShort();";
+            codeTmp = "local #{name} = buf:ReadShort()";
         }
 
         return codeTmp;
@@ -202,23 +222,23 @@ public class LuaGameClientProtoGenerate extends ProtoCodeGenerateTemplate {
         String typeName = commandParam.getType();
         String codeTmp = "";
         if("String".equals(typeName)) {
-            codeTmp = "#{name}(readString());";
+            codeTmp = "#{name} = buf:ReadString()";
         } else if("Long".equals(typeName)) {
-            codeTmp = "#{name}(readLong());";
+            codeTmp = "#{name} = buf:ReadLong()";
         } else if("Integer".equals(typeName)) {
-            codeTmp = "#{name}(readInt());";
+            codeTmp = "#{name} = buf:ReadInt()";
         } else if("Boolean".equals(typeName)) {
-            codeTmp = "#{name}(readBoolean());";
+            codeTmp = "#{name} = buf:ReadBoolean()";
         } else if("Float".equals(typeName)) {
-            codeTmp = "#{name}(readFloat());";
+            codeTmp = "#{name} = buf:ReadFloat()";
         } else if("Double".equals(typeName)) {
-            codeTmp = "#{name}(readDouble());";
+            codeTmp = "#{name} = buf:ReadDouble()";
         } else if("Charset".equals(typeName)) {
-            codeTmp = "#{name}(readChar());";
+            codeTmp = "#{name} = buf:ReadChar()";
         } else if("Byte".equals(typeName)) {
-            codeTmp = "#{name}(readByte());";
+            codeTmp = "#{name} = buf:ReadByte()";
         } else if("Short".equals(typeName)) {
-            codeTmp = "#{name}(readShort());";
+            codeTmp = "#{name} = buf:ReadShort()";
         }
 
         return codeTmp;
@@ -230,8 +250,8 @@ public class LuaGameClientProtoGenerate extends ProtoCodeGenerateTemplate {
      * @return
      */
     private String parseInnerReceiveParam(CommandParam commandParam, List<CommandParam> innerParams) {
-        String result = "int #{name}Size = readInt();\n";
-        result += "#{name} = new ArrayList<>(#{name}Size );\n";
+        String result = "local  #{name}Size = readInt()\n";
+        result += "#{name} = {}\n";
         result += "for(int i = 0; i++; i < #{name}Size) {\n";
         for (CommandParam innerCommandParam : innerParams) {
             if(innerCommandParam.getChildrens().isEmpty()) {
@@ -251,7 +271,7 @@ public class LuaGameClientProtoGenerate extends ProtoCodeGenerateTemplate {
     @Override
     public String getGeneratePath(ProtoModel protoModel) {
         return UserData.getUserConfig().getProjectPath() + PathUtils.getSeparator() +
-                protoModel.getGenerateConfigInfo().getProjectName() + PathUtils.getSeparator() + "protos"+ PathUtils.getSeparator() +
+                protoModel.getGenerateConfigInfo().getProjectName() + PathUtils.getSeparator() +
                 protoModel.getGenerateConfigInfo().getPackageName() + PathUtils.getSeparator();
     }
 

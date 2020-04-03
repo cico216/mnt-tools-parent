@@ -1,0 +1,59 @@
+package $packagePath;
+
+#if($importPackages)
+    #foreach( $importPackage in $importPackages )
+    import ${importPackage};
+    #end
+#end
+import io.netty.buffer.ByteBuf;
+import net.zy.common.network.socket.packet.MMOSendablePacket;
+
+
+
+/**
+* $remark
+*
+* @author $user
+* @Date $date
+*/
+
+public class $className extends MMOSendablePacket {
+
+    private static final int OPCODE = $opCode;
+
+    /**
+    * 返回结果
+    */
+    private final int result;
+
+#foreach( $param in $params )
+
+    /**
+    * $param.remark
+    */
+    private $param.type ${param.name};
+#end
+    public $className(int result) {
+        super(OPCODE);
+        this.result = result;
+    }
+
+    public $className(int result$sendDecrParams) {
+        this(result);
+#foreach( $param in $params )
+        this.${param.name} = ${param.name};
+#end
+
+    }
+
+    @Override
+    protected void writeImpl(ByteBuf buffer) {
+        writeInt(buffer, result);
+        if(result == 0) {
+#foreach( $param in $params )
+            $param.code
+#end
+        }
+    }
+}
+

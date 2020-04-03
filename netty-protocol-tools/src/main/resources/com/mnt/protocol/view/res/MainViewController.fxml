@@ -38,11 +38,17 @@
                                 <MenuItem mnemonicParsing="false" onAction="#processMenuSetting" text="代码生成设置" />
                               </items>
                             </Menu>
-                            <Menu mnemonicParsing="false" text="关于我们">
+                            <Menu mnemonicParsing="false" text="功能">
                               <items>
-                                <MenuItem mnemonicParsing="false" onAction="#processMenuAbout" text="信息" />
+                                <MenuItem mnemonicParsing="false" onAction="#processMenuErrorCode" text="错误码" />
+                                    <MenuItem mnemonicParsing="false" onAction="#processMenuProtoImport" text="协议导入命令" />
                               </items>
                             </Menu>
+                              <Menu mnemonicParsing="false" text="关于我们">
+                                 <items>
+                                    <MenuItem mnemonicParsing="false" onAction="#processMenuAbout" text="信息" />
+                                 </items>
+                              </Menu>
                           </menus>
                            <padding>
                               <Insets top="1.0" />

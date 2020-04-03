@@ -23,6 +23,11 @@ public class ProtoModel {
     private String remark;
 
     /**
+     * 所属模块
+     */
+    private String moduleName;
+
+    /**
      * 当前用户
      */
     private String user;

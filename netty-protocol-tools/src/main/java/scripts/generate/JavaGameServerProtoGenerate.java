@@ -31,40 +31,69 @@ public class JavaGameServerProtoGenerate extends ProtoCodeGenerateTemplate {
     protected void generateImpl(ProtoModel protoModel) {
         String generatePath = getGeneratePath(protoModel);
 
+        generatePath = generatePath + PathUtils.packageToPath(protoModel.getGenerateConfigInfo().getPackageName());
+
         //创建路径
         checkAndCreateDir(generatePath);
 
+
         for (CommandModel commandModel : protoModel.getCommands()) {
-            String protosJavaFilePath =  generatePath + PathUtils.getSeparator() + commandModel.getName() + ".java";
+            //模板引擎替换的参数
+            Map<String, Object> protosParams = new HashMap<>();
+
+            String protosJavaFilePath;
+            //模板名称
+            String tmpName;
+            //生成代码的文件名
+            String className;
+            //生成类的包名
+            String packagePath;
+
+            //判断是发送代码还是接收代码
+            if("s".equals(commandModel.getSrc())) {
+                packagePath = protoModel.getGenerateConfigInfo().getPackageName() + ".receivpacks." + protoModel.getModuleName();
+                className = commandModel.getName() + "ReceivablePacket";
+                String javaClassDir = generatePath + "receivpacks" + PathUtils.getSeparator() + protoModel.getModuleName() +  PathUtils.getSeparator();
+                checkAndCreateDir(javaClassDir);
+
+                protosJavaFilePath =  javaClassDir + className + ".java";
+                tmpName = getSendProtoTemplateName();
+                parseSendParams(commandModel.getCommandParams(), commandModel.getInnerParams());
+
+                String sendDecrParams = "";
+                for (CommandParam commandParam : commandModel.getCommandParams()) {
+                    sendDecrParams += ", " + commandParam.getName();
+                }
+                //发送的参数声明
+                protosParams.put("sendDecrParams", sendDecrParams);
+
+            } else {
+                packagePath = protoModel.getGenerateConfigInfo().getPackageName() + ".sendpacks." + protoModel.getModuleName();
+                className = commandModel.getName() + "SendablePacket";
+                String javaClassDir = generatePath + "sendpacks" + PathUtils.getSeparator() + protoModel.getModuleName() +  PathUtils.getSeparator();
+                checkAndCreateDir(javaClassDir);
+                protosJavaFilePath =  javaClassDir + className + ".java";
+
+                tmpName = getReceiveProtoTemplateName();
+                parseReceiveParams(commandModel.getCommandParams(), commandModel.getInnerParams());
+            }
+
+
+
 
             //获取保留代码
             String holdCode = getHoldCode(protosJavaFilePath);
             getImportClass(protosJavaFilePath, commandModel.getCommandImportClass());
 
-            Map<String, Object> protosParams = new HashMap<>();
-
             protosParams.put("user", protoModel.getUser());
             protosParams.put("date", protoModel.getDate());
 
+            protosParams.put("packagePath", packagePath);
             protosParams.put("remark", commandModel.getRemark());
             protosParams.put("opCode", commandModel.getOpCode());
 
-            //模板名称
-            String tmpName;
-            //生成代码的文件名
-            String className = "";
-            //判断是发送代码还是接收代码
-            if("s".equals(commandModel.getSrc())) {
-                tmpName = getSendProtoTemplateName();
-                parseSendParams(commandModel.getCommandParams(), commandModel.getInnerParams());
-
-            } else {
-                tmpName = getReceiveProtoTemplateName();
-                parseReceiveParams(commandModel.getCommandParams(), commandModel.getInnerParams());
-
-            }
             protosParams.put("params", commandModel.getCommandParams());
-            protosParams.put("name", className);
+            protosParams.put("className", className);
             protosParams.put("importPackages", commandModel.getCommandImportClass());
             protosParams.put("holdCode", holdCode);
 
@@ -257,8 +286,9 @@ public class JavaGameServerProtoGenerate extends ProtoCodeGenerateTemplate {
     @Override
     public String getGeneratePath(ProtoModel protoModel) {
         return UserData.getUserConfig().getProjectPath() + PathUtils.getSeparator() +
-                protoModel.getGenerateConfigInfo().getProjectName() + PathUtils.getSeparator() + "protos"+ PathUtils.getSeparator() +
-                protoModel.getGenerateConfigInfo().getPackageName() + PathUtils.getSeparator();
+                protoModel.getGenerateConfigInfo().getProjectName() + PathUtils.getSeparator() + PathUtils.getSeparator() + "src"+ PathUtils.getSeparator() +
+                "main" + PathUtils.getSeparator() + "java" +
+                 PathUtils.getSeparator();
     }
 
     /**
@@ -279,8 +309,9 @@ public class JavaGameServerProtoGenerate extends ProtoCodeGenerateTemplate {
 
                     if(line.startsWith("import ") && line.endsWith(";")) {
 
-                        if(!line.contains("import org.springframework.web.bind.annotation.RequestMapping;") &&
-                                !line.contains("import org.springframework.web.bind.annotation.RestController;")
+                        if(!line.contains("import net.zy.common.network.socket.packet.MMOSendablePacket;")
+                                &&!line.contains("import io.netty.buffer.ByteBuf;")
+                                &&!line.contains("import net.zy.common.network.socket.packet.MMOReceivablePacket;")
 
                         ) {
                             String packageStr = line.trim().replace("import ", "").replace(";", "");

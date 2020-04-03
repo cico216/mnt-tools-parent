@@ -1,0 +1,52 @@
+package $packagePath;
+
+#if($importPackages)
+#foreach( $importPackage in $importPackages )
+import ${importPackage};
+#end
+#end
+import io.netty.buffer.ByteBuf;
+import net.zy.common.network.socket.packet.MMOReceivablePacket;
+
+
+
+/**
+* $remark
+*
+* @author $user
+* @Date $date
+*/
+public class $className extends MMOReceivablePacket<GameClientConnection> {
+
+    public final static int OPCODE = $opCode;
+
+
+#foreach( $param in $params )
+
+    /**
+    * $param.remark
+    */
+    private $param.type ${param.name};
+#end
+
+
+    protected $className(ByteBuf buffer) {
+    super(OPCODE, buffer);
+    }
+
+    @Override
+    protected void readImpl() throws Throwable {
+#foreach( $param in $params )
+        $param.code
+#end
+    }
+
+    @Override
+    public void run() {
+    /* append__start */
+${holdCode}
+
+
+    /* append__end */
+    }
+}

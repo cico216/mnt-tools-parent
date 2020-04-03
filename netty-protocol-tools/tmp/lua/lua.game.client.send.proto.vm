@@ -1,0 +1,24 @@
+---
+--- ${remark}
+--- Created by ${user}.
+--- DateTime: ${date}
+---
+---
+
+ClientReadySendablePacket = {}
+
+local OPCode = $opCode
+
+-- ${remark}
+#foreach( $param in $params )
+--  ${param.name} ${param.remark}
+#end
+function ClientReadySendablePacket.BuildByteBuf($sendDecrParams)
+local buf = LuaFramework.ByteBuffer.New()
+    buf:WriteInt(OPCode)
+#foreach( $param in $params )
+    $param.code
+#end
+    return buf
+end
+

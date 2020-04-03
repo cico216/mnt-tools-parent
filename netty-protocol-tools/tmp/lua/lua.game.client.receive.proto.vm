@@ -1,0 +1,44 @@
+---
+--- ${remark}
+--- Created by ${user}.
+--- DateTime: ${date}
+---
+Event = require 'events'
+
+${className} = {}
+
+local OPCode = '$opCode'
+function ${className}.RegisterPacket()
+    Event.AddListener(OPCode, ${className}.HandleBuf)
+end
+
+function ${className}.HandleBuf(buf)
+    local result = buf:ReadInt();
+    if result == 0 then
+#foreach( $param in $params )
+        ${param.code}
+#end
+        ${className}.RunImpl($sendDecrParams)
+    else
+        ${className}.ErrorRunImpl(result)
+    end
+
+end
+
+-- ${remark}
+#foreach( $param in $params )
+--  ${param.name} ${param.remark}
+#end
+function ${className}.RunImpl($sendDecrParams)
+-- append__start --
+${holdCode}
+
+
+-- append__end --
+end
+
+-- 返回错误结果执行
+function ${className}.ErrorRunImpl(result)
+    ErrorResultHandler.ErrorWarning(result)
+end
+

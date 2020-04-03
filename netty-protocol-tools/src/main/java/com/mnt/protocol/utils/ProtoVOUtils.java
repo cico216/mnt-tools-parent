@@ -47,9 +47,9 @@ public class ProtoVOUtils {
      * @param xmlObject
      * @return
      */
-    public static String getProtoPath(XMLParseUtils.XMLObject xmlObject) {
+    public static String getProtoModuleName(XMLParseUtils.XMLObject xmlObject) {
 
-        return getProtoAttr(xmlObject,"path");
+        return getProtoAttr(xmlObject,"moduleName");
 
     }
 
@@ -58,9 +58,9 @@ public class ProtoVOUtils {
      * @param xmlObject
      * @return
      */
-    public static String getProtoName(XMLParseUtils.XMLObject xmlObject) {
+    public static String getProtoCodeLimit(XMLParseUtils.XMLObject xmlObject) {
 
-        return getProtoAttr(xmlObject,"name");
+        return getProtoAttr(xmlObject,"codeLimit");
 
     }
 
@@ -118,6 +118,8 @@ public class ProtoVOUtils {
     public static BaseProtoVO getProto(XMLParseUtils.XMLObject xmlObject) {
         BaseProtoVO result = new BaseProtoVO();
         result.setRemark(getProtoRemark(xmlObject));
+        result.setCodeLimit(getProtoCodeLimit(xmlObject));
+        result.setModuleName(getProtoModuleName(xmlObject));
         result.setXmlObject(xmlObject);
         return result;
     }
@@ -203,7 +205,7 @@ public class ProtoVOUtils {
 
     public static void main(String[] args) {
         XMLParseUtils.XMLObject xmlObject = XMLParseUtils.parseXML(new File(System.getProperty("user.dir") + "/protos/test.xml"));
-        System.err.println(getProtoName(xmlObject));
+        System.err.println(getProtoCodeLimit(xmlObject));
     }
 
 }

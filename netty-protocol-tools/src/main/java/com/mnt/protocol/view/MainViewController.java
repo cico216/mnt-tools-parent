@@ -635,4 +635,22 @@ public class MainViewController extends BaseController {
     /************************************************************************************************* 协议信息end *****************************************************************************************************/
 
 
+    /**
+     * 错误码代码生成
+     * @param event
+     */
+    @FXML
+    void processMenuErrorCode(ActionEvent event) {
+
+    }
+
+    /**
+     * 协议导入模板代码
+     * @param event
+     */
+    @FXML
+    void processMenuProtoImport(ActionEvent event) {
+
+    }
+
 }

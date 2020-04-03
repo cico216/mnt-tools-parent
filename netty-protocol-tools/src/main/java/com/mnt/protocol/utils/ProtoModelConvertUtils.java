@@ -43,19 +43,10 @@ public class ProtoModelConvertUtils {
 
         result.setGenerateConfigInfo(generateConfigInfo);
 
-
-        //当前控制层所在controller
-        String actionPackage = generateConfigInfo.getPackageName();
-
-        //控制层名称
-        String name = ProtoVOUtils.getProtoName(baseProtoVO.getXmlObject());
-
-
-
+        result.setModuleName(baseProtoVO.getModuleName());
 
         //注释信息
-        String remark = ProtoVOUtils.getProtoRemark(baseProtoVO.getXmlObject());
-        result.setRemark(remark);
+        result.setRemark(baseProtoVO.getRemark());
 
         //创建日期
         String date = new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date());
