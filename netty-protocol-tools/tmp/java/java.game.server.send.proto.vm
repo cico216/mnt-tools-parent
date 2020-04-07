@@ -1,9 +1,9 @@
 package $packagePath;
 
 #if($importPackages)
-    #foreach( $importPackage in $importPackages )
-    import ${importPackage};
-    #end
+#foreach( $importPackage in $importPackages )
+import ${importPackage};
+#end
 #end
 import io.netty.buffer.ByteBuf;
 import net.zy.common.network.socket.packet.MMOSendablePacket;
@@ -33,6 +33,7 @@ public class $className extends MMOSendablePacket {
     */
     private $param.type ${param.name};
 #end
+
     public $className(int result) {
         super(OPCODE);
         this.result = result;

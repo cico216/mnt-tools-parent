@@ -22,11 +22,6 @@ public class GenerateConfigInfo {
      */
     private String projectName;
 
-    /**
-     * 兼容spring cloud项目 api请求和回复参数
-     */
-    private String apiProjectName;
-
 
     public String getPackageName() {
         return packageName;
@@ -52,11 +47,4 @@ public class GenerateConfigInfo {
         this.projectName = projectName;
     }
 
-    public String getApiProjectName() {
-        return apiProjectName;
-    }
-
-    public void setApiProjectName(String apiProjectName) {
-        this.apiProjectName = apiProjectName;
-    }
 }

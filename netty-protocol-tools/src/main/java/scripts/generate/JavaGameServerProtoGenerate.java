@@ -31,7 +31,7 @@ public class JavaGameServerProtoGenerate extends ProtoCodeGenerateTemplate {
     protected void generateImpl(ProtoModel protoModel) {
         String generatePath = getGeneratePath(protoModel);
 
-        generatePath = generatePath + PathUtils.packageToPath(protoModel.getGenerateConfigInfo().getPackageName());
+        generatePath = generatePath + PathUtils.packageToPath(protoModel.getGenerateConfigInfo().getPackageName()) +  PathUtils.getSeparator();
 
         //创建路径
         checkAndCreateDir(generatePath);
@@ -51,9 +51,9 @@ public class JavaGameServerProtoGenerate extends ProtoCodeGenerateTemplate {
 
             //判断是发送代码还是接收代码
             if("s".equals(commandModel.getSrc())) {
-                packagePath = protoModel.getGenerateConfigInfo().getPackageName() + ".receivpacks." + protoModel.getModuleName();
-                className = commandModel.getName() + "ReceivablePacket";
-                String javaClassDir = generatePath + "receivpacks" + PathUtils.getSeparator() + protoModel.getModuleName() +  PathUtils.getSeparator();
+                packagePath = protoModel.getGenerateConfigInfo().getPackageName() + ".packets.sendpacks." + protoModel.getModuleName();
+                className = commandModel.getName() + "SendablePacket";
+                String javaClassDir = generatePath + "packets" + PathUtils.getSeparator() + "sendpacks" + PathUtils.getSeparator() + protoModel.getModuleName() +  PathUtils.getSeparator();
                 checkAndCreateDir(javaClassDir);
 
                 protosJavaFilePath =  javaClassDir + className + ".java";
@@ -62,23 +62,26 @@ public class JavaGameServerProtoGenerate extends ProtoCodeGenerateTemplate {
 
                 String sendDecrParams = "";
                 for (CommandParam commandParam : commandModel.getCommandParams()) {
-                    sendDecrParams += ", " + commandParam.getName();
+                    sendDecrParams += ", " + commandParam.getType() + " " + commandParam.getName();
                 }
                 //发送的参数声明
                 protosParams.put("sendDecrParams", sendDecrParams);
 
             } else {
-                packagePath = protoModel.getGenerateConfigInfo().getPackageName() + ".sendpacks." + protoModel.getModuleName();
-                className = commandModel.getName() + "SendablePacket";
-                String javaClassDir = generatePath + "sendpacks" + PathUtils.getSeparator() + protoModel.getModuleName() +  PathUtils.getSeparator();
+                packagePath = protoModel.getGenerateConfigInfo().getPackageName() + ".packets.receivpacks." + protoModel.getModuleName();
+                className = commandModel.getName() + "ReceivablePacket";
+                String javaClassDir = generatePath + "packets" + PathUtils.getSeparator() + "receivpacks" + PathUtils.getSeparator() + protoModel.getModuleName() +  PathUtils.getSeparator();
                 checkAndCreateDir(javaClassDir);
                 protosJavaFilePath =  javaClassDir + className + ".java";
 
                 tmpName = getReceiveProtoTemplateName();
                 parseReceiveParams(commandModel.getCommandParams(), commandModel.getInnerParams());
+
+
             }
 
-
+            //添加连接包
+            commandModel.getCommandImportClass().add(protoModel.getGenerateConfigInfo().getPackageName() + ".entitys.GameClientConnection");
 
 
             //获取保留代码

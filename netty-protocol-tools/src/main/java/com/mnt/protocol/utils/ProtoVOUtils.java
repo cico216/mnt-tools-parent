@@ -157,8 +157,7 @@ public class ProtoVOUtils {
         GenerateConfigInfo generateConfigInfo;
         for (Node node : nodes) {
             generateConfigInfo = new GenerateConfigInfo();
-            generateConfigInfo.setPackageName(node.valueOf("@actionPackage"));
-            generateConfigInfo.setApiProjectName(node.valueOf("@apiProjectName"));
+            generateConfigInfo.setPackageName(node.valueOf("@cmdPackage"));
             generateConfigInfo.setProjectName(node.valueOf("@projectName"));
             generateConfigInfo.setType(node.valueOf("@type"));
             result.put(generateConfigInfo.getType(), generateConfigInfo);

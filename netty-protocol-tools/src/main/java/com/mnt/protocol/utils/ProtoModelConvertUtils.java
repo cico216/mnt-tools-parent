@@ -87,7 +87,7 @@ public class ProtoModelConvertUtils {
             commandModel.setName(baseCommadVO.getName());
             commandModel.setOpCode(baseCommadVO.getOpCode());
             commandModel.setRemark(baseCommadVO.getRemark());
-            commandModel.setSrc(commandModel.getSrc());
+            commandModel.setSrc(baseCommadVO.getSrc());
 
 
             //引入class

@@ -31,7 +31,7 @@ public class $className extends MMOReceivablePacket<GameClientConnection> {
 
 
     protected $className(ByteBuf buffer) {
-    super(OPCODE, buffer);
+        super(OPCODE, buffer);
     }
 
     @Override
