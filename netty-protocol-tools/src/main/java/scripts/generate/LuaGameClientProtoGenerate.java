@@ -32,43 +32,54 @@ public class LuaGameClientProtoGenerate extends ProtoCodeGenerateTemplate {
 
         for (CommandModel commandModel : protoModel.getCommands()) {
 
-            String protosLuaFilePath =  generatePath + PathUtils.getSeparator() + commandModel.getName() + ".lua";
 
-            //获取保留代码
-            String holdCode = getHoldCode(protosLuaFilePath);
+
 
             Map<String, Object> protosParams = new HashMap<>();
 
-
-
+            /**
+             * lua代码文件
+             */
+            String protosLuaFilePath;
             //模板名称
             String tmpName;
             //生成代码的文件名
             String className = "";
             //判断是发送代码还是接收代码
-            if("s".equals(commandModel.getSrc())) {
+            if("c".equals(commandModel.getSrc())) {
                 tmpName = getSendProtoTemplateName();
                 className = commandModel.getName() + "SendablePacket";
-                String luaClassDir = generatePath + "Sendpacks" + PathUtils.getSeparator() + protoModel.getModuleName() +  PathUtils.getSeparator();
+                String luaClassDir = generatePath + "Sendpacks" + PathUtils.getSeparator() + protoModel.getGenerateConfigInfo().getProjectName() +  PathUtils.getSeparator();
                 checkAndCreateDir(luaClassDir);
-
+                protosLuaFilePath = luaClassDir + PathUtils.getSeparator() + className + ".lua";
                 parseSendParams(commandModel.getCommandParams(), commandModel.getInnerParams());
 
             } else {
                 tmpName = getReceiveProtoTemplateName();
 
                 className = commandModel.getName() + "ReceivablePacket";
-                String luaClassDir = generatePath + "Receivpacks" + PathUtils.getSeparator() + protoModel.getModuleName() +  PathUtils.getSeparator();
+                String luaClassDir = generatePath + "Receivpacks" + PathUtils.getSeparator() + protoModel.getGenerateConfigInfo().getProjectName() +  PathUtils.getSeparator();
                 checkAndCreateDir(luaClassDir);
-
+                protosLuaFilePath = luaClassDir + PathUtils.getSeparator() + className + ".lua";
                 parseReceiveParams(commandModel.getCommandParams(), commandModel.getInnerParams());
 
             }
 
             String sendDecrParams = "";
+            boolean start = true;
             for (CommandParam commandParam : commandModel.getCommandParams()) {
-                sendDecrParams += ", " + commandParam.getName();
+                if(start) {
+                    start = false;
+                    sendDecrParams +=  commandParam.getName();
+
+                } else {
+                    sendDecrParams += ", " + commandParam.getName();
+                }
+
             }
+            //获取保留代码
+            String holdCode = getHoldCode(protosLuaFilePath);
+
             //发送的参数声明
             protosParams.put("sendDecrParams", sendDecrParams);
 
@@ -79,7 +90,7 @@ public class LuaGameClientProtoGenerate extends ProtoCodeGenerateTemplate {
             protosParams.put("opCode", commandModel.getOpCode());
 
             protosParams.put("params", commandModel.getCommandParams());
-            protosParams.put("name", className);
+            protosParams.put("className", className);
             protosParams.put("holdCode", holdCode);
 
             try{
@@ -271,7 +282,6 @@ public class LuaGameClientProtoGenerate extends ProtoCodeGenerateTemplate {
     @Override
     public String getGeneratePath(ProtoModel protoModel) {
         return UserData.getUserConfig().getProjectPath() + PathUtils.getSeparator() +
-                protoModel.getGenerateConfigInfo().getProjectName() + PathUtils.getSeparator() +
                 protoModel.getGenerateConfigInfo().getPackageName() + PathUtils.getSeparator();
     }
 

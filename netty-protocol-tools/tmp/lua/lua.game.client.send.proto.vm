@@ -5,7 +5,7 @@
 ---
 ---
 
-ClientReadySendablePacket = {}
+${className} = {}
 
 local OPCode = $opCode
 
@@ -13,7 +13,7 @@ local OPCode = $opCode
 #foreach( $param in $params )
 --  ${param.name} ${param.remark}
 #end
-function ClientReadySendablePacket.BuildByteBuf($sendDecrParams)
+function ${className}.BuildByteBuf($sendDecrParams)
 local buf = LuaFramework.ByteBuffer.New()
     buf:WriteInt(OPCode)
 #foreach( $param in $params )
