@@ -161,7 +161,7 @@ public class LuaGameClientProtoGenerate extends ProtoCodeGenerateTemplate {
      */
     private String parseInnerSendParam(CommandParam commandParam, List<CommandParam> innerParams) {
         String result = TAB  + "local #{name}Size = ##{name}\n";
-        result += TAB  + "buf:writeInt(#{name}Size)\n";
+        result += TAB  + "buf:writeShort(#{name}Size)\n";
         result += TAB  + "for index, #{name}Inner in pairs(#{name}) do\n";
 
         //为基础类型时
@@ -270,7 +270,7 @@ public class LuaGameClientProtoGenerate extends ProtoCodeGenerateTemplate {
      * @return
      */
     private String parseInnerReceiveParam(CommandParam commandParam, List<CommandParam> innerParams) {
-        String result = "local  #{name}Size = buf:readInt()\n";
+        String result = "local  #{name}Size = buf:ReadShort()\n";
         result += TAB + TAB + "local #{name} = {}\n";
         result += TAB + TAB + "for i= 0, #{name}Size do\n";
         result += TAB + TAB + TAB + "#{name}[i] = {}\n";
