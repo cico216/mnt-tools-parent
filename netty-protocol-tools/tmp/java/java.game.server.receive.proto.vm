@@ -16,7 +16,7 @@ import net.zy.common.network.socket.packet.MMOReceivablePacket;
 * @author $user
 * @Date $date
 */
-public class $className extends MMOReceivablePacket<GameClientConnection> {
+public class $className extends MMOReceivablePacket<$connection> {
 
     public final static int OPCODE = $opCode;
 
@@ -43,6 +43,7 @@ $param.code
 
     @Override
     public void run() {
+        $connection connection = getConnection();
     /* append__start */
 ${holdCode}
 

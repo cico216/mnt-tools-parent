@@ -81,9 +81,19 @@ public class JavaGameServerProtoGenerate extends ProtoCodeGenerateTemplate {
 
 
             }
+            //公共模块时
+            if(protoModel.getGenerateConfigInfo().getProjectName().contains("game-server/game-common")) {
+                //添加连接包
+                commandModel.getCommandImportClass().add(protoModel.getGenerateConfigInfo().getPackageName() + ".entitys.BaseGameClientConnection");
 
-            //添加连接包
-            commandModel.getCommandImportClass().add(protoModel.getGenerateConfigInfo().getPackageName() + ".entitys.GameClientConnection");
+                protosParams.put("connection", "BaseGameClientConnection");
+            } else {
+                //添加连接包
+                commandModel.getCommandImportClass().add(protoModel.getGenerateConfigInfo().getPackageName() + ".entitys.GameClientConnection");
+
+                protosParams.put("connection", "GameClientConnection");
+            }
+
 
 
             //获取保留代码
@@ -152,7 +162,7 @@ public class JavaGameServerProtoGenerate extends ProtoCodeGenerateTemplate {
     private void parseSendParams(List<CommandParam> commandParams, Map<CommandParam, List<CommandParam>> innerParamsMap) {
         for (CommandParam commandParam : commandParams) {
             if(StringUtils.isBlank(commandParam.getTypeClass())) {
-                String code = getSendCodeTmp(commandParam.getType()).replace("#{name}", commandParam.getName());
+                String code = TAB + TAB + TAB + getSendCodeTmp(commandParam.getType()).replace("#{name}", commandParam.getName());
                 commandParam.setCode(code);
             } else {
                 commandParam.setCode(parseInnerSendParam(commandParam, commandParam.getChildrens()));
@@ -236,7 +246,7 @@ public class JavaGameServerProtoGenerate extends ProtoCodeGenerateTemplate {
     private void parseReceiveParams(List<CommandParam> commandParams, Map<CommandParam, List<CommandParam>> innerParams) {
         for (CommandParam commandParam : commandParams) {
             if(StringUtils.isBlank(commandParam.getTypeClass())) {
-                String code = getReceiveCodeTmp(commandParam).replace("#{name}", commandParam.getName());
+                String code = TAB + TAB + getReceiveCodeTmp(commandParam).replace("#{name}", commandParam.getName());
                 commandParam.setCode(code);
             } else {
                 commandParam.setCode(parseInnerReceiveParam(commandParam, commandParam.getChildrens()));

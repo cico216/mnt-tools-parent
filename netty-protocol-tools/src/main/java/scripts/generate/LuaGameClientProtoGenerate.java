@@ -144,7 +144,7 @@ public class LuaGameClientProtoGenerate extends ProtoCodeGenerateTemplate {
     private void parseSendParams(List<CommandParam> commandParams, Map<CommandParam, List<CommandParam>> innerParamsMap) {
         for (CommandParam commandParam : commandParams) {
             if(StringUtils.isBlank(commandParam.getTypeClass())) {
-                String code = getSendCodeTmp(commandParam.getType()).replace("#{name}", commandParam.getName());
+                String code = TAB  + getSendCodeTmp(commandParam.getType()).replace("#{name}", commandParam.getName());
                 commandParam.setCode(code);
             } else {
                 commandParam.setCode(parseInnerSendParam(commandParam, commandParam.getChildrens()));
