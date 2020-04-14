@@ -37,7 +37,7 @@ public class $className extends MMOReceivablePacket<GameClientConnection> {
     @Override
     protected void readImpl() throws Throwable {
 #foreach( $param in $params )
-        $param.code
+$param.code
 #end
     }
 

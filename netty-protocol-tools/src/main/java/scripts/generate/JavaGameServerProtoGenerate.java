@@ -6,6 +6,7 @@ import com.mnt.protocol.model.CommandModel;
 import com.mnt.protocol.model.CommandParam;
 import com.mnt.protocol.model.ProtoModel;
 import com.mnt.protocol.model.UserData;
+import com.mnt.protocol.utils.NameUtils;
 import com.mnt.protocol.utils.PathUtils;
 import org.apache.commons.lang.StringUtils;
 
@@ -113,11 +114,10 @@ public class JavaGameServerProtoGenerate extends ProtoCodeGenerateTemplate {
 
     /**
      * 获取发送的代码
-     * @param commandParam
+     * @param typeName
      * @return
      */
-    private String getSendCodeTmp(CommandParam commandParam) {
-        String typeName = commandParam.getType();
+    private String getSendCodeTmp(String typeName) {
         String codeTmp = "";
         if("String".equals(typeName)) {
             codeTmp = "writeString(buffer, #{name});";
@@ -151,8 +151,8 @@ public class JavaGameServerProtoGenerate extends ProtoCodeGenerateTemplate {
      */
     private void parseSendParams(List<CommandParam> commandParams, Map<CommandParam, List<CommandParam>> innerParamsMap) {
         for (CommandParam commandParam : commandParams) {
-            if(commandParam.getChildrens().isEmpty() && StringUtils.isBlank(commandParam.getTypeClass())) {
-                String code = getSendCodeTmp(commandParam).replace("#{name}", commandParam.getName());
+            if(StringUtils.isBlank(commandParam.getTypeClass())) {
+                String code = getSendCodeTmp(commandParam.getType()).replace("#{name}", commandParam.getName());
                 commandParam.setCode(code);
             } else {
                 commandParam.setCode(parseInnerSendParam(commandParam, commandParam.getChildrens()));
@@ -168,19 +168,32 @@ public class JavaGameServerProtoGenerate extends ProtoCodeGenerateTemplate {
      * @return
      */
     private String parseInnerSendParam(CommandParam commandParam, List<CommandParam> innerParams) {
-        String result = "writeInt(buffer, #{name})\n";
-        result += "for(Name name : #{name}) { \n";
-        for (CommandParam innerCommandParam : innerParams) {
-            if(innerCommandParam.getChildrens().isEmpty() && StringUtils.isBlank(innerCommandParam.getTypeClass())) {
-                result += parseInnerSendParam(innerCommandParam, innerCommandParam.getChildrens());
-            } else {
-                String innerParamName = "";
-                String code = getSendCodeTmp(commandParam).replace("#{name}", innerParamName);
-                result += code;
+        String result = TAB + TAB + TAB + "int #{name}Size = #{name}.size();\n";
+        result += TAB + TAB + TAB + "writeShort(buffer, #{name}Size);\n";
+        result += TAB + TAB + TAB + "for(#{type} #{name}Inner : #{name}) { \n".replace("#{type}", commandParam.getTypeClass());
+        if(innerParams.isEmpty()) {
+            String innerParamName = commandParam.getName() + "Inner";
+            String code = getSendCodeTmp(commandParam.getTypeClass()).replace("#{name}", innerParamName);
+            result += TAB  + TAB + TAB  + TAB + code + "\n";
+        } else {
+            for (CommandParam innerCommandParam : innerParams) {
+                if(StringUtils.isBlank(innerCommandParam.getTypeClass())) {
+                    String innerParamName = commandParam.getName() + "Inner.";
+                    if("Boolean".equals(innerCommandParam.getType())) {
+                        innerParamName += "is" ;
+                    } else {
+                        innerParamName += "get" ;
+                    }
+                    innerParamName += NameUtils.upperFristStr(innerCommandParam.getName()) + "()";
+                    String code = getSendCodeTmp(innerCommandParam.getType()).replace("#{name}", innerParamName);
+                    result += TAB + TAB + TAB + TAB + code + " //" + innerCommandParam.getRemark() + "\n";
+                } else {
+                    result += parseInnerSendParam(innerCommandParam, innerCommandParam.getChildrens());
+                }
             }
         }
-        result += "}\n";
-        return result;
+        result += TAB + TAB + TAB + "}\n";
+        return result.replace("#{name}", commandParam.getName());
     }
 
 
@@ -222,7 +235,7 @@ public class JavaGameServerProtoGenerate extends ProtoCodeGenerateTemplate {
      */
     private void parseReceiveParams(List<CommandParam> commandParams, Map<CommandParam, List<CommandParam>> innerParams) {
         for (CommandParam commandParam : commandParams) {
-            if(commandParam.getChildrens().isEmpty() && StringUtils.isBlank(commandParam.getTypeClass())) {
+            if(StringUtils.isBlank(commandParam.getTypeClass())) {
                 String code = getReceiveCodeTmp(commandParam).replace("#{name}", commandParam.getName());
                 commandParam.setCode(code);
             } else {
@@ -234,11 +247,10 @@ public class JavaGameServerProtoGenerate extends ProtoCodeGenerateTemplate {
 
     /**
      * 获取内部接收的代码
-     * @param commandParam
+     * @param typeName
      * @return
      */
-    private String getInnerReceiveCodeTmp(CommandParam commandParam) {
-        String typeName = commandParam.getType();
+    private String getInnerReceiveCodeTmp(String typeName) {
         String codeTmp = "";
         if("String".equals(typeName)) {
             codeTmp = "#{name}(readString());";
@@ -269,20 +281,29 @@ public class JavaGameServerProtoGenerate extends ProtoCodeGenerateTemplate {
      * @return
      */
     private String parseInnerReceiveParam(CommandParam commandParam, List<CommandParam> innerParams) {
-        String result = "int #{name}Size = readInt();\n";
-        result += "#{name} = new ArrayList<>(#{name}Size );\n";
-        result += "for(int i = 0; i++; i < #{name}Size) {\n";
-        for (CommandParam innerCommandParam : innerParams) {
-            if(innerCommandParam.getChildrens().isEmpty() && StringUtils.isBlank(innerCommandParam.getTypeClass())) {
-                result += parseInnerReceiveParam(innerCommandParam, innerCommandParam.getChildrens());
-            } else {
-                String innerParamName = "";
-                String code = getInnerReceiveCodeTmp(commandParam).replace("#{name}", innerParamName);
-                result += code;
+        String result = TAB  + TAB + TAB + "int #{name}Size = readShort();\n";
+        result += TAB  + TAB + TAB + "#{name} = new ArrayList<>(#{name}Size );\n";
+        result += TAB  + TAB + TAB + "for(int i = 0; i < #{name}Size; i++) {\n";
+        if(innerParams.isEmpty()) {
+            String innerParamName = commandParam.getName() + ".add";
+            String code = getInnerReceiveCodeTmp(commandParam.getTypeClass()).replace("#{name}", innerParamName);
+            result += TAB + TAB + TAB + code + "\n";
+        } else {
+            result += TAB  + TAB + TAB + TAB + commandParam.getTypeClass() + " #{name}Inner = new " + commandParam.getTypeClass() +  "();\n";
+            for (CommandParam innerCommandParam : innerParams) {
+                if(StringUtils.isBlank(innerCommandParam.getTypeClass())) {
+                    String innerParamName = "#{name}Inner.set" +  NameUtils.upperFristStr(innerCommandParam.getName());
+                    String code = getInnerReceiveCodeTmp(innerCommandParam.getType()).replace("#{name}", innerParamName);
+                    result += TAB + TAB + TAB + TAB + code + " //" + innerCommandParam.getRemark() + "\n";
+                } else {
+                    result += parseInnerReceiveParam(innerCommandParam, innerCommandParam.getChildrens());
+                }
             }
+            result += TAB  + TAB + TAB + TAB + "#{name}.add(#{name}Inner);\n";
         }
-        result += "}";
-        return result;
+
+        result += TAB + TAB + TAB + "}\n";
+        return result.replace("#{name}", commandParam.getName());
     }
 
 

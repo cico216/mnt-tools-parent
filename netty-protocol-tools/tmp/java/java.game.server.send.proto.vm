@@ -52,7 +52,7 @@ public class $className extends MMOSendablePacket {
         writeInt(buffer, result);
         if(result == 0) {
 #foreach( $param in $params )
-            $param.code
+$param.code
 #end
         }
     }

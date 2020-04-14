@@ -144,10 +144,13 @@ public class ProtoModelConvertUtils {
                 if(defaultLoadClassEnums == DefaultLoadClassEnums.LIST) {
 
                     if(null == typeClass) {
-                        type = type + "<" + NameUtils.buildInnerClassName(commadReqVO.getName()) + ">";
-                    } else {
-                        type = type + "<" + typeClass + ">";
+                        checkAndAdd(commandImportClass, commadReqVO.getTypeClass());
+//                        type = type + "<" + NameUtils.buildInnerClassName(commadReqVO.getName()) + ">";
+                        int lastIndex = commadReqVO.getTypeClass().lastIndexOf(".") + 1;
+                        typeClass = commadReqVO.getTypeClass().substring(lastIndex);
                     }
+                    type = type + "<" + typeClass + ">";
+                    checkAndAdd(commandImportClass, "java.util.ArrayList");
 
 
                 } else if(defaultLoadClassEnums == DefaultLoadClassEnums.DATE) {
