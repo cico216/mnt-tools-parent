@@ -205,6 +205,9 @@ public class MainViewController extends BaseController {
     private Button btnNext;
 
     @FXML
+    private CheckBox cbSelect;
+
+    @FXML
     private ListView<BaseProtoVO> listViewProtos;
 
     @FXML
@@ -356,6 +359,10 @@ public class MainViewController extends BaseController {
             public void changed(ObservableValue<? extends BaseCommandVO> observable, BaseCommandVO oldValue, BaseCommandVO newValue) {
                 selectCommand(newValue);
             }
+        });
+
+        cbSelect.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            itemCommads.forEach((item -> item.setChoose(newValue)));
         });
     }
 

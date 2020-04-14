@@ -94,6 +94,7 @@
                                              </tooltip>
                                           </Button>
                                           <Button mnemonicParsing="false" onAction="#processUpdate" prefHeight="30.0" prefWidth="58.0" text="刷新" />
+                                          <CheckBox fx:id="cbSelect" mnemonicParsing="false" text="全选" />
                                        </children>
                                        <padding>
                                           <Insets bottom="2.0" left="10.0" top="2.0" />

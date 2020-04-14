@@ -35,9 +35,5 @@ public class UserConfig {
      */
     private String generateCodeType;
 
-    /**
-     * 是否生成验证代码
-     */
-    private Boolean generateValid = false;
 
 }

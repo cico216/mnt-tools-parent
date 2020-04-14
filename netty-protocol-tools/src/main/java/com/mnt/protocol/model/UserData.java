@@ -26,7 +26,6 @@ public class UserData {
             userConfig.setHeaders(Collections.emptyMap());
             userConfig.setProjectPath("");
             userConfig.setLastSelectedDir("");
-            userConfig.setGenerateValid(false);
             userConfig.setGenerateCodeType("java.receive");
         }
     }

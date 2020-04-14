@@ -36,8 +36,6 @@ public class SettingController extends BaseController {
     @FXML
     private TextField txtProjectPath;
 
-    @FXML
-    private CheckBox cbGenerateValid;
 
     private Stage currStage;
 
@@ -60,7 +58,6 @@ public class SettingController extends BaseController {
         String projectPath = UserData.getUserConfig().getProjectPath();
         txtProjectPath.setText(projectPath);
 
-        cbGenerateValid.setSelected(UserData.getUserConfig().getGenerateValid());
 
         initComboBox();
 
@@ -132,7 +129,6 @@ public class SettingController extends BaseController {
 
         UserData.getUserConfig().setGenerateCodeType(generateType);
 
-        UserData.getUserConfig().setGenerateValid(cbGenerateValid.isSelected());
 
         UserData.saveUserConfig();
 
