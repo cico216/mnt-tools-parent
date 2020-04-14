@@ -7,6 +7,7 @@ import com.mnt.protocol.model.CommandParam;
 import com.mnt.protocol.model.ProtoModel;
 import com.mnt.protocol.model.UserData;
 import com.mnt.protocol.utils.PathUtils;
+import org.apache.commons.lang.StringUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -105,18 +106,17 @@ public class LuaGameClientProtoGenerate extends ProtoCodeGenerateTemplate {
 
     /**
      * 获取发送的代码
-     * @param commandParam
+     * @param typeName
      * @return
      */
-    private String getSendCodeTmp(CommandParam commandParam) {
-        String typeName = commandParam.getType();
+    private String getSendCodeTmp(String typeName) {
         String codeTmp = "";
         if("String".equals(typeName)) {
             codeTmp = "buf:writeString(#{name})";
         } else if("Long".equals(typeName)) {
             codeTmp = "buf:writeLong(#{name})";
         } else if("Integer".equals(typeName)) {
-            codeTmp = "buf:writeInt( #{name})";
+            codeTmp = "buf:writeInt(#{name})";
         } else if("Boolean".equals(typeName)) {
             codeTmp = "buf:writeBoolean(#{name})";
         } else if("Float".equals(typeName)) {
@@ -126,9 +126,9 @@ public class LuaGameClientProtoGenerate extends ProtoCodeGenerateTemplate {
         } else if("Charset".equals(typeName)) {
             codeTmp = "buf:writeChar(#{name})";
         } else if("Byte".equals(typeName)) {
-            codeTmp = "buf:writeByte( #{name})";
+            codeTmp = "buf:writeByte(#{name})";
         } else if("Short".equals(typeName)) {
-            codeTmp = "buf:writeShort( #{name})";
+            codeTmp = "buf:writeShort(#{name})";
         }
 
         return codeTmp;
@@ -143,8 +143,8 @@ public class LuaGameClientProtoGenerate extends ProtoCodeGenerateTemplate {
      */
     private void parseSendParams(List<CommandParam> commandParams, Map<CommandParam, List<CommandParam>> innerParamsMap) {
         for (CommandParam commandParam : commandParams) {
-            if(commandParam.getChildrens().isEmpty()) {
-                String code = getSendCodeTmp(commandParam).replace("#{name}", commandParam.getName());
+            if(StringUtils.isBlank(commandParam.getTypeClass())) {
+                String code = getSendCodeTmp(commandParam.getType()).replace("#{name}", commandParam.getName());
                 commandParam.setCode(code);
             } else {
                 commandParam.setCode(parseInnerSendParam(commandParam, commandParam.getChildrens()));
@@ -160,29 +160,39 @@ public class LuaGameClientProtoGenerate extends ProtoCodeGenerateTemplate {
      * @return
      */
     private String parseInnerSendParam(CommandParam commandParam, List<CommandParam> innerParams) {
-        String result = "buf:writeInt(#{name})\n";
-        result += "for(Name name : #{name}) { \n";
-        for (CommandParam innerCommandParam : innerParams) {
-            if(innerCommandParam.getChildrens().isEmpty()) {
-                result += parseInnerSendParam(innerCommandParam, innerCommandParam.getChildrens());
-            } else {
-                String innerParamName = "";
-                String code = getSendCodeTmp(commandParam).replace("#{name}", innerParamName);
-                result += code;
+        String result = TAB  + "local #{name}Size = ##{name}\n";
+        result += TAB  + "buf:writeInt(#{name}Size)\n";
+        result += TAB  + "for index, #{name}Inner in pairs(#{name}) do\n";
+
+        //为基础类型时
+        if(innerParams.isEmpty()) {
+            String innerParamName = commandParam.getName() + "Inner";
+            String code = getSendCodeTmp(commandParam.getTypeClass()).replace("#{name}", innerParamName);
+            result += TAB  + TAB + code + "\n";
+        } else {
+            for (CommandParam innerCommandParam : innerParams) {
+                if(StringUtils.isBlank(innerCommandParam.getTypeClass())) {
+                    String innerParamName = commandParam.getName() + "Inner." + innerCommandParam.getName();
+                    String code = getSendCodeTmp(innerCommandParam.getType()).replace("#{name}", innerParamName);
+                    result += TAB  + TAB + code + " --" + innerCommandParam.getRemark() + "\n";
+                } else {
+                    result += parseInnerSendParam(innerCommandParam, innerCommandParam.getChildrens());
+                }
             }
         }
-        result += "}\n";
-        return result;
+
+
+        result += TAB  + "end\n";
+        return result.replace("#{name}", commandParam.getName());
     }
 
 
     /**
      * 获取接收的代码
-     * @param commandParam
+     * @param typeName
      * @return
      */
-    private String getReceiveCodeTmp(CommandParam commandParam) {
-        String typeName = commandParam.getType();
+    private String getReceiveCodeTmp(String typeName) {
         String codeTmp = "";
         if("String".equals(typeName)) {
             codeTmp = "local #{name} = buf:ReadString()";
@@ -214,8 +224,8 @@ public class LuaGameClientProtoGenerate extends ProtoCodeGenerateTemplate {
      */
     private void parseReceiveParams(List<CommandParam> commandParams, Map<CommandParam, List<CommandParam>> innerParams) {
         for (CommandParam commandParam : commandParams) {
-            if(commandParam.getChildrens().isEmpty()) {
-                String code = getReceiveCodeTmp(commandParam).replace("#{name}", commandParam.getName());
+            if(commandParam.getChildrens().isEmpty() && StringUtils.isBlank(commandParam.getTypeClass())) {
+                String code = getReceiveCodeTmp(commandParam.getType()).replace("#{name}", commandParam.getName());
                 commandParam.setCode(code);
             } else {
                 commandParam.setCode(parseInnerReceiveParam(commandParam, commandParam.getChildrens()));
@@ -226,11 +236,10 @@ public class LuaGameClientProtoGenerate extends ProtoCodeGenerateTemplate {
 
     /**
      * 获取内部接收的代码
-     * @param commandParam
+     * @param typeName
      * @return
      */
-    private String getInnerReceiveCodeTmp(CommandParam commandParam) {
-        String typeName = commandParam.getType();
+    private String getInnerReceiveCodeTmp(String typeName) {
         String codeTmp = "";
         if("String".equals(typeName)) {
             codeTmp = "#{name} = buf:ReadString()";
@@ -261,20 +270,29 @@ public class LuaGameClientProtoGenerate extends ProtoCodeGenerateTemplate {
      * @return
      */
     private String parseInnerReceiveParam(CommandParam commandParam, List<CommandParam> innerParams) {
-        String result = "local  #{name}Size = readInt()\n";
-        result += "#{name} = {}\n";
-        result += "for(int i = 0; i++; i < #{name}Size) {\n";
-        for (CommandParam innerCommandParam : innerParams) {
-            if(innerCommandParam.getChildrens().isEmpty()) {
-                result += parseInnerReceiveParam(innerCommandParam, innerCommandParam.getChildrens());
-            } else {
-                String innerParamName = "";
-                String code = getInnerReceiveCodeTmp(commandParam).replace("#{name}", innerParamName);
-                result += code;
+        String result = "local  #{name}Size = buf:readInt()\n";
+        result += TAB + TAB + "local #{name} = {}\n";
+        result += TAB + TAB + "for i= 0, #{name}Size do\n";
+        result += TAB + TAB + TAB + "#{name}[i] = {}\n";
+
+        if(innerParams.isEmpty()) {
+            String innerParamName = commandParam.getName() + "[i]";
+            String code = getInnerReceiveCodeTmp(commandParam.getTypeClass()).replace("#{name}", innerParamName);
+            result += TAB + TAB + TAB + code + "\n";
+        } else {
+            for (CommandParam innerCommandParam : innerParams) {
+                if(StringUtils.isBlank(innerCommandParam.getTypeClass())) {
+                    String innerParamName = commandParam.getName() + "[i]." + innerCommandParam.getName();
+                    String code = getInnerReceiveCodeTmp(innerCommandParam.getType()).replace("#{name}", innerParamName);
+                    result += TAB + TAB + TAB + code + " --" + innerCommandParam.getRemark() + "\n";
+                } else {
+                    result += parseInnerReceiveParam(innerCommandParam, innerCommandParam.getChildrens());
+                }
             }
         }
-        result += "}";
-        return result;
+
+        result += TAB + TAB + "end\n";
+        return result.replace("#{name}", commandParam.getName());
     }
 
 

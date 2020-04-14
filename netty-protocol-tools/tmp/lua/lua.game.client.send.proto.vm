@@ -14,10 +14,10 @@ local OPCode = $opCode
 --  ${param.name} ${param.remark}
 #end
 function ${className}.BuildByteBuf($sendDecrParams)
-local buf = LuaFramework.ByteBuffer.New()
+    local buf = LuaFramework.ByteBuffer.New()
     buf:WriteInt(OPCode)
 #foreach( $param in $params )
-    $param.code
+$param.code
 #end
     return buf
 end

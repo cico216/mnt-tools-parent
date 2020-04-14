@@ -163,7 +163,7 @@ public class ProtoModelConvertUtils {
             }
 
             commandParam.setType(type);
-            commandParam.setTypeClass(commadReqVO.getTypeClass());
+            commandParam.setTypeClass(typeClass);
 
             //递归获取子集
             if(!commadReqVO.getChildrens().isEmpty()) {

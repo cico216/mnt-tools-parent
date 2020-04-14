@@ -7,6 +7,7 @@ import com.mnt.protocol.model.CommandParam;
 import com.mnt.protocol.model.ProtoModel;
 import com.mnt.protocol.model.UserData;
 import com.mnt.protocol.utils.PathUtils;
+import org.apache.commons.lang.StringUtils;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -150,7 +151,7 @@ public class JavaGameServerProtoGenerate extends ProtoCodeGenerateTemplate {
      */
     private void parseSendParams(List<CommandParam> commandParams, Map<CommandParam, List<CommandParam>> innerParamsMap) {
         for (CommandParam commandParam : commandParams) {
-            if(commandParam.getChildrens().isEmpty()) {
+            if(commandParam.getChildrens().isEmpty() && StringUtils.isBlank(commandParam.getTypeClass())) {
                 String code = getSendCodeTmp(commandParam).replace("#{name}", commandParam.getName());
                 commandParam.setCode(code);
             } else {
@@ -170,7 +171,7 @@ public class JavaGameServerProtoGenerate extends ProtoCodeGenerateTemplate {
         String result = "writeInt(buffer, #{name})\n";
         result += "for(Name name : #{name}) { \n";
         for (CommandParam innerCommandParam : innerParams) {
-            if(innerCommandParam.getChildrens().isEmpty()) {
+            if(innerCommandParam.getChildrens().isEmpty() && StringUtils.isBlank(innerCommandParam.getTypeClass())) {
                 result += parseInnerSendParam(innerCommandParam, innerCommandParam.getChildrens());
             } else {
                 String innerParamName = "";
@@ -221,7 +222,7 @@ public class JavaGameServerProtoGenerate extends ProtoCodeGenerateTemplate {
      */
     private void parseReceiveParams(List<CommandParam> commandParams, Map<CommandParam, List<CommandParam>> innerParams) {
         for (CommandParam commandParam : commandParams) {
-            if(commandParam.getChildrens().isEmpty()) {
+            if(commandParam.getChildrens().isEmpty() && StringUtils.isBlank(commandParam.getTypeClass())) {
                 String code = getReceiveCodeTmp(commandParam).replace("#{name}", commandParam.getName());
                 commandParam.setCode(code);
             } else {
@@ -272,7 +273,7 @@ public class JavaGameServerProtoGenerate extends ProtoCodeGenerateTemplate {
         result += "#{name} = new ArrayList<>(#{name}Size );\n";
         result += "for(int i = 0; i++; i < #{name}Size) {\n";
         for (CommandParam innerCommandParam : innerParams) {
-            if(innerCommandParam.getChildrens().isEmpty()) {
+            if(innerCommandParam.getChildrens().isEmpty() && StringUtils.isBlank(innerCommandParam.getTypeClass())) {
                 result += parseInnerReceiveParam(innerCommandParam, innerCommandParam.getChildrens());
             } else {
                 String innerParamName = "";

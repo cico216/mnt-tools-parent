@@ -29,6 +29,7 @@ public abstract class ProtoCodeGenerateTemplate {
      */
     protected static final String APPEND_END = "append__end";
 
+    protected static final String TAB = "    ";
 
 
 	public ProtoCodeGenerateTemplate() {

@@ -40,7 +40,7 @@ public class ParamTypeUtils {
             return "List";
         }
 
-        return null;
+        return typeName;
     }
 
 }
