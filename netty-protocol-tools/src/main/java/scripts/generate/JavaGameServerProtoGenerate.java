@@ -64,7 +64,7 @@ public class JavaGameServerProtoGenerate extends ProtoCodeGenerateTemplate {
 
                 String sendDecrParams = "";
                 for (CommandParam commandParam : commandModel.getCommandParams()) {
-                    sendDecrParams += ", " + commandParam.getType() + " " + commandParam.getName();
+                    sendDecrParams += ", " + commandParam.getUnboxType() + " " + commandParam.getName();
                 }
                 //发送的参数声明
                 protosParams.put("sendDecrParams", sendDecrParams);

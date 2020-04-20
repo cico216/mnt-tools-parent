@@ -134,6 +134,10 @@ public class ProtoModelConvertUtils {
 
             String type = ParamTypeUtils.convertType(commadReqVO.getType());
 
+            commandParam.setUnboxType(ParamTypeUtils.getUnboxType(type));
+
+            commandParam.setType(commadReqVO.getType());
+
             String typeClass = ParamTypeUtils.convertType(commadReqVO.getTypeClass());
 
             DefaultLoadClassEnums defaultLoadClassEnums =  DefaultLoadClassEnums.getByName(type);
@@ -150,6 +154,7 @@ public class ProtoModelConvertUtils {
                         typeClass = commadReqVO.getTypeClass().substring(lastIndex);
                     }
                     type = type + "<" + typeClass + ">";
+                    commandParam.setUnboxType(type);
                     checkAndAdd(commandImportClass, "java.util.ArrayList");
 
 
@@ -166,6 +171,7 @@ public class ProtoModelConvertUtils {
             }
 
             commandParam.setType(type);
+
             commandParam.setTypeClass(typeClass);
 
             //递归获取子集

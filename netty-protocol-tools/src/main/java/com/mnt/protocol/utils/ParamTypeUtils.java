@@ -43,4 +43,30 @@ public class ParamTypeUtils {
         return null;
     }
 
+    /**
+     * 获取拆箱类型
+     * @param typeName 类型名称
+     * @return 拆箱类型
+     */
+    public static String getUnboxType(String typeName) {
+        if("String".equals(typeName)) {
+            return "String";
+        } else if("Long".equals(typeName)) {
+            return "long";
+        } else if("Integer".equals(typeName)) {
+            return "int";
+        } else if("Boolean".equals(typeName)) {
+            return "boolean";
+        } else if("Float".equals(typeName)) {
+            return "float";
+        } else if("Double".equals(typeName)) {
+            return "double";
+        }  else if("Date".equals(typeName)) {
+            return "Date";
+        }  else if("List".equals(typeName)) {
+            return "List";
+        }
+        return null;
+    }
+
 }

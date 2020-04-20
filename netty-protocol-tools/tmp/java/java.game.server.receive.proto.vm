@@ -26,7 +26,7 @@ public class $className extends MMOReceivablePacket<$connection> {
     /**
     * $param.remark
     */
-    private $param.type ${param.name};
+    private $param.unboxType ${param.name};
 #end
 
 

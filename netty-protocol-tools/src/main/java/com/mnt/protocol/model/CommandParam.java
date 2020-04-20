@@ -29,6 +29,11 @@ public class CommandParam {
     private String type;
 
     /**
+     * 参数拆箱类型
+     */
+    private String unboxType;
+
+    /**
      * 类型泛型参数
      */
     private String typeClass;
