@@ -388,7 +388,7 @@ public class MainViewController extends BaseController {
                 } else {
 
                     List<DBModel> dbModels = new ArrayList<>();
-
+                    String dbTtype = getSelJDBCInfo().getDbType();
                     DBModel dbModel ;
                     for (TableNameVO tableNameVO : selectTables) {
                         dbModel = new DBModel();
@@ -408,16 +408,18 @@ public class MainViewController extends BaseController {
                             dbCloumn.setLength(tableColumnVO.getLength());
                             dbCloumn.setRemark(tableColumnVO.getRemark());
                             dbCloumn.setCloumnJavaName(GenerateNameUtils.getJavaName(tableColumnVO.getCloumnName()));
-                            dbCloumn.setCloumnJavaType(GenerateDataTypeUtils.getJavaTypeByMysql(tableColumnVO.getCloumnType()));
+
                             dbCloumn.setMethodName(GenerateNameUtils.getClassFileName(tableColumnVO.getCloumnName()));
-                            dbCloumn.setCloumnJdbcType(GenerateDataTypeUtils.getJdbcTypeByMysql(tableColumnVO.getCloumnType()));
+
+                            dbCloumn.setCloumnJavaType(GenerateDataTypeUtils.getJavaTypeByDB(dbTtype, tableColumnVO.getCloumnType()));
+                            dbCloumn.setCloumnJdbcType(GenerateDataTypeUtils.getJdbcTypeByDB(dbTtype, tableColumnVO.getCloumnType()));
 
                             dbCloumns.add(dbCloumn);
                         }
                         dbModels.add(dbModel);
                     }
 
-                    TemplateClassLoad.BASE_CODE_GENERATE_TEMPLATE.stream().filter((script)-> script.getDBType().equals(getSelJDBCInfo().getDbType())).forEach(script -> {
+                    TemplateClassLoad.BASE_CODE_GENERATE_TEMPLATE.stream().filter((script)-> script.getDBType().equals(dbTtype)).forEach(script -> {
                         script.generate(dbModels, generateConfig);
                     });
 

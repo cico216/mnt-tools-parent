@@ -22,7 +22,7 @@ import java.util.Map;
 public class PostgresqlCodeGenerate extends BaseCodeGenerateTemplate {
     @Override
     public String getDBType() {
-        return "postgresql";
+        return "postgres";
     }
 
     /**
@@ -58,7 +58,7 @@ public class PostgresqlCodeGenerate extends BaseCodeGenerateTemplate {
         result.add(new CodeGenerateInfo("项目路径","project.path", "", PropertyType.DIRECTOR));
         result.add(new CodeGenerateInfo("dao路径","project.dao.path", "", PropertyType.TEXT));
         result.add(new CodeGenerateInfo("mapper路径","project.mapper.path", "", PropertyType.TEXT));
-        result.add(new CodeGenerateInfo("vo路径","project.vo.path", "", PropertyType.TEXT));
+//        result.add(new CodeGenerateInfo("vo路径","project.vo.path", "", PropertyType.TEXT));
         result.add(new CodeGenerateInfo("query路径","project.query.path", "", PropertyType.TEXT));
         result.add(new CodeGenerateInfo("entity路径","project.entity.path", "", PropertyType.TEXT));
         result.add(new CodeGenerateInfo("service路径","project.service.path", "", PropertyType.TEXT));
@@ -107,11 +107,11 @@ public class PostgresqlCodeGenerate extends BaseCodeGenerateTemplate {
             e.printStackTrace();
         }
 
-        try {
-            generateVO(projectPath, baseFileName, dbModel, propertiesMap.get("project.vo.path"),  bastTmpPath + "vo.vm", baseParams);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        try {
+//            generateVO(projectPath, baseFileName, dbModel, propertiesMap.get("project.vo.path"),  bastTmpPath + "vo.vm", baseParams);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
 
         try {
             generateQuery(projectPath, baseFileName, dbModel, propertiesMap.get("project.query.path"),  bastTmpPath + "query.vm", baseParams);
@@ -265,7 +265,7 @@ public class PostgresqlCodeGenerate extends BaseCodeGenerateTemplate {
         List<String> importPackages = new ArrayList<>();
 
         for (DBCloumn dbCloumn : dbModel.getDbCloumns()) {
-            if(!filterColumns.contains(dbCloumn.getCloumnName())) {
+            if(!filterColumns.contains(dbCloumn.getCloumnName()) && !"id".equals(dbCloumn.getCloumnName())) {
 
                 //判断是否需要引入包
                 if(importColumns.containsKey(dbCloumn.getCloumnJavaType())) {
