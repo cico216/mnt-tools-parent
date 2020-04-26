@@ -11,14 +11,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * vue uniapp 协议代码生成
+ * lua client 协议代码生成
  */
 public class LuaLogicClientProtoGenerate extends ProtoCodeGenerateTemplate {
 
 
     @Override
     public String getType() {
-        return "vue.uniapp";
+        return "lua.client";
     }
 
     @Override
@@ -28,24 +28,26 @@ public class LuaLogicClientProtoGenerate extends ProtoCodeGenerateTemplate {
         //创建路径
         checkAndCreateDir(generatePath);
 
-        String protosJsFilePath =  generatePath + PathUtils.getSeparator() + protoModel.getRequestMapper() + ".js";
+        String protosLuaFilePath =  generatePath + PathUtils.getSeparator() + protoModel.getControllerName() + ".lua";
 
         Map<String, Object> protosParams = new HashMap<>();
 
+        protosParams.put("controllerName", protoModel.getControllerName());
         protosParams.put("remark", protoModel.getRemark());
         protosParams.put("user", protoModel.getUser());
         protosParams.put("date", protoModel.getDate());
+        protosParams.put("moduleName", protoModel.getGenerateConfigInfo().getModuleName());
         protosParams.put("actions", protoModel.getActions());
 
         protosParams.put("protoName", protoModel.getRequestMapper());
 
 
         //获取保留代码
-        String holdCode = getHoldCode(protosJsFilePath);
+        String holdCode = getHoldCode(protosLuaFilePath);
         protosParams.put("holdCode", holdCode);
 
         try{
-            VelocityUtils.getInstance().parseTemplate(getSendProtoTemplateName(), protosJsFilePath, protosParams);
+            VelocityUtils.getInstance().parseTemplate(getSendProtoTemplateName(), protosLuaFilePath, protosParams);
         } catch (Exception e) {
             e.printStackTrace();
             ConsoleLogUtils.log("[" + protoModel.getControllerName() + "] - 协议文件生成错误 : Exception ---  " + e);
@@ -55,7 +57,7 @@ public class LuaLogicClientProtoGenerate extends ProtoCodeGenerateTemplate {
     @Override
     public String getGeneratePath(ProtoModel protoModel) {
         return UserData.getUserConfig().getProjectPath() + PathUtils.getSeparator() +
-                protoModel.getGenerateConfigInfo().getProjectName() + PathUtils.getSeparator() + "protos"+ PathUtils.getSeparator() +
+                protoModel.getGenerateConfigInfo().getProjectName() + PathUtils.getSeparator() +
                 protoModel.getGenerateConfigInfo().getPackageName() + PathUtils.getSeparator();
     }
 
@@ -65,7 +67,7 @@ public class LuaLogicClientProtoGenerate extends ProtoCodeGenerateTemplate {
      * @return 基础模板前缀
      */
     private String baseTmpPath() {
-        return "vue/vue.uniapp.";
+        return "lua/lua.client.";
     }
 
     /**

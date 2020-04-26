@@ -151,4 +151,35 @@ public class GenerateDataTypeUtils {
 		return "VARCHAR";
 	}
 
+	/**
+	 *
+	 * 获取 postgresql 对应的java类型
+	 * @param typeName
+	 * @return
+	 */
+	public static String getJavaTypeByDB(String dbType, String typeName) {
+
+		if("postgres".equals(dbType)) {
+			return getJavaTypeByPostgresql(typeName);
+		}
+
+		return getJavaTypeByMysql(typeName);
+	}
+
+	/**
+	 *
+	 * 获取 postgresql 对应的jdbc类型
+	 * @param typeName
+	 * @return
+	 */
+	public static String getJdbcTypeByDB(String dbType, String typeName) {
+
+
+		if("postgres".equals(dbType)) {
+			return getJdbcTypeByPostgresql(typeName);
+		}
+
+		return getJdbcTypeByMysql(typeName);
+	}
+
 }

@@ -18,7 +18,7 @@
     </modules>
 
     <properties>
-        <mnt.version>1.1</mnt.version>
+        <mnt.version>1.1.1</mnt.version>
         <mnt.tools.version>1.0-SNAPSHOT</mnt.tools.version>
         <junit.version>4.13-beta-3</junit.version>
         <velocity.version>1.7</velocity.version>

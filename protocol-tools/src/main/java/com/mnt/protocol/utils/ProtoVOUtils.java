@@ -163,6 +163,7 @@ public class ProtoVOUtils {
             generateConfigInfo.setApiProjectName(node.valueOf("@apiProjectName"));
             generateConfigInfo.setProjectName(node.valueOf("@projectName"));
             generateConfigInfo.setType(node.valueOf("@type"));
+            generateConfigInfo.setModuleName(node.valueOf("@moduleName"));
             result.put(generateConfigInfo.getType(), generateConfigInfo);
         }
 

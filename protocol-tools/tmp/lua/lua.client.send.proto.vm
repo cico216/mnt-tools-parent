@@ -1,0 +1,59 @@
+---
+--- $remark 通讯协议列表
+--- Created by $user
+--- DateTime: $date
+---
+
+$controllerName = {}
+
+
+#foreach($action in $actions)
+
+--- $action.remark
+---
+#foreach( $reqParam in ${action.commadReqParams} )
+--- ${reqParam.name} ${reqParam.type} ${reqParam.remark}
+#end
+--[[ 返回参数 ${action.respName}
+#foreach( $respParam in ${action.commadRespParams} )
+#if(${respParam.name}  == "data")
+#foreach( $dataRespParam in ${respParam.childrens} )
+    local ${dataRespParam.name} = ${action.respName}.${dataRespParam.name}; //${dataRespParam.remark}
+#end
+#end
+#end
+--]]
+function ${controllerName}.${action.actionName}(${action.reqName}, succCallback, errCallback)
+    local defErrCallback = nil
+    if errCallback then
+        defErrCallback = errCallback
+    else
+        defErrCallback = function(err)
+            ErrorResultHandler.ErrorWarning(err)
+        end
+    end
+
+#if(${action.method} == "GET")
+#if (${action.commadReqParams.isEmpty()})
+    local queryParam = ''
+#else
+    local queryParam = '?'
+#end
+#foreach( $reqParam in ${action.commadReqParams} )
+    queryParam = queryParam..'${reqParam.name}'..${action.reqName}.${reqParam.name},
+#end
+
+    HttpClient.DoGet("${moduleName}", "/${protoName}/${action.requestMapper}"..queryParam,
+#elseif(${action.method} == "POST")
+    local postData = {
+#foreach( $reqParam in ${action.commadReqParams} )
+        ${reqParam.name} = ${action.reqName}.${reqParam.name},
+#end
+    }
+
+    HttpClient.DoPost("${moduleName}", "${action.requestMapper}", postData,
+#end
+        succCallback,
+        defErrCallback)
+end
+#end

@@ -109,7 +109,7 @@ public class ProtoModelConvertUtils {
             actionModel.setActionName(baseCommadVO.getPath());
             actionModel.setRequestMapper(baseCommadVO.getPath());
             actionModel.setRemark(baseCommadVO.getRemark());
-            actionModel.setMethod(actionModel.getMethod());
+            actionModel.setMethod(baseCommadVO.getMethod());
             actionModel.setBody(baseCommadVO.isBody());
             //请求参数类
             String requestParamClass = NameUtils.upperFristStr(actionName) + upperName + "RequestParam";

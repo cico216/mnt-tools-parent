@@ -28,6 +28,12 @@ public class GenerateConfigInfo {
     private String apiProjectName;
 
 
+    /**
+     * 模块名称
+     */
+    private String moduleName;
+
+
     public String getPackageName() {
         return packageName;
     }
@@ -58,5 +64,13 @@ public class GenerateConfigInfo {
 
     public void setApiProjectName(String apiProjectName) {
         this.apiProjectName = apiProjectName;
+    }
+
+    public String getModuleName() {
+        return moduleName;
+    }
+
+    public void setModuleName(String moduleName) {
+        this.moduleName = moduleName;
     }
 }

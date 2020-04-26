@@ -112,23 +112,23 @@ public class LuaGameClientProtoGenerate extends ProtoCodeGenerateTemplate {
     private String getSendCodeTmp(String typeName) {
         String codeTmp = "";
         if("String".equals(typeName)) {
-            codeTmp = "buf:writeString(#{name})";
+            codeTmp = "buf:WriteString(#{name})";
         } else if("Long".equals(typeName)) {
-            codeTmp = "buf:writeLong(#{name})";
+            codeTmp = "buf:WriteLong(#{name})";
         } else if("Integer".equals(typeName)) {
-            codeTmp = "buf:writeInt(#{name})";
+            codeTmp = "buf:WriteInt(#{name})";
         } else if("Boolean".equals(typeName)) {
-            codeTmp = "buf:writeBoolean(#{name})";
+            codeTmp = "buf:WriteBoolean(#{name})";
         } else if("Float".equals(typeName)) {
-            codeTmp = "buf:writeBoolean(#{name})";
+            codeTmp = "buf:WriteBoolean(#{name})";
         } else if("Double".equals(typeName)) {
-            codeTmp = "buf:writeDouble(#{name})";
+            codeTmp = "buf:WriteDouble(#{name})";
         } else if("Charset".equals(typeName)) {
-            codeTmp = "buf:writeChar(#{name})";
+            codeTmp = "buf:WriteChar(#{name})";
         } else if("Byte".equals(typeName)) {
-            codeTmp = "buf:writeByte(#{name})";
+            codeTmp = "buf:WriteByte(#{name})";
         } else if("Short".equals(typeName)) {
-            codeTmp = "buf:writeShort(#{name})";
+            codeTmp = "buf:WriteShort(#{name})";
         }
 
         return codeTmp;
@@ -161,7 +161,7 @@ public class LuaGameClientProtoGenerate extends ProtoCodeGenerateTemplate {
      */
     private String parseInnerSendParam(CommandParam commandParam, List<CommandParam> innerParams) {
         String result = TAB  + "local #{name}Size = ##{name}\n";
-        result += TAB  + "buf:writeShort(#{name}Size)\n";
+        result += TAB  + "buf:WriteShort(#{name}Size)\n";
         result += TAB  + "for index, #{name}Inner in pairs(#{name}) do\n";
 
         //为基础类型时
