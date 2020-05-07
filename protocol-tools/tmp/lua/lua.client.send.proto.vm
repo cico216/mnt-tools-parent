@@ -18,7 +18,7 @@ $controllerName = {}
 #foreach( $respParam in ${action.commadRespParams} )
 #if(${respParam.name}  == "data")
 #foreach( $dataRespParam in ${respParam.childrens} )
-    local ${dataRespParam.name} = ${action.respName}.${dataRespParam.name}; //${dataRespParam.remark}
+    local ${dataRespParam.name} = ${action.respName}.${dataRespParam.name}; --${dataRespParam.remark}
 #end
 #end
 #end
@@ -40,7 +40,7 @@ function ${controllerName}.${action.actionName}(${action.reqName}, succCallback,
     local queryParam = '?'
 #end
 #foreach( $reqParam in ${action.commadReqParams} )
-    queryParam = queryParam..'${reqParam.name}'..${action.reqName}.${reqParam.name},
+    queryParam = queryParam..'${reqParam.name}'..${action.reqName}.${reqParam.name}
 #end
 
     HttpClient.DoGet("${moduleName}", "/${protoName}/${action.requestMapper}"..queryParam,
