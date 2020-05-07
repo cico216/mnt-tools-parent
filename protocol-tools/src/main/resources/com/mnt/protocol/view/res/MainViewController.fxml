@@ -89,7 +89,7 @@
                                                 <Tooltip text="打开文件夹" />
                                              </tooltip>
                                           </Button>
-                                          <Button mnemonicParsing="false" onAction="#processUpdate" prefHeight="29.0" prefWidth="43.0" text="刷新" />
+                                          <Button mnemonicParsing="false" onAction="#processUpdate" prefHeight="30.0" prefWidth="62.0" text="刷新" />
                                        </children>
                                        <padding>
                                           <Insets bottom="2.0" left="10.0" top="2.0" />
