@@ -53,19 +53,19 @@ public class GenerateDataTypeUtils {
 	public static String getJdbcTypeByPostgresql(String typeName) {
 		if(typeName.equals("varchar")) {
 			return "VARCHAR";
-		} else if(typeName.equals("bigint")) {
+		} else if(typeName.equals("int8")) {
 			return "BIGINT";
-		} else if(typeName.equals("int")) {
+		} else if(typeName.equals("int4")) {
 			return "INTEGER";
-		} else if(typeName.equals("bit")) {
+		} else if(typeName.equals("bool")) {
 			return "BOOLEAN";
-		} else if(typeName.equals("float")) {
+		} else if(typeName.equals("float4")) {
 			return "FLOAT";
-		} else if(typeName.equals("double")) {
+		} else if(typeName.equals("float8")) {
 			return "DOUBLE";
 		}  else if(typeName.equals("timestamp")) {
 			return "TIMESTAMP";
-		}  else if(typeName.equals("char")) {
+		}  else if(typeName.equals("bpchar")) {
 			return "CHAR";
 		}  else if(typeName.equals("date")) {
 			return "DATE";
