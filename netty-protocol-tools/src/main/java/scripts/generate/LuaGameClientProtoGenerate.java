@@ -272,14 +272,14 @@ public class LuaGameClientProtoGenerate extends ProtoCodeGenerateTemplate {
     private String parseInnerReceiveParam(CommandParam commandParam, List<CommandParam> innerParams) {
         String result = "local  #{name}Size = buf:ReadShort()\n";
         result += TAB + TAB + "local #{name} = {}\n";
-        result += TAB + TAB + "for i= 0, #{name}Size do\n";
-        result += TAB + TAB + TAB + "#{name}[i] = {}\n";
+        result += TAB + TAB + "for i = 1, #{name}Size do\n";
 
         if(innerParams.isEmpty()) {
             String innerParamName = commandParam.getName() + "[i]";
             String code = getInnerReceiveCodeTmp(commandParam.getTypeClass()).replace("#{name}", innerParamName);
             result += TAB + TAB + TAB + code + "\n";
         } else {
+            result += TAB + TAB + TAB + "#{name}[i] = {}\n";
             for (CommandParam innerCommandParam : innerParams) {
                 if(StringUtils.isBlank(innerCommandParam.getTypeClass())) {
                     String innerParamName = commandParam.getName() + "[i]." + innerCommandParam.getName();
