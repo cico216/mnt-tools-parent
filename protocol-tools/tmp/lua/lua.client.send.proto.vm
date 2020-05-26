@@ -51,7 +51,7 @@ function ${controllerName}.${action.actionName}(${action.reqName}, succCallback,
 #end
     }
 
-    HttpClient.DoPost("${moduleName}", "${action.requestMapper}", postData,
+    HttpClient.DoPost("${moduleName}", "/${protoName}/${action.requestMapper}", postData,
 #end
         succCallback,
         defErrCallback)
