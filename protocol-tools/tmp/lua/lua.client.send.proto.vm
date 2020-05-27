@@ -29,7 +29,7 @@ function ${controllerName}.${action.actionName}(${action.reqName}, succCallback,
         defErrCallback = errCallback
     else
         defErrCallback = function(err)
-            ErrorResultHandler.ErrorWarning(err)
+            ErrorResultHandler.HttpErrorWarning(err)
         end
     end
 
