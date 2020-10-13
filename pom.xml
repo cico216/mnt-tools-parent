@@ -19,7 +19,7 @@
     <properties>
         <mnt.version>1.1.1</mnt.version>
         <mnt.tools.version>1.0-SNAPSHOT</mnt.tools.version>
-        <junit.version>4.13-beta-3</junit.version>
+        <junit.version>4.13.1</junit.version>
         <velocity.version>1.7</velocity.version>
         <lombok.version>1.18.8</lombok.version>
         <fastjson.version>1.2.59</fastjson.version>
