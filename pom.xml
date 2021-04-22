@@ -28,7 +28,7 @@
         <dom4j.version>1.6.1</dom4j.version>
         <httpclient.version>4.5.9</httpclient.version>
         <jaxen.version>1.1.6</jaxen.version>
-        <mybatis.version>3.5.2</mybatis.version>
+        <mybatis.version>3.5.6</mybatis.version>
     </properties>
 
     <dependencies>
