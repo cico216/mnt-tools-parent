@@ -1,9 +1,14 @@
 package com.mnt.common.utils;
 
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Enumeration;
 
 
 /**
@@ -86,7 +91,13 @@ public class TimeUtils {
 	}
 	
 	
-	public static void main(String[] args) {
-		System.err.println(getMonthStart());
+	public static void main(String[] args) throws UnknownHostException {
+
+		InetAddress address = InetAddress.getLocalHost();//获取的是本地的IP地址 //PC-20140317PXKX/192.168.0.121
+		String hostAddress = address.getHostAddress();//192.168.0.121
+		System.err.println(address);
+		System.err.println(hostAddress);
+
+//		System.err.println(getMonthStart());
 	}
 }
