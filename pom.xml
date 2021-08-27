@@ -27,7 +27,7 @@
         <mysql.version>8.0.17</mysql.version>
         <postgresql.version>42.2.6</postgresql.version>
         <dom4j.version>1.6.1</dom4j.version>
-        <httpclient.version>4.5.9</httpclient.version>
+        <httpclient.version>4.5.13</httpclient.version>
         <jaxen.version>1.1.6</jaxen.version>
         <mybatis.version>3.5.2</mybatis.version>
     </properties>
