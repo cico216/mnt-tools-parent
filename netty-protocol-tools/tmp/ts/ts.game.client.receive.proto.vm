@@ -1,0 +1,41 @@
+import { GameEvent } from "../../../Common/Event/GameEvent";
+import { ReceivablePacket } from "../../../Common/Network/ReceivablePacket";
+
+/**
+* ${remark}
+* Created by ${user}.
+* DateTime: ${date}
+*/
+export class ${className} extends ReceivablePacket {
+
+    public static readonly OPCODE: number = $opCode ;
+
+
+#foreach( $param in $params )
+
+    /**
+    * $param.remark
+    */
+    private ${param.name}: any;
+#end
+
+    getOpCode = () => {return ${className}.OPCODE};
+
+    readImpl= () => {
+#foreach( $param in $params )
+    $param.code
+#end
+    }
+
+    runImpl = () => {
+/* append__start */
+${holdCode}
+
+/* append__end */
+    }
+
+    errorRunImpl = (result: number) => {
+
+    };
+}
+

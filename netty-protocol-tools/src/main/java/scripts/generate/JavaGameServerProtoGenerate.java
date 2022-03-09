@@ -138,7 +138,7 @@ public class JavaGameServerProtoGenerate extends ProtoCodeGenerateTemplate {
         } else if("Boolean".equals(typeName)) {
             codeTmp = "writeBoolean(buffer, #{name});";
         } else if("Float".equals(typeName)) {
-            codeTmp = "writeBoolean(buffer, #{name});";
+            codeTmp = "writeFloat(buffer, #{name});";
         } else if("Double".equals(typeName)) {
             codeTmp = "writeDouble(buffer, #{name});";
         } else if("Charset".equals(typeName)) {

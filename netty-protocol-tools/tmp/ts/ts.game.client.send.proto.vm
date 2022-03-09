@@ -1,0 +1,47 @@
+import { SendablePacket } from "../../../Common/Network/SendablePacket";
+
+/**
+* $remark
+*
+* @author $user
+* @Date $date
+*/
+export class $className extends SendablePacket {
+
+    public static readonly OPCODE: number = $opCode ;
+
+#foreach( $param in $params )
+
+    /**
+    * $param.remark
+    */
+    private ${param.name};
+#end
+
+
+#if (!${params.isEmpty()})
+    constructor ($sendDecrParams) {
+        super(${className}.OPCODE);
+#foreach( $param in $params )
+        this.${param.name} = ${param.name};
+#end
+
+    }
+#else
+    constructor () {
+        super(${className}.OPCODE);
+    }
+#end
+
+
+    getBuffLength = ()=>{
+        return 4 + 4;
+    }
+
+    writeImpl = (buff: DataView) =>  {
+#foreach( $param in $params )
+    $param.code
+#end
+    }
+}
+
