@@ -230,7 +230,7 @@ public class ProtoVOUtils {
             commadReqVO.setFormat(node.valueOf("@format"));
             result.add(commadReqVO);
 
-            List<Node> innerParamNodes = requestNode.selectNodes("param");
+            List<Node> innerParamNodes = node.selectNodes("param");
             if(!innerParamNodes.isEmpty()) {
                 setCommadReqChildrenCommadVO(node, commadReqVO.getChildrens());
             }
@@ -280,7 +280,7 @@ public class ProtoVOUtils {
             commadRespVO.setFormat(node.valueOf("@format"));
             result.add(commadRespVO);
 
-            List<Node> innerParamNodes = requestNode.selectNodes("param");
+            List<Node> innerParamNodes = node.selectNodes("param");
             if(!innerParamNodes.isEmpty()) {
                 setCommadRespChildrenCommadVO(node, commadRespVO.getChildrens());
             }
