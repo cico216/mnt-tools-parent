@@ -24,7 +24,7 @@
         <velocity.version>1.7</velocity.version>
         <lombok.version>1.18.8</lombok.version>
         <fastjson.version>1.2.59</fastjson.version>
-        <mysql.version>8.0.17</mysql.version>
+        <mysql.version>8.0.28</mysql.version>
         <postgresql.version>42.2.6</postgresql.version>
         <dom4j.version>1.6.1</dom4j.version>
         <httpclient.version>4.5.9</httpclient.version>
